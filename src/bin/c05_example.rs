@@ -14,4 +14,6 @@ fn main() {
 
     println!("Evens up to 0: {:?}", evens_up_to(0));
     println!("Evens up to 1: {:?}", evens_up_to(1));
+    println!("Evens up to 1: {:?}", evens_up_to(5));
+
 }

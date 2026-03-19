@@ -1,7 +1,8 @@
 pub fn min_max(values: [i32; 5]) -> (i32, i32) {
     // TODO: Return a tuple of (min, max) from the array.
-    let _ = values;
-    (0, 0)
+    let min: i32 = *values.iter().min().expect("something is here");
+    let max: i32 = *values.iter().max().expect("something is here");
+    (min, max)
 }
 
 fn main() {

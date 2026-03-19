@@ -1,7 +1,13 @@
 pub fn evens_up_to(n: u32) -> Vec<u32> {
     // TODO: Return all even numbers from 1 to n (inclusive).
-    let _ = n;
-    Vec::new()
+    let mut  temp =  Vec::new();
+    for i in 1..=n {
+        if i % 2 == 0 {
+            temp.push(i);
+        }
+    }
+    temp
+
 }
 
 fn main() {

@@ -11,6 +11,7 @@ fn main() {
 
     // Type casting with `as`
     let sum: i32 = scores.iter().sum();
+    println!("{:?}", scores);
     let avg = sum as f64 / scores.len() as f64;
     println!("Average: {avg:.2}");
 }
