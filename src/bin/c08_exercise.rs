@@ -1,8 +1,7 @@
 pub fn first_word_len(s: &str) -> usize {
     // TODO: Return the length of the first word.
     // Hint: .split_whitespace().next() gives you an Option<&str>.
-    let _ = s;
-    0
+    s.split_whitespace().next().map_or(0, str::len)
 }
 
 fn main() {

@@ -7,8 +7,7 @@ pub struct Point {
 pub fn distance_from_origin(p: &Point) -> f64 {
     // TODO: Return the distance from (0, 0) to (p.x, p.y).
     // Hint: Use (x*x + y*y).sqrt()
-    let _ = p;
-    0.0
+    (p.x * p.x + p.y * p.y).sqrt()
 }
 
 fn main() {

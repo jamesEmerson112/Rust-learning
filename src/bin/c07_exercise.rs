@@ -1,7 +1,7 @@
 pub fn shout(message: &str) -> String {
     // TODO: Return the message in uppercase followed by "!".
     let _ = message;
-    String::new()
+    format!("{}!", message)
 }
 
 fn main() {
