@@ -28,16 +28,6 @@ pub fn fizzbuzz(n: u32) -> Vec<String> {
     }
 
 
-
-
-
-    let my_value =
-        loop {
-            // Blah blah blah
-
-            break 123;
-        };
-
     result
 }
 
