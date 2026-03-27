@@ -6,13 +6,13 @@ pub struct Rectangle {
 impl Rectangle {
     pub fn area(&self) -> u32 {
         // TODO: Return width * height.
-        0
+        self.width * self.height
     }
 
     pub fn can_hold(&self, other: &Rectangle) -> bool {
         // TODO: Return true only if self is strictly larger in both dimensions.
         let _ = other;
-        false
+        self.width > other.width && self.height > other.height
     }
 }
 
