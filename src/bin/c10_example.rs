@@ -15,6 +15,11 @@ impl Rectangle {
     fn can_hold(&self, other: &Rectangle) -> bool {
         self.width > other.width && self.height > other.height
     }
+
+    fn double_size(&mut self) {
+        self.width *= 2;
+        self.height *= 2;
+    }
 }
 
 fn main() {
