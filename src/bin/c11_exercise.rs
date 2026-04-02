@@ -1,5 +1,3 @@
-use std::fmt::format;
-
 pub enum Command {
     Add(i32, i32),
     Sub(i32, i32),
@@ -12,8 +10,8 @@ pub fn run_command(cmd: Command) -> String {
     // Sub(a, b) => "Result: <difference>"
     // Quit => "Goodbye!"
     match cmd {
-        Command::Add(num1, num2)  => format!("{}", num1 + num2),
-        Command::Sub(num1, num2)  => format!("{}", num1 - num2) ,
+        Command::Add(num1, num2)  => format!("Result: {}", num1 + num2),
+        Command::Sub(num1, num2)  => format!("Result: {}", num1 - num2),
         Command::Quit                       => "Goodbye!".to_string()
     }
 }
