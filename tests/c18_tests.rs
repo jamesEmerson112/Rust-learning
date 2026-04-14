@@ -2,20 +2,24 @@
 #[allow(dead_code)]
 mod c18_exercise;
 
-use c18_exercise::largest;
+use c18_exercise::parse_pair;
 
 #[test]
-fn largest_on_integers() {
-    assert_eq!(largest(&[3, 9, 2, 14, 5]), Some(14));
+fn parse_pair_both_valid() {
+    assert_eq!(parse_pair("3", "4"), Ok((3, 4)));
 }
 
 #[test]
-fn largest_on_chars() {
-    assert_eq!(largest(&['a', 'z', 'm']), Some('z'));
+fn parse_pair_first_invalid() {
+    assert!(parse_pair("x", "4").is_err());
 }
 
 #[test]
-fn largest_on_empty_slice() {
-    let empty: [i32; 0] = [];
-    assert_eq!(largest(&empty), None);
+fn parse_pair_second_invalid() {
+    assert!(parse_pair("3", "y").is_err());
+}
+
+#[test]
+fn parse_pair_negative_numbers() {
+    assert_eq!(parse_pair("-5", "10"), Ok((-5, 10)));
 }

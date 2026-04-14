@@ -2,31 +2,21 @@
 #[allow(dead_code)]
 mod c20_exercise;
 
-use c20_exercise::Gradebook;
+use c20_exercise::apply;
 
 #[test]
-fn average_for_known_student() {
-    let mut gradebook = Gradebook::new();
-    gradebook.add_score("Sam", 80);
-    gradebook.add_score("Sam", 100);
-
-    let avg = gradebook.average("Sam").expect("expected average for Sam");
-    assert!((avg - 90.0).abs() < 1e-9);
+fn apply_double() {
+    assert_eq!(apply(5, |n| n * 2), 10);
 }
 
 #[test]
-fn average_for_unknown_student_is_none() {
-    let gradebook = Gradebook::new();
-    assert_eq!(gradebook.average("Unknown"), None);
+fn apply_add_constant() {
+    let add_one = |n| n + 1;
+    assert_eq!(apply(41, add_one), 42);
 }
 
 #[test]
-fn average_precision_to_two_decimals() {
-    let mut gradebook = Gradebook::new();
-    gradebook.add_score("Ava", 89);
-    gradebook.add_score("Ava", 90);
-
-    let avg = gradebook.average("Ava").expect("expected average for Ava");
-    let rounded = (avg * 100.0).round() / 100.0;
-    assert_eq!(rounded, 89.5);
+fn apply_captures_from_scope() {
+    let factor = 3;
+    assert_eq!(apply(5, |n| n * factor), 15);
 }

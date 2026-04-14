@@ -1,23 +1,25 @@
-fn safe_divide(a: &str, b: &str) -> Result<f64, String> {
-    let left = a
-        .parse::<f64>()
-        .map_err(|_| "invalid number for a".to_string())?;
-    let right = b
-        .parse::<f64>()
-        .map_err(|_| "invalid number for b".to_string())?;
+use std::collections::HashMap;
 
-    if right == 0.0 {
-        return Err("cannot divide by zero".to_string());
+fn normalize_word(word: &str) -> String {
+    word.trim_matches(|c: char| !c.is_alphanumeric())
+        .to_lowercase()
+}
+
+fn word_count(input: &str) -> HashMap<String, usize> {
+    let mut counts = HashMap::new();
+    for raw in input.split_whitespace() {
+        let word = normalize_word(raw);
+        if word.is_empty() {
+            continue;
+        }
+        *counts.entry(word).or_insert(0) += 1;
     }
-
-    Ok(left / right)
+    counts
 }
 
 fn main() {
-    for (a, b) in [("10", "2"), ("7", "0"), ("x", "4")] {
-        match safe_divide(a, b) {
-            Ok(value) => println!("{a} / {b} = {value:.2}"),
-            Err(err) => println!("Error for ({a}, {b}): {err}"),
-        }
+    let counts: HashMap<String, usize> = word_count("Rust rust, ownership! Borrowing rust.");
+    for (word, count) in &counts {
+        println!("{word}: {count}");
     }
 }

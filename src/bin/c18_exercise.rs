@@ -1,10 +1,13 @@
-pub fn largest<T: Ord + Copy>(items: &[T]) -> Option<T> {
-    // TODO: Return the largest item, or None when the slice is empty.
-    let _ = items;
-    None
+use std::num::ParseIntError;
+
+pub fn parse_pair(a: &str, b: &str) -> Result<(i32, i32), ParseIntError> {
+    // TODO: Parse both strings as i32 using `?` to early-return on failure.
+    // Return Ok((x, y)) when both parses succeed.
+    let _ = (a, b);
+    Ok((0, 0))
 }
 
 fn main() {
-    let values = [4, 1, 8, 3];
-    println!("Largest: {:?}", largest(&values));
+    println!("{:?}", parse_pair("3", "4"));
+    println!("{:?}", parse_pair("3", "x"));
 }

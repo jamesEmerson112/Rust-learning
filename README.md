@@ -6,9 +6,9 @@ This repo contains small Rust lessons, each with:
 - an integration test file for validation
 
 ## File layout
-- `src/bin/c01_example.rs` ... `src/bin/c20_example.rs`
-- `src/bin/c01_exercise.rs` ... `src/bin/c20_exercise.rs`
-- `tests/c01_tests.rs` ... `tests/c20_tests.rs`
+- `src/bin/c01_example.rs` ... `src/bin/c30_example.rs`
+- `src/bin/c01_exercise.rs` ... `src/bin/c30_exercise.rs`
+- `tests/c01_tests.rs` ... `tests/c30_tests.rs`
 
 ## Lesson flow (~15 minutes each)
 1. Read and run the example.
@@ -134,59 +134,129 @@ Work through one lesson at a time. Read the example, then complete the exercise.
 
 ---
 
-### Lesson 14 — HashMap Entry API and String Normalization
-**Learn:** `.entry().or_insert()`/`.or_default()`, `.to_lowercase()`, `trim_matches`
-**Exercise:** Count word frequencies in a string, normalising case and punctuation.
+### Lesson 14 — HashMap Entry API
+**Learn:** `.entry()`, `.or_insert()`, `.or_default()`, `.and_modify()`
+**Exercise:** Count occurrences of each integer in a slice using the entry API.
 **You're done when:** You can use the entry API without looking up the syntax.
 
 ---
 
-### Lesson 15 — Result Basics
+### Lesson 15 — String Normalization
+**Learn:** `.to_lowercase()`, `.trim_matches()`, char predicates like `.is_alphanumeric()`
+**Exercise:** Clean a single word — lowercase it and strip surrounding punctuation.
+**You're done when:** You can write a normalization function that handles messy input.
+
+---
+
+### Lesson 16 — Word Count (HashMap + Strings)
+**Learn:** Combining the entry API with string normalization on real input
+**Exercise:** Count word frequencies in a sentence, normalising case and punctuation.
+**You're done when:** You can compose a multi-step text-processing pipeline.
+
+---
+
+### Lesson 17 — Result Basics
 **Learn:** `Result<T, E>`, `Ok`/`Err`, `.parse::<T>()`, match on Result
 **Exercise:** Parse a string as a `u8` age, returning `Err` for invalid input.
 **You're done when:** You can return meaningful error messages from a function.
 
 ---
 
-### Lesson 16 — The ? Operator and Error Chaining
-**Learn:** `?` operator, `.map_err()`, chaining fallible operations
-**Exercise:** Parse two strings as numbers and divide them, handling all error cases.
-**You're done when:** You can chain `?` calls and return meaningful error strings.
+### Lesson 18 — The ? Operator
+**Learn:** `?` early-return on Err when both calls share the same error type
+**Exercise:** Parse two numbers and return them as a tuple using `?` twice.
+**You're done when:** You can chain fallible calls with `?` without `match`.
 
 ---
 
-### Lesson 17 — Traits
-**Learn:** `trait` definition, `impl Trait for Type`, calling trait methods
+### Lesson 19 — Error Chaining with `map_err`
+**Learn:** `.map_err()` to convert error types, building friendly error strings
+**Exercise:** Parse two strings as `f64` and divide them, handling all error cases with descriptive messages.
+**You're done when:** You can bridge different error types into a single `Result`.
+
+---
+
+### Lesson 20 — Closures
+**Learn:** Anonymous functions (`|x| x + 1`), capturing environment, `impl Fn(...)`
+**Exercise:** Write an `apply(x, f)` function that runs a closure on a value.
+**You're done when:** You can pass closures around and use ones that capture local state.
+
+---
+
+### Lesson 21 — Iterator Combinators I (`map`/`filter`/`collect`)
+**Learn:** Chainable lazy transformations over iterators
+**Exercise:** Return the squares of the even numbers in a slice as a `Vec`.
+**You're done when:** You can build a `Vec` by chaining combinators without a manual loop.
+
+---
+
+### Lesson 22 — Iterator Combinators II (`fold`/`sum`/aggregations)
+**Learn:** Reducing iterators into a single value — `fold`, `sum`, `product`, `max`, `min`
+**Exercise:** Sum the squares of every integer in a slice using combinators.
+**You're done when:** You can replace manual accumulation loops with `fold` or specialised aggregators.
+
+---
+
+### Lesson 23 — Traits
+**Learn:** `trait` definition, `impl Trait for Type`, `impl Trait` arguments
 **Exercise:** Define a `Describable` trait and implement it for an `Item` struct.
-**You're done when:** You can define and implement a trait.
+**You're done when:** You can define a trait and write a function that accepts any type implementing it.
 
 ---
 
-### Lesson 18 — Generics and Trait Bounds
-**Learn:** `<T>`, `T: Ord + Copy`, generic functions
-**Exercise:** Write a generic `largest` function that works on any comparable, copyable type.
-**You're done when:** You can write a generic function and explain what the trait bounds are doing.
+### Lesson 24 — Generics
+**Learn:** Type parameters `<T>` on functions, impl blocks, and structs
+**Exercise:** Write a generic `swap<T>(a, b)` that returns `(b, a)` for any type.
+**You're done when:** You understand what you can and can't do with an unconstrained `T`.
 
 ---
 
-### Lesson 19 — Modules and Visibility
-**Learn:** `mod`, `pub`, `use`, file-based modules
+### Lesson 25 — Trait Bounds
+**Learn:** `T: Ord + Copy`, `where` clauses, unlocking methods via bounds
+**Exercise:** Write a generic `largest<T>` that works on any comparable, copyable type.
+**You're done when:** You can explain what each bound enables and pick the minimum bounds needed.
+
+---
+
+### Lesson 26 — Lifetimes Intro
+**Learn:** `'a` annotations, why the borrow checker needs them, elision rules
+**Exercise:** Write `longer<'a>(a: &'a str, b: &'a str) -> &'a str` that returns the longer slice.
+**You're done when:** You can annotate a function that returns a borrowed reference.
+
+---
+
+### Lesson 27 — `Box<T>` — Heap Allocation
+**Learn:** `Box::new()`, heap allocation, recursive types (cons-lists), auto-deref
+**Exercise:** Wrap an integer in a `Box`.
+**You're done when:** You can explain when boxing is necessary (recursive types, trait objects).
+
+---
+
+### Lesson 28 — `Rc<T>` and `Arc<T>` — Shared Ownership
+**Learn:** Reference-counted shared ownership, `Rc::clone()`, `Rc::strong_count()`, `Arc` for threads
+**Exercise:** Create an `Rc`, clone it twice, and return the current strong count.
+**You're done when:** You can share data between multiple owners without the compiler complaining.
+
+---
+
+### Lesson 29 — Modules and Visibility
+**Learn:** `mod`, `pub`, `use`, file-based modules via `#[path]`
 **Exercise:** Complete a `Counter` struct in a separate module with private fields.
 **You're done when:** You can organise code across files and control visibility with `pub`.
 
 ---
 
-### Lesson 20 — Capstone: Gradebook
-**Learn:** Everything combined: modules + HashMap + Vec + Option + methods
+### Lesson 30 — Capstone: Gradebook
+**Learn:** Everything combined — modules + HashMap + Vec + Option + methods
 **Exercise:** Complete a `Gradebook` struct in a separate module — add scores and compute averages.
-**You're done when:** You can run `cargo test` and all 20 lesson tests pass.
+**You're done when:** You can run `cargo test` and all 30 lesson tests pass.
 
 ---
 
-### Beyond Chapter 20
-The lessons above cover the core language. Once you finish them, good next topics are:
-- Lifetimes (`'a`) — when the borrow checker needs extra hints
-- Closures and iterators — `.map()`, `.filter()`, `.fold()`
-- `Box<T>`, `Rc<T>`, `Arc<T>` — heap allocation and shared ownership
-- Async / `tokio` — concurrent programming
+### Beyond Chapter 30
+The lessons above cover the core language in depth. Once you finish them, good next topics are:
+- Async / `tokio` — concurrent and asynchronous programming
+- `RefCell<T>` and interior mutability
+- Custom iterators (`impl Iterator`)
+- Procedural macros and `derive` macros
 - Building a small CLI or web service to apply everything

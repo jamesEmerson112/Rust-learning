@@ -1,26 +1,11 @@
-trait Describable {
-    fn describe(&self) -> String;
-}
-
-struct Item {
-    name: String,
-    price: f64,
-}
-
-impl Describable for Item {
-    fn describe(&self) -> String {
-        format!("{}: ${:.2}", self.name, self.price)
+fn parse_age(input: &str) -> Result<u8, String> {
+    match input.trim().parse::<u8>() {
+        Ok(n) => Ok(n),
+        Err(_) => Err(format!("invalid age: {input}")),
     }
 }
 
-fn print_description(item: &impl Describable) {
-    println!("{}", item.describe());
-}
-
 fn main() {
-    let item = Item {
-        name: "Widget".to_string(),
-        price: 9.99,
-    };
-    print_description(&item);
+    println!("{:?}", parse_age("25"));
+    println!("{:?}", parse_age("abc"));
 }

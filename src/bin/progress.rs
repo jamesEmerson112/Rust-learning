@@ -80,7 +80,7 @@ struct LessonMeta {
     stat_group: &'static str,
 }
 
-const LESSONS: [LessonMeta; 20] = [
+const LESSONS: [LessonMeta; 30] = [
     LessonMeta { number: 1,  title: "Hello Variables",                      stat_group: "Core Firmware" },
     LessonMeta { number: 2,  title: "Strings and Formatting",              stat_group: "Core Firmware" },
     LessonMeta { number: 3,  title: "Arrays and Iteration",                stat_group: "Data Cortex" },
@@ -95,15 +95,25 @@ const LESSONS: [LessonMeta; 20] = [
     LessonMeta { number: 12, title: "Option<T>",                           stat_group: "Type Encoding" },
     LessonMeta { number: 13, title: "HashMap Basics",                      stat_group: "Data Vault" },
     LessonMeta { number: 14, title: "HashMap Entry API",                   stat_group: "Data Vault" },
-    LessonMeta { number: 15, title: "Result Basics",                       stat_group: "Fault Tolerance" },
-    LessonMeta { number: 16, title: "The ? Operator",                      stat_group: "Fault Tolerance" },
-    LessonMeta { number: 17, title: "Traits",                              stat_group: "Protocol Layer" },
-    LessonMeta { number: 18, title: "Generics and Trait Bounds",           stat_group: "Protocol Layer" },
-    LessonMeta { number: 19, title: "Modules and Visibility",              stat_group: "System Kernel" },
-    LessonMeta { number: 20, title: "Capstone: Gradebook",                 stat_group: "System Kernel" },
+    LessonMeta { number: 15, title: "String Normalization",                stat_group: "String Forge" },
+    LessonMeta { number: 16, title: "Word Count (HashMap + Strings)",      stat_group: "String Forge" },
+    LessonMeta { number: 17, title: "Result Basics",                       stat_group: "Fault Tolerance" },
+    LessonMeta { number: 18, title: "The ? Operator",                      stat_group: "Fault Tolerance" },
+    LessonMeta { number: 19, title: "Error Chaining with map_err",         stat_group: "Error Channel" },
+    LessonMeta { number: 20, title: "Closures",                            stat_group: "Error Channel" },
+    LessonMeta { number: 21, title: "Iterator Combinators I (map/filter)", stat_group: "Iterator Matrix" },
+    LessonMeta { number: 22, title: "Iterator Combinators II (fold/sum)",  stat_group: "Iterator Matrix" },
+    LessonMeta { number: 23, title: "Traits",                              stat_group: "Protocol Layer" },
+    LessonMeta { number: 24, title: "Generics",                            stat_group: "Protocol Layer" },
+    LessonMeta { number: 25, title: "Trait Bounds",                        stat_group: "Bound Compiler" },
+    LessonMeta { number: 26, title: "Lifetimes Intro",                     stat_group: "Bound Compiler" },
+    LessonMeta { number: 27, title: "Box<T> — Heap Allocation",            stat_group: "Pointer Grid" },
+    LessonMeta { number: 28, title: "Rc<T> and Arc<T>",                    stat_group: "Pointer Grid" },
+    LessonMeta { number: 29, title: "Modules and Visibility",              stat_group: "System Kernel" },
+    LessonMeta { number: 30, title: "Capstone: Gradebook",                 stat_group: "System Kernel" },
 ];
 
-const STAT_GROUPS: [&str; 10] = [
+const STAT_GROUPS: [&str; 15] = [
     "Core Firmware",
     "Data Cortex",
     "Logic Matrix",
@@ -111,8 +121,13 @@ const STAT_GROUPS: [&str; 10] = [
     "Cyber Architecture",
     "Type Encoding",
     "Data Vault",
+    "String Forge",
     "Fault Tolerance",
+    "Error Channel",
+    "Iterator Matrix",
     "Protocol Layer",
+    "Bound Compiler",
+    "Pointer Grid",
     "System Kernel",
 ];
 
@@ -124,7 +139,7 @@ struct Ability {
     lesson: u32,
 }
 
-const ABILITIES: [Ability; 20] = [
+const ABILITIES: [Ability; 30] = [
     // Script Kiddie (L1–4)
     Ability { name: "Stack Injection",         description: "Bind data to the stack with `let` and `mut`.",                       lesson: 1  },
     Ability { name: "String Splice",           description: "Manipulate heap strings and format output into the datastream.",     lesson: 2  },
@@ -143,14 +158,26 @@ const ABILITIES: [Ability; 20] = [
     // Chrome Operative (L13–16)
     Ability { name: "Hash Map Infiltration",   description: "Index and query key-value data stores at O(1).",                     lesson: 13 },
     Ability { name: "Entry Point Exploit",     description: "Use the entry API to atomically insert-or-update.",                  lesson: 14 },
-    Ability { name: "Error Channel",           description: "Propagate failure signals through `Result<T, E>`.",                  lesson: 15 },
-    Ability { name: "Fault Cascade",           description: "Chain fallible operations with `?` without losing context.",         lesson: 16 },
-    // Ghost in the Wire (L17–19)
-    Ability { name: "Trait Interface",         description: "Define shared behavior contracts across disparate types.",           lesson: 17 },
-    Ability { name: "Generic Protocol",        description: "Write type-agnostic code with compile-time trait bounds.",           lesson: 18 },
-    Ability { name: "Module Firewall",         description: "Partition code into modules with controlled visibility.",            lesson: 19 },
-    // Zero-Day Sovereign (L20)
-    Ability { name: "Full System Access",      description: "All subsystems integrated. The compiler bends to your will.",        lesson: 20 },
+    Ability { name: "String Normalizer",       description: "Sanitize raw text — trim punctuation, lowercase, prep for lookup.",  lesson: 15 },
+    Ability { name: "Word Count Weave",        description: "Combine HashMap + string normalization into frequency analysis.",    lesson: 16 },
+    // Ghost in the Wire (L17–20)
+    Ability { name: "Error Channel",           description: "Propagate failure signals through `Result<T, E>`.",                  lesson: 17 },
+    Ability { name: "Fault Cascade",           description: "Chain fallible operations with `?` without losing context.",         lesson: 18 },
+    Ability { name: "Exception Gadget",        description: "Convert error types with `map_err` and bridge disparate failures.",  lesson: 19 },
+    Ability { name: "Lambda Grenade",          description: "Deploy closures as first-class functions that capture scope.",       lesson: 20 },
+    // Neon Assassin (L21–24)
+    Ability { name: "Stream Transmuter",       description: "Chain `.map()`, `.filter()`, and `.collect()` over any iterator.",   lesson: 21 },
+    Ability { name: "Aggregate Cipher",        description: "Reduce streams into single values with `fold`, `sum`, `reduce`.",    lesson: 22 },
+    Ability { name: "Trait Interface",         description: "Define shared behavior contracts across disparate types.",           lesson: 23 },
+    Ability { name: "Generic Protocol",        description: "Write type-agnostic code with parametric polymorphism.",             lesson: 24 },
+    // Silicon Shaman (L25–29)
+    Ability { name: "Bounded Channel",         description: "Constrain generics with trait bounds to unlock comparison/copy.",    lesson: 25 },
+    Ability { name: "Lifetime Weaver",         description: "Annotate `'a` so references never outlive the data they point to.", lesson: 26 },
+    Ability { name: "Heap Injector",           description: "Box values onto the heap and break recursive type cycles.",          lesson: 27 },
+    Ability { name: "Ownership Broadcast",     description: "Share one allocation via `Rc`/`Arc` with atomic refcounting.",       lesson: 28 },
+    Ability { name: "Module Firewall",         description: "Partition code into modules with controlled visibility.",            lesson: 29 },
+    // Zero-Day Sovereign (L30)
+    Ability { name: "Full System Access",      description: "All subsystems integrated. The compiler bends to your will.",        lesson: 30 },
 ];
 
 // ─── Ranks ─────────────────────────────────────────────────────────────────
@@ -161,14 +188,16 @@ struct Rank {
     quote: &'static str,
 }
 
-const RANKS: [Rank; 7] = [
+const RANKS: [Rank; 9] = [
     Rank { min_level: 0,  name: "Disconnected",        quote: "No signal detected. Jack in to begin." },
     Rank { min_level: 1,  name: "Script Kiddie",        quote: "You've breached the first firewall. The grid recognizes you." },
     Rank { min_level: 5,  name: "Netrunner",            quote: "The heap sprawls before you — an endless neon datascape." },
     Rank { min_level: 9,  name: "ICE Breaker",          quote: "Intrusion Countermeasures mean nothing to you now." },
     Rank { min_level: 13, name: "Chrome Operative",     quote: "Your pattern recognition subroutines are fully online." },
     Rank { min_level: 17, name: "Ghost in the Wire",    quote: "You exist in the protocol layer — type-agnostic, untraceable." },
-    Rank { min_level: 20, name: "Zero-Day Sovereign",   quote: "You own the system. Every compiler warning bows to your will. 🦀" },
+    Rank { min_level: 21, name: "Neon Assassin",        quote: "Streams bend to your will — one combinator at a time." },
+    Rank { min_level: 25, name: "Silicon Shaman",       quote: "Lifetimes, pointers, and shared memory answer to your incantations." },
+    Rank { min_level: 30, name: "Zero-Day Sovereign",   quote: "You own the system. Every compiler warning bows to your will. 🦀" },
 ];
 
 const CLASSES: [&str; 4] = [
@@ -250,7 +279,7 @@ fn create_character() -> SaveFile {
     println!("{}",   color::bold_cyan("║       Welcome to the Rust Underground        ║"));
     println!("{}",   color::bold_cyan("╚══════════════════════════════════════════════╝"));
     println!();
-    println!("  Before you lies a grid of {} data nodes.", color::bold("20"));
+    println!("  Before you lies a grid of {} data nodes.", color::bold("30"));
     println!("  Master them all to earn the rank of {}.", color::bold_yellow("Zero-Day Sovereign"));
     println!();
 
@@ -348,7 +377,7 @@ fn scan_lessons(save: &mut SaveFile, rescan: bool) -> ScanResult {
                     .is_some_and(|s| s.passed)
             })
             .map(|l| l.number)
-            .unwrap_or(20);
+            .unwrap_or(30);
         first_incomplete.saturating_sub(1).max(1)
     };
 
@@ -559,15 +588,15 @@ fn display_character_sheet(save: &SaveFile) {
         color::bold_yellow(rank.name)
     );
     println!(
-        "  {}  Level: {}/20   XP: {}/2000",
+        "  {}  Level: {}/30   XP: {}/3000",
         color::bold_cyan("║"),
         color::bold(&level.to_string()),
         xp
     );
     println!(
-        "  {}  [{}] {}/2000",
+        "  {}  [{}] {}/3000",
         color::bold_cyan("║"),
-        xp_bar(xp, 2000, 30),
+        xp_bar(xp, 3000, 30),
         xp
     );
     println!(
@@ -586,9 +615,9 @@ fn display_character_sheet(save: &SaveFile) {
             _ => format!("{} {}", color::green("●"), color::green("●")),
         };
         let label = match score {
-            2 => color::green(group),
-            1 => color::yellow(group),
-            _ => color::dim(group),
+            n if n >= 2 => color::green(group),
+            1           => color::yellow(group),
+            _           => color::dim(group),
         };
         println!("    {bar}  {label}  ({score}/2)");
     }
@@ -644,13 +673,13 @@ fn display_character_sheet(save: &SaveFile) {
 
     // Next step hint
     println!();
-    if level == 20 {
+    if level == 30 {
         println!("  {}", color::bold_cyan("╔══════════════════════════════════════════════════════════╗"));
         println!("  {}",   color::bold_cyan("║        🦀  SYSTEM FULLY COMPROMISED  🦀                ║"));
         println!("  {}", color::bold_cyan("╚══════════════════════════════════════════════════════════╝"));
         println!();
         println!("  {}",   color::bold_green("  You are the Zero-Day Sovereign. The Rust Underground salutes you."));
-        println!("  {}",   color::dim("  Check the README for suggested next topics beyond chapter 20."));
+        println!("  {}",   color::dim("  Check the README for suggested next topics beyond chapter 30."));
     } else {
         let next = LESSONS.iter().find(|l| {
             !save
@@ -691,7 +720,7 @@ fn print_help() {
     println!();
     println!("  {}", color::bold("USAGE:"));
     println!("    cargo run --bin progress              Normal run (incremental scan + display)");
-    println!("    cargo run --bin progress -- --rescan  Re-test all 20 data nodes from scratch");
+    println!("    cargo run --bin progress -- --rescan  Re-test all 30 data nodes from scratch");
     println!("    cargo run --bin progress -- --reset   Delete save file and start fresh");
     println!("    cargo run --bin progress -- --help    Show this help message");
     println!();

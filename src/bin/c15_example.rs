@@ -1,16 +1,10 @@
-fn parse_age(input: &str) -> Result<u8, String> {
-    let age: u8 = input
-        .trim()
-        .parse()
-        .map_err(|_| format!("invalid age: {input}"))?;
-    Ok(age)
+fn normalize_word(word: &str) -> String {
+    word.trim_matches(|c: char| !c.is_alphanumeric())
+        .to_lowercase()
 }
 
 fn main() {
-    for input in ["25", "abc", "300"] {
-        match parse_age(input) {
-            Ok(age) => println!("Parsed age: {age}"),
-            Err(e) => println!("Error: {e}"),
-        }
+    for raw in ["Hello,", "...Rust!!!", "42nd", "???"] {
+        println!("{raw:?} -> {:?}", normalize_word(raw));
     }
 }

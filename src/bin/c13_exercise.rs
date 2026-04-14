@@ -3,12 +3,12 @@ use std::collections::HashMap;
 pub fn count_chars(s: &str) -> HashMap<char, usize> {
     // TODO: Count the frequency of each character in the string.
     let _ = s;
-    let mut newHash: HashMap<char, usize> = HashMap::new();
+    let mut new_hash: HashMap<char, usize> = HashMap::new();
     for c in s.chars()
     {
-        *newHash.entry(c).or_insert(0) += 1;
+        *new_hash.entry(c).or_insert(0) += 1;
     }
-    newHash
+    new_hash
 }
 
 fn main() {

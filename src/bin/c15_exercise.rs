@@ -1,11 +1,13 @@
-pub fn parse_age(input: &str) -> Result<u8, String> {
-    // TODO: Parse the input string as a u8.
-    // Return Ok(age) on success, or Err with a descriptive message on failure.
-    let _ = input;
-    Err("TODO: implement parse_age".to_string())
+pub fn normalize_word(word: &str) -> String {
+    // TODO: Return the word with:
+    //   1) leading/trailing non-alphanumeric characters trimmed
+    //      (use .trim_matches(|c: char| !c.is_alphanumeric()))
+    //   2) lowercased (.to_lowercase())
+    word.trim_matches(|c: char| !c.is_alphanumeric())
+    .to_lowercase()
 }
 
 fn main() {
-    println!("{:?}", parse_age("25"));
-    println!("{:?}", parse_age("abc"));
+    println!("{:?}", normalize_word("Hello,"));
+    println!("{:?}", normalize_word("...Rust!!!"));
 }

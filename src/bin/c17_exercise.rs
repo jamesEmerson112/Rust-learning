@@ -1,25 +1,12 @@
-pub trait Describable {
-    fn describe(&self) -> String;
-}
-
-pub struct Item {
-    pub name: String,
-    pub price: f64,
-}
-
-impl Describable for Item {
-    fn describe(&self) -> String {
-        // TODO: Return "<name>: $<price>" with price to 2 decimal places.
-        let _ = &self.name;
-        let _ = self.price;
-        String::new()
-    }
+pub fn parse_age(input: &str) -> Result<u8, String> {
+    // TODO: Use `match` on `input.trim().parse::<u8>()`:
+    //   Ok(n)  => Ok(n)
+    //   Err(_) => Err(format!("invalid age: {input}"))
+    let _ = input;
+    Err("TODO: implement parse_age".to_string())
 }
 
 fn main() {
-    let item = Item {
-        name: "Widget".to_string(),
-        price: 9.99,
-    };
-    println!("{}", item.describe());
+    println!("{:?}", parse_age("25"));
+    println!("{:?}", parse_age("abc"));
 }

@@ -1,12 +1,11 @@
-#[path = "../lesson20/exercise_gradebook.rs"]
-mod gradebook;
-
-pub use gradebook::Gradebook;
+pub fn apply(x: i32, f: impl Fn(i32) -> i32) -> i32 {
+    // TODO: Call the closure `f` on `x` and return the result.
+    let _ = (x, &f);
+    0
+}
 
 fn main() {
-    let mut gradebook = Gradebook::new();
-    gradebook.add_score("Sam", 80);
-    gradebook.add_score("Sam", 100);
-
-    println!("Sam average: {:?}", gradebook.average("Sam"));
+    let double = |n| n * 2;
+    println!("{}", apply(5, double));
+    println!("{}", apply(5, |n| n + 100));
 }

@@ -2,23 +2,24 @@
 #[allow(dead_code)]
 mod c14_exercise;
 
-use c14_exercise::word_count;
+use c14_exercise::count_numbers;
 
 #[test]
-fn counts_words_case_insensitive() {
-    let counts = word_count("Rust rust RUST");
-    assert_eq!(counts.get("rust"), Some(&3));
+fn counts_single_value() {
+    let counts = count_numbers(&[7, 7, 7]);
+    assert_eq!(counts.get(&7), Some(&3));
 }
 
 #[test]
-fn trims_basic_punctuation() {
-    let counts = word_count("hello, world! hello.");
-    assert_eq!(counts.get("hello"), Some(&2));
-    assert_eq!(counts.get("world"), Some(&1));
+fn counts_multiple_values() {
+    let counts = count_numbers(&[1, 2, 2, 3, 3, 3]);
+    assert_eq!(counts.get(&1), Some(&1));
+    assert_eq!(counts.get(&2), Some(&2));
+    assert_eq!(counts.get(&3), Some(&3));
 }
 
 #[test]
 fn empty_input_returns_empty_map() {
-    let counts = word_count("");
+    let counts = count_numbers(&[]);
     assert!(counts.is_empty());
 }

@@ -2,22 +2,19 @@
 #[allow(dead_code)]
 mod c17_exercise;
 
-use c17_exercise::{Describable, Item};
+use c17_exercise::parse_age;
 
 #[test]
-fn describe_item_basic() {
-    let item = Item {
-        name: "Widget".to_string(),
-        price: 9.99,
-    };
-    assert_eq!(item.describe(), "Widget: $9.99");
+fn parse_age_valid() {
+    assert_eq!(parse_age("25"), Ok(25));
 }
 
 #[test]
-fn describe_item_whole_number() {
-    let item = Item {
-        name: "Bolt".to_string(),
-        price: 3.0,
-    };
-    assert_eq!(item.describe(), "Bolt: $3.00");
+fn parse_age_invalid() {
+    assert!(parse_age("abc").is_err());
+}
+
+#[test]
+fn parse_age_overflow() {
+    assert!(parse_age("300").is_err());
 }

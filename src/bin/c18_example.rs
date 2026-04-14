@@ -1,23 +1,12 @@
-fn largest<T: Ord + Copy>(items: &[T]) -> Option<T> {
-    let mut iter = items.iter().copied();
-    let mut largest = iter.next()?;
+use std::num::ParseIntError;
 
-    for item in iter {
-        if item > largest {
-            largest = item;
-        }
-    }
-
-    Some(largest)
+fn parse_pair(a: &str, b: &str) -> Result<(i32, i32), ParseIntError> {
+    let x = a.parse::<i32>()?;
+    let y = b.parse::<i32>()?;
+    Ok((x, y))
 }
 
 fn main() {
-    let numbers = vec![3, 9, 2, 14, 5];
-    let letters = vec!['a', 'z', 'm'];
-
-    println!("Largest number: {:?}", largest(&numbers));
-    println!("Largest letter: {:?}", largest(&letters));
-
-    let empty: Vec<i32> = vec![];
-    println!("Largest of empty: {:?}", largest(&empty));
+    println!("{:?}", parse_pair("3", "4"));
+    println!("{:?}", parse_pair("10", "x"));
 }

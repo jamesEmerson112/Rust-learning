@@ -2,19 +2,25 @@
 #[allow(dead_code)]
 mod c15_exercise;
 
-use c15_exercise::parse_age;
+use c15_exercise::normalize_word;
 
 #[test]
-fn parse_age_valid() {
-    assert_eq!(parse_age("25"), Ok(25));
+fn lowercases() {
+    assert_eq!(normalize_word("HELLO"), "hello");
 }
 
 #[test]
-fn parse_age_invalid() {
-    assert!(parse_age("abc").is_err());
+fn trims_punctuation() {
+    assert_eq!(normalize_word("hello,"), "hello");
+    assert_eq!(normalize_word("...rust!!!"), "rust");
 }
 
 #[test]
-fn parse_age_overflow() {
-    assert!(parse_age("300").is_err());
+fn preserves_alphanumeric_mid_word() {
+    assert_eq!(normalize_word("42nd"), "42nd");
+}
+
+#[test]
+fn all_punctuation_becomes_empty() {
+    assert_eq!(normalize_word("???"), "");
 }
