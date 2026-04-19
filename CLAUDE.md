@@ -65,3 +65,13 @@ Tests import exercises as modules via `#[path = "../src/bin/cXX_exercise.rs"]` a
 - [research] `.to_lowercase()` vs `.to_ascii_lowercase()` vs `.to_uppercase()` — Unicode-aware vs ASCII-only.
 - [research] `&str` vs `String`: viewing methods return `&str` (no allocation), transforming methods return `String` (new data).
 - [decision] User commits to Rust as sole learning track; explicitly chose Rust over Python/DSA/LeetCode grinding despite immediate-ROI argument. Reason: Python carries negative emotional baggage from two recent interview failures; Rust = fresh canvas + momentum. Sustainable learning > optimal learning. Saved as durable feedback memory `feedback_rust_only_learning_track.md`.
+
+### 2026-04-14
+- [fix] Rewrote `src/bin/c17_example.rs` from dense `.map_err()?` chain to explicit `match` on `Result`. Original c17 introduced 3 new concepts at once (`.parse()`, `.map_err()`, `?`), violating one-concept-per-lesson rule — `?` belongs to c18, `map_err` to c19. Updated TODO comment in `src/bin/c17_exercise.rs` to hint at the match approach; test signature preserved.
+- [verify] `cargo run --bin c17_example` prints `Ok(25)` and `Err("invalid age: abc")` as expected.
+- [decision] Durable pedagogical rule: from c17 onward every lesson introduces exactly ONE new concept. Audit confirmed c18-c29 already comply; c30 is the intentional integration capstone.
+- [decision] Do NOT restructure the 30-lesson layout to close the 4 "honest gaps" (custom error enums, explicit slices `&[T]`, struct lifetimes, `RefCell<T>`). Churn on save file + `progress.rs` + ranks outweighs marginal pedagogical gain. Gaps belong to Post-30 Track.
+- [feat] Created `ROADMAP.md` at repo root: 30-row at-a-glance table, 9 phase groupings with one-sentence themes, ASCII prerequisite chain, explicit Post-30 Track naming the 4 gaps plus thiserror/anyhow, custom iterators, async, macros. Added one-line link to `ROADMAP.md` at top of `README.md`.
+- [research] `.parse::<T>()` works on any `T: FromStr` (trait bound on a generic method — Rust's compile-time dispatch analog to C's `atoi`/`atof`/`strtol` family). `FromStr` formally lands in c23 (traits); generics/bounds in c24-c25.
+- [research] Teacher's review of c17-c30: pedagogically sound. One-concept rule enforced, dependency ordering correct throughout. Optional enhancement considered: extend c26 to cover struct lifetimes as a second `'a` example — user deferred.
+- [ref] Plan file `C:\Users\voan2\.claude\plans\spicy-foraging-frost.md` updated with teacher's review + ROADMAP plan.

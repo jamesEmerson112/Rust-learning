@@ -1,5 +1,7 @@
 # Rust Learning
 
+See [ROADMAP.md](ROADMAP.md) for a scannable overview of all 30 lessons.
+
 This repo contains small Rust lessons, each with:
 - an `example` binary (complete reference)
 - an `exercise` binary (starter stubs with `TODO`s)

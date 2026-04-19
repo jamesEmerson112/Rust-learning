@@ -1,0 +1,149 @@
+# Rust Learning — Roadmap
+
+**30 lessons, ~15 minutes each, one new concept per lesson.**
+
+Each lesson is a triple:
+- `src/bin/cXX_example.rs` — complete reference (read it)
+- `src/bin/cXX_exercise.rs` — stubs with `TODO`s (fill it in)
+- `tests/cXX_tests.rs` — integration tests (run until green)
+
+Run the tracker: `cargo run --bin progress`
+
+---
+
+## At a Glance
+
+| #  | Title                                 | Key concept                              |
+|----|---------------------------------------|------------------------------------------|
+| 01 | Hello Variables                       | `let`, `mut`, primitive types            |
+| 02 | Strings and Formatting                | `&str` vs `String`, `format!`            |
+| 03 | Arrays and Iteration                  | `[T; N]`, `.iter()`                      |
+| 04 | Tuples and Type Casting               | tuple returns, `as`                      |
+| 05 | If/Else and For Loops                 | control flow, `Vec::new()`               |
+| 06 | Match and String Building             | `match`, `.join()`                       |
+| 07 | Ownership and Borrowing               | move semantics, `&T`                     |
+| 08 | String Slices and Methods             | `&str` views, iterator chaining          |
+| 09 | Structs                               | `struct`, `#[derive(Debug)]`             |
+| 10 | Methods and impl Blocks               | `impl`, `&self`                          |
+| 11 | Enums                                 | variants with data                       |
+| 12 | `Option<T>`                           | `Some`/`None`, `if let`                  |
+| 13 | HashMap Basics                        | `.insert()`, `.get()`                    |
+| 14 | HashMap Entry API                     | `.entry().or_insert()`                   |
+| 15 | String Normalization                  | `.trim_matches()`, `.to_lowercase()`     |
+| 16 | Word Count (HashMap + Strings)        | composing text pipelines                 |
+| 17 | Result Basics                         | `Result<T,E>`, `match` on Result         |
+| 18 | The `?` Operator                      | early-return on `Err`                    |
+| 19 | Error Chaining with `map_err`         | bridging error types                     |
+| 20 | Closures                              | `|x| expr`, capture, `impl Fn`           |
+| 21 | Iterator Combinators I                | `map` / `filter` / `collect`             |
+| 22 | Iterator Combinators II               | `fold` / `sum` / aggregations            |
+| 23 | Traits                                | `trait` + `impl Trait for Type`          |
+| 24 | Generics                              | `<T>`                                    |
+| 25 | Trait Bounds                          | `T: Ord + Copy`, `where`                 |
+| 26 | Lifetimes Intro                       | `'a` on fn signatures                    |
+| 27 | `Box<T>` — Heap Allocation            | `Box::new`, recursive types              |
+| 28 | `Rc<T>` and `Arc<T>`                  | reference counting                       |
+| 29 | Modules and Visibility                | `mod`, `pub`, `use`                      |
+| 30 | Capstone: Gradebook                   | everything combined                      |
+
+See [README.md](README.md) Study Plan for the **Learn / Exercise / Done-when** detail on every lesson.
+
+---
+
+## Phases
+
+**Foundations (c01–c06)** — syntax, control flow, primitives. How to write a compilable Rust program.
+
+**Ownership Era (c07–c08)** — the one Rust idea other languages don't have. Everything downstream builds on this.
+
+**Data Modeling (c09–c16)** — structs, enums, `Option`, `HashMap`, strings. Shape your data.
+
+**Error Handling (c17–c19)** — `Result`, then `?`, then `map_err`. Each lesson answers the question the previous one raised.
+
+**Functional Rust (c20–c22)** — closures are the prerequisite for iterator combinators, which come next.
+
+**Abstractions (c23–c26)** — traits define contracts, generics consume them, bounds constrain them, lifetimes borrow through them.
+
+**Heap & Sharing (c27–c28)** — `Box` for single owners, `Rc`/`Arc` for many.
+
+**Code Organization (c29)** — `mod` and `pub`. Comes late because you don't need it to learn the language.
+
+**Capstone (c30)** — integrate everything into one working project.
+
+---
+
+## Prerequisite Chain
+
+```
+c01 → c02 → c03 → c04 → c05 → c06
+                                │
+                                ▼
+                               c07 (ownership) ──────────┐
+                                │                        │
+                                ▼                        │
+                               c08 (slices)              │
+                                │                        │
+                ┌───────────────┴──────────┐             │
+                ▼                          ▼             │
+               c09 (struct) → c10 (impl)  c11 (enum) → c12 (Option)
+                │                                        │
+                └──────────┬─────────────────────────────┘
+                           ▼
+                          c13 (HashMap) → c14 (entry) → c15 (normalize) → c16 (word count)
+                                                                           │
+                                                                           ▼
+                                                                          c17 (Result)
+                                                                           │
+                                                                           ▼
+                                                                          c18 (?)
+                                                                           │
+                                                                           ▼
+                                                                          c19 (map_err)
+                                                                           │
+                                                                           ▼
+                                                                          c20 (closures)
+                                                                           │
+                                                                ┌──────────┴──────────┐
+                                                                ▼                     ▼
+                                                               c21 (iter I)          c22 (iter II)
+                                                                           │
+                                                                           ▼
+                                                                          c23 (traits) → c24 (generics) → c25 (bounds)
+                                                                                                           │
+                                                                                                           ▼
+                                                                                                          c26 (lifetimes)
+                                                                                                           │
+                                                                                                           ▼
+                                                                                                          c27 (Box) → c28 (Rc/Arc)
+                                                                                                                       │
+                                                                                                                       ▼
+                                                                                                                      c29 (modules)
+                                                                                                                       │
+                                                                                                                       ▼
+                                                                                                                      c30 (capstone)
+```
+
+Read: each arrow means "the concept on the right depends on the one on the left." You can skip sideways (e.g., start c13 before finishing c12) but don't skip forward across an arrow.
+
+---
+
+## Post-30 Track
+
+The 30-lesson curriculum covers the core language. Once you clear c30, these are the highest-value next concepts — roughly in the order a teacher would tackle them:
+
+1. **Custom Error Enums** — `enum AppError { Io(io::Error), Parse(ParseIntError) }` + `impl Display` + `impl std::error::Error`. Real Rust codebases use these instead of `String` errors. This is the single biggest gap in c01–c30.
+2. **Slices `&[T]`** — explicit lesson on slice semantics (DST, bounds, `&vec[..]`). Used implicitly throughout c01–c30.
+3. **Struct lifetimes** — `struct Parser<'a> { source: &'a str }`. Extends c26 to the more common real-world case.
+4. **`RefCell<T>`** and `Rc<RefCell<T>>` — interior mutability, shared mutable state.
+5. **`thiserror` / `anyhow`** — ergonomic error crates once you understand custom error enums.
+6. **Custom iterators** — `impl Iterator for MyType`.
+7. **Async / `tokio`** — concurrent and asynchronous programming.
+8. **Procedural and derive macros** — code generation.
+
+After that: build a small CLI or web service. That forces every concept above into use.
+
+---
+
+## One Rule
+
+**One new concept per lesson.** If a lesson introduces more than one new thing, it's a bug — flag it and we'll split it. (c17 was rewritten for exactly this reason.)
