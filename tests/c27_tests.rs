@@ -2,22 +2,19 @@
 #[allow(dead_code)]
 mod c27_exercise;
 
-use c27_exercise::boxed_number;
+use c27_exercise::swap;
 
 #[test]
-fn boxed_holds_value() {
-    let b = boxed_number(7);
-    assert_eq!(*b, 7);
+fn swap_integers() {
+    assert_eq!(swap(1, 2), (2, 1));
 }
 
 #[test]
-fn boxed_handles_negative() {
-    let b = boxed_number(-42);
-    assert_eq!(*b, -42);
+fn swap_strings() {
+    assert_eq!(swap("a", "b"), ("b", "a"));
 }
 
 #[test]
-fn boxed_zero() {
-    let b = boxed_number(0);
-    assert_eq!(*b, 0);
+fn swap_bools() {
+    assert_eq!(swap(true, false), (false, true));
 }

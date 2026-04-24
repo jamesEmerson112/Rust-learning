@@ -1,11 +1,10 @@
-pub fn boxed_number(n: i32) -> Box<i32> {
-    // TODO: Return `n` inside a Box (heap-allocated).
-    // Hint: Box::new(...)
-    let _ = n;
-    Box::new(0)
+pub fn swap<T>(a: T, b: T) -> (T, T) {
+    // TODO: Return (b, a) — a generic swap that works for any T.
+    let _ = (&a, &b);
+    (a, b)
 }
 
 fn main() {
-    let b = boxed_number(42);
-    println!("boxed = {b}");
+    println!("{:?}", swap(1, 2));
+    println!("{:?}", swap("hi", "bye"));
 }

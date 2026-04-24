@@ -1,17 +1,9 @@
-fn largest<T: Ord + Copy>(items: &[T]) -> Option<T> {
-    let mut iter = items.iter().copied();
-    let mut largest = iter.next()?;
-    for item in iter {
-        if item > largest {
-            largest = item;
-        }
-    }
-    Some(largest)
+fn debug_string(items: &[i32]) -> String {
+    format!("{:?}", items)
 }
 
 fn main() {
-    let numbers = vec![3, 9, 2, 14, 5];
-    let letters = vec!['a', 'z', 'm'];
-    println!("Largest number: {:?}", largest(&numbers));
-    println!("Largest letter: {:?}", largest(&letters));
+    let nums = [1, 2, 3];
+    println!("{:?}", nums);
+    println!("{}", debug_string(&nums));
 }

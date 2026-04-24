@@ -80,7 +80,10 @@ struct LessonMeta {
     stat_group: &'static str,
 }
 
-const LESSONS: [LessonMeta; 30] = [
+const NUM_LESSONS: u32 = LESSONS.len() as u32;
+const MAX_XP: u32 = NUM_LESSONS * 100;
+
+const LESSONS: [LessonMeta; 33] = [
     LessonMeta { number: 1,  title: "Hello Variables",                      stat_group: "Core Firmware" },
     LessonMeta { number: 2,  title: "Strings and Formatting",              stat_group: "Core Firmware" },
     LessonMeta { number: 3,  title: "Arrays and Iteration",                stat_group: "Data Cortex" },
@@ -101,19 +104,22 @@ const LESSONS: [LessonMeta; 30] = [
     LessonMeta { number: 18, title: "The ? Operator",                      stat_group: "Fault Tolerance" },
     LessonMeta { number: 19, title: "Error Chaining with map_err",         stat_group: "Error Channel" },
     LessonMeta { number: 20, title: "Closures",                            stat_group: "Error Channel" },
-    LessonMeta { number: 21, title: "Iterator Combinators I (map/filter)", stat_group: "Iterator Matrix" },
-    LessonMeta { number: 22, title: "Iterator Combinators II (fold/sum)",  stat_group: "Iterator Matrix" },
-    LessonMeta { number: 23, title: "Traits",                              stat_group: "Protocol Layer" },
-    LessonMeta { number: 24, title: "Generics",                            stat_group: "Protocol Layer" },
-    LessonMeta { number: 25, title: "Trait Bounds",                        stat_group: "Bound Compiler" },
-    LessonMeta { number: 26, title: "Lifetimes Intro",                     stat_group: "Bound Compiler" },
-    LessonMeta { number: 27, title: "Box<T> — Heap Allocation",            stat_group: "Pointer Grid" },
-    LessonMeta { number: 28, title: "Rc<T> and Arc<T>",                    stat_group: "Pointer Grid" },
-    LessonMeta { number: 29, title: "Modules and Visibility",              stat_group: "System Kernel" },
-    LessonMeta { number: 30, title: "Capstone: Gradebook",                 stat_group: "System Kernel" },
+    LessonMeta { number: 21, title: "Map + Collect",                       stat_group: "Iterator Matrix" },
+    LessonMeta { number: 22, title: "Filter",                              stat_group: "Iterator Matrix" },
+    LessonMeta { number: 23, title: "Sum",                                 stat_group: "Iterator Matrix" },
+    LessonMeta { number: 24, title: "Fold",                                stat_group: "Iterator Matrix" },
+    LessonMeta { number: 25, title: "Debug Format",                        stat_group: "Debug Console" },
+    LessonMeta { number: 26, title: "Traits",                              stat_group: "Protocol Layer" },
+    LessonMeta { number: 27, title: "Generics",                            stat_group: "Protocol Layer" },
+    LessonMeta { number: 28, title: "Trait Bounds",                        stat_group: "Bound Compiler" },
+    LessonMeta { number: 29, title: "Lifetimes Intro",                     stat_group: "Bound Compiler" },
+    LessonMeta { number: 30, title: "Box<T> — Heap Allocation",            stat_group: "Pointer Grid" },
+    LessonMeta { number: 31, title: "Rc<T> — Shared Ownership",            stat_group: "Pointer Grid" },
+    LessonMeta { number: 32, title: "Modules and Visibility",              stat_group: "System Kernel" },
+    LessonMeta { number: 33, title: "Capstone: Gradebook",                 stat_group: "System Kernel" },
 ];
 
-const STAT_GROUPS: [&str; 15] = [
+const STAT_GROUPS: [&str; 16] = [
     "Core Firmware",
     "Data Cortex",
     "Logic Matrix",
@@ -125,6 +131,7 @@ const STAT_GROUPS: [&str; 15] = [
     "Fault Tolerance",
     "Error Channel",
     "Iterator Matrix",
+    "Debug Console",
     "Protocol Layer",
     "Bound Compiler",
     "Pointer Grid",
@@ -139,7 +146,7 @@ struct Ability {
     lesson: u32,
 }
 
-const ABILITIES: [Ability; 30] = [
+const ABILITIES: [Ability; 33] = [
     // Script Kiddie (L1–4)
     Ability { name: "Stack Injection",         description: "Bind data to the stack with `let` and `mut`.",                       lesson: 1  },
     Ability { name: "String Splice",           description: "Manipulate heap strings and format output into the datastream.",     lesson: 2  },
@@ -166,18 +173,22 @@ const ABILITIES: [Ability; 30] = [
     Ability { name: "Exception Gadget",        description: "Convert error types with `map_err` and bridge disparate failures.",  lesson: 19 },
     Ability { name: "Lambda Grenade",          description: "Deploy closures as first-class functions that capture scope.",       lesson: 20 },
     // Neon Assassin (L21–24)
-    Ability { name: "Stream Transmuter",       description: "Chain `.map()`, `.filter()`, and `.collect()` over any iterator.",   lesson: 21 },
-    Ability { name: "Aggregate Cipher",        description: "Reduce streams into single values with `fold`, `sum`, `reduce`.",    lesson: 22 },
-    Ability { name: "Trait Interface",         description: "Define shared behavior contracts across disparate types.",           lesson: 23 },
-    Ability { name: "Generic Protocol",        description: "Write type-agnostic code with parametric polymorphism.",             lesson: 24 },
+    Ability { name: "Map Transmuter",          description: "Transform every element with `.map()` and `.collect()` into a Vec.", lesson: 21 },
+    Ability { name: "Filter Prism",            description: "Select elements with `.filter()` — mastering the double-reference.", lesson: 22 },
+    Ability { name: "Sum Aggregator",          description: "Collapse an iterator into one value with `.sum()`.",                 lesson: 23 },
+    Ability { name: "Fold Reducer",            description: "Custom-reduce any sequence with `.fold(init, |acc, x| ...)`.",       lesson: 24 },
     // Silicon Shaman (L25–29)
-    Ability { name: "Bounded Channel",         description: "Constrain generics with trait bounds to unlock comparison/copy.",    lesson: 25 },
-    Ability { name: "Lifetime Weaver",         description: "Annotate `'a` so references never outlive the data they point to.", lesson: 26 },
-    Ability { name: "Heap Injector",           description: "Box values onto the heap and break recursive type cycles.",          lesson: 27 },
-    Ability { name: "Ownership Broadcast",     description: "Share one allocation via `Rc`/`Arc` with atomic refcounting.",       lesson: 28 },
-    Ability { name: "Module Firewall",         description: "Partition code into modules with controlled visibility.",            lesson: 29 },
-    // Zero-Day Sovereign (L30)
-    Ability { name: "Full System Access",      description: "All subsystems integrated. The compiler bends to your will.",        lesson: 30 },
+    Ability { name: "Debug Lens",              description: "Inspect any `#[derive(Debug)]` type with `{:?}` formatting.",        lesson: 25 },
+    Ability { name: "Trait Interface",         description: "Define shared behavior contracts across disparate types.",           lesson: 26 },
+    Ability { name: "Generic Protocol",        description: "Write type-agnostic code with parametric polymorphism.",             lesson: 27 },
+    Ability { name: "Bounded Channel",         description: "Constrain generics with trait bounds to unlock comparison.",         lesson: 28 },
+    Ability { name: "Lifetime Weaver",         description: "Annotate `'a` so references never outlive the data they point to.", lesson: 29 },
+    // Neon Sovereign (L30–32)
+    Ability { name: "Heap Injector",           description: "Box values onto the heap and break recursive type cycles.",          lesson: 30 },
+    Ability { name: "Ownership Broadcast",     description: "Share one allocation via `Rc` with reference counting.",             lesson: 31 },
+    Ability { name: "Module Firewall",         description: "Partition code into modules with controlled visibility.",            lesson: 32 },
+    // Zero-Day Sovereign (L33)
+    Ability { name: "Full System Access",      description: "All subsystems integrated. The compiler bends to your will.",        lesson: 33 },
 ];
 
 // ─── Ranks ─────────────────────────────────────────────────────────────────
@@ -188,7 +199,7 @@ struct Rank {
     quote: &'static str,
 }
 
-const RANKS: [Rank; 9] = [
+const RANKS: [Rank; 10] = [
     Rank { min_level: 0,  name: "Disconnected",        quote: "No signal detected. Jack in to begin." },
     Rank { min_level: 1,  name: "Script Kiddie",        quote: "You've breached the first firewall. The grid recognizes you." },
     Rank { min_level: 5,  name: "Netrunner",            quote: "The heap sprawls before you — an endless neon datascape." },
@@ -197,7 +208,8 @@ const RANKS: [Rank; 9] = [
     Rank { min_level: 17, name: "Ghost in the Wire",    quote: "You exist in the protocol layer — type-agnostic, untraceable." },
     Rank { min_level: 21, name: "Neon Assassin",        quote: "Streams bend to your will — one combinator at a time." },
     Rank { min_level: 25, name: "Silicon Shaman",       quote: "Lifetimes, pointers, and shared memory answer to your incantations." },
-    Rank { min_level: 30, name: "Zero-Day Sovereign",   quote: "You own the system. Every compiler warning bows to your will. 🦀" },
+    Rank { min_level: 30, name: "Neon Sovereign",        quote: "Heap and stack are yours. Pointers and modules obey." },
+    Rank { min_level: 33, name: "Zero-Day Sovereign",   quote: "You own the system. Every compiler warning bows to your will. 🦀" },
 ];
 
 const CLASSES: [&str; 4] = [
@@ -279,7 +291,7 @@ fn create_character() -> SaveFile {
     println!("{}",   color::bold_cyan("║       Welcome to the Rust Underground        ║"));
     println!("{}",   color::bold_cyan("╚══════════════════════════════════════════════╝"));
     println!();
-    println!("  Before you lies a grid of {} data nodes.", color::bold("30"));
+    println!("  Before you lies a grid of {} data nodes.", color::bold(&NUM_LESSONS.to_string()));
     println!("  Master them all to earn the rank of {}.", color::bold_yellow("Zero-Day Sovereign"));
     println!();
 
@@ -377,7 +389,7 @@ fn scan_lessons(save: &mut SaveFile, rescan: bool) -> ScanResult {
                     .is_some_and(|s| s.passed)
             })
             .map(|l| l.number)
-            .unwrap_or(30);
+            .unwrap_or(NUM_LESSONS);
         first_incomplete.saturating_sub(1).max(1)
     };
 
@@ -588,16 +600,19 @@ fn display_character_sheet(save: &SaveFile) {
         color::bold_yellow(rank.name)
     );
     println!(
-        "  {}  Level: {}/30   XP: {}/3000",
+        "  {}  Level: {}/{}   XP: {}/{}",
         color::bold_cyan("║"),
         color::bold(&level.to_string()),
-        xp
+        NUM_LESSONS,
+        xp,
+        MAX_XP
     );
     println!(
-        "  {}  [{}] {}/3000",
+        "  {}  [{}] {}/{}",
         color::bold_cyan("║"),
-        xp_bar(xp, 3000, 30),
-        xp
+        xp_bar(xp, MAX_XP, 30),
+        xp,
+        MAX_XP
     );
     println!(
         "  {}",
@@ -609,17 +624,20 @@ fn display_character_sheet(save: &SaveFile) {
     println!("  {}", color::bold("STATS"));
     for group in &STAT_GROUPS {
         let score = stat_score(save, group);
-        let bar = match score {
-            0 => color::dim("○ ○"),
-            1 => format!("{} {}", color::yellow("●"), color::dim("○")),
-            _ => format!("{} {}", color::green("●"), color::green("●")),
+        let max = LESSONS.iter().filter(|l| l.stat_group == *group).count() as u32;
+        let bar = {
+            let filled: Vec<String> = (0..score).map(|_| {
+                if score == max { color::green("●") } else { color::yellow("●") }
+            }).collect();
+            let empty: Vec<String> = (0..max - score).map(|_| color::dim("○")).collect();
+            [filled, empty].concat().join(" ")
         };
         let label = match score {
-            n if n >= 2 => color::green(group),
-            1           => color::yellow(group),
-            _           => color::dim(group),
+            n if n == max => color::green(group),
+            0             => color::dim(group),
+            _             => color::yellow(group),
         };
-        println!("    {bar}  {label}  ({score}/2)");
+        println!("    {bar}  {label}  ({score}/{max})");
     }
 
     // Abilities
@@ -673,13 +691,13 @@ fn display_character_sheet(save: &SaveFile) {
 
     // Next step hint
     println!();
-    if level == 30 {
+    if level == NUM_LESSONS {
         println!("  {}", color::bold_cyan("╔══════════════════════════════════════════════════════════╗"));
         println!("  {}",   color::bold_cyan("║        🦀  SYSTEM FULLY COMPROMISED  🦀                ║"));
         println!("  {}", color::bold_cyan("╚══════════════════════════════════════════════════════════╝"));
         println!();
         println!("  {}",   color::bold_green("  You are the Zero-Day Sovereign. The Rust Underground salutes you."));
-        println!("  {}",   color::dim("  Check the README for suggested next topics beyond chapter 30."));
+        println!("  {}",   color::dim(&format!("  Check the README for suggested next topics beyond chapter {}.", NUM_LESSONS)));
     } else {
         let next = LESSONS.iter().find(|l| {
             !save
@@ -720,7 +738,7 @@ fn print_help() {
     println!();
     println!("  {}", color::bold("USAGE:"));
     println!("    cargo run --bin progress              Normal run (incremental scan + display)");
-    println!("    cargo run --bin progress -- --rescan  Re-test all 30 data nodes from scratch");
+    println!("    cargo run --bin progress -- --rescan  Re-test all {} data nodes from scratch", NUM_LESSONS);
     println!("    cargo run --bin progress -- --reset   Delete save file and start fresh");
     println!("    cargo run --bin progress -- --help    Show this help message");
     println!();

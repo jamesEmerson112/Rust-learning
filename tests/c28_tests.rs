@@ -2,14 +2,19 @@
 #[allow(dead_code)]
 mod c28_exercise;
 
-use c28_exercise::share_count;
+use c28_exercise::larger;
 
 #[test]
-fn three_owners() {
-    assert_eq!(share_count(1), 3);
+fn larger_ints() {
+    assert_eq!(larger(3, 7), 7);
 }
 
 #[test]
-fn count_independent_of_value() {
-    assert_eq!(share_count(999), 3);
+fn larger_strs() {
+    assert_eq!(larger("apple", "banana"), "banana");
+}
+
+#[test]
+fn larger_equal() {
+    assert_eq!(larger(5, 5), 5);
 }

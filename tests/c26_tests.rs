@@ -2,19 +2,22 @@
 #[allow(dead_code)]
 mod c26_exercise;
 
-use c26_exercise::longer;
+use c26_exercise::{Describable, Item};
 
 #[test]
-fn picks_longer() {
-    assert_eq!(longer("short", "a longer string"), "a longer string");
+fn describe_item_basic() {
+    let item = Item {
+        name: "Widget".to_string(),
+        price: 9.99,
+    };
+    assert_eq!(item.describe(), "Widget: $9.99");
 }
 
 #[test]
-fn picks_first_on_tie() {
-    assert_eq!(longer("same", "size"), "same");
-}
-
-#[test]
-fn works_with_empty() {
-    assert_eq!(longer("", "hello"), "hello");
+fn describe_item_whole_number() {
+    let item = Item {
+        name: "Bolt".to_string(),
+        price: 3.0,
+    };
+    assert_eq!(item.describe(), "Bolt: $3.00");
 }

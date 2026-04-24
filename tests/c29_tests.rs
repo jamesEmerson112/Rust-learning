@@ -2,29 +2,19 @@
 #[allow(dead_code)]
 mod c29_exercise;
 
-use c29_exercise::Counter;
+use c29_exercise::longer;
 
 #[test]
-fn new_counter_is_zero() {
-    let c = Counter::new();
-    assert_eq!(c.value(), 0);
+fn picks_longer() {
+    assert_eq!(longer("short", "a longer string"), "a longer string");
 }
 
 #[test]
-fn increment_works() {
-    let mut c = Counter::new();
-    c.increment();
-    c.increment();
-    assert_eq!(c.value(), 2);
+fn picks_first_on_tie() {
+    assert_eq!(longer("same", "size"), "same");
 }
 
 #[test]
-fn independent_instances() {
-    let mut a = Counter::new();
-    let mut b = Counter::new();
-    a.increment();
-    a.increment();
-    b.increment();
-    assert_eq!(a.value(), 2);
-    assert_eq!(b.value(), 1);
+fn works_with_empty() {
+    assert_eq!(longer("", "hello"), "hello");
 }

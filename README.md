@@ -1,6 +1,6 @@
 # Rust Learning
 
-See [ROADMAP.md](ROADMAP.md) for a scannable overview of all 30 lessons.
+See [ROADMAP.md](ROADMAP.md) for a scannable overview of all 33 lessons.
 
 This repo contains small Rust lessons, each with:
 - an `example` binary (complete reference)
@@ -8,9 +8,9 @@ This repo contains small Rust lessons, each with:
 - an integration test file for validation
 
 ## File layout
-- `src/bin/c01_example.rs` ... `src/bin/c30_example.rs`
-- `src/bin/c01_exercise.rs` ... `src/bin/c30_exercise.rs`
-- `tests/c01_tests.rs` ... `tests/c30_tests.rs`
+- `src/bin/c01_example.rs` ... `src/bin/c33_example.rs`
+- `src/bin/c01_exercise.rs` ... `src/bin/c33_exercise.rs`
+- `tests/c01_tests.rs` ... `tests/c33_tests.rs`
 
 ## Lesson flow (~15 minutes each)
 1. Read and run the example.
@@ -185,78 +185,100 @@ Work through one lesson at a time. Read the example, then complete the exercise.
 
 ---
 
-### Lesson 21 — Iterator Combinators I (`map`/`filter`/`collect`)
-**Learn:** Chainable lazy transformations over iterators
-**Exercise:** Return the squares of the even numbers in a slice as a `Vec`.
-**You're done when:** You can build a `Vec` by chaining combinators without a manual loop.
+### Lesson 21 — Map + Collect
+**Learn:** `.map().collect()` — transforming an iterator into a new `Vec`
+**Exercise:** Double every number in a slice and collect into a Vec.
+**You're done when:** You can turn an iterator chain into a concrete collection with `.collect()`.
 
 ---
 
-### Lesson 22 — Iterator Combinators II (`fold`/`sum`/aggregations)
-**Learn:** Reducing iterators into a single value — `fold`, `sum`, `product`, `max`, `min`
-**Exercise:** Sum the squares of every integer in a slice using combinators.
-**You're done when:** You can replace manual accumulation loops with `fold` or specialised aggregators.
+### Lesson 22 — Filter
+**Learn:** `.filter()` — selecting elements from an iterator; the `&&n` double-reference pattern
+**Exercise:** Return the squares of the even numbers in a slice.
+**You're done when:** You understand why `.filter()` gives `&&i32` and can destructure it.
 
 ---
 
-### Lesson 23 — Traits
-**Learn:** `trait` definition, `impl Trait for Type`, `impl Trait` arguments
+### Lesson 23 — Sum
+**Learn:** `.sum()` — the simplest aggregator, collapsing an iterator into one value
+**Exercise:** Sum all integers in a slice.
+**You're done when:** You can aggregate an iterator without a manual loop.
+
+---
+
+### Lesson 24 — Fold
+**Learn:** `.fold(init, |acc, &n| ...)` — general-purpose reduction
+**Exercise:** Compute the product of all integers in a slice.
+**You're done when:** You can express any accumulation pattern with `.fold()`.
+
+---
+
+### Lesson 25 — Debug Format
+**Learn:** `{:?}` vs `{}`, `format!("{:?}", ...)`, how `#[derive(Debug)]` connects to traits
+**Exercise:** Return the debug representation of a slice as a String.
+**You're done when:** You know when to use `{:?}` and why `Vec` can't use `{}`.
+
+---
+
+### Lesson 26 — Traits
+**Learn:** `trait` definition, `impl Trait for Type`, `&impl Trait` arguments
 **Exercise:** Define a `Describable` trait and implement it for an `Item` struct.
 **You're done when:** You can define a trait and write a function that accepts any type implementing it.
 
 ---
 
-### Lesson 24 — Generics
+### Lesson 27 — Generics
 **Learn:** Type parameters `<T>` on functions, impl blocks, and structs
 **Exercise:** Write a generic `swap<T>(a, b)` that returns `(b, a)` for any type.
 **You're done when:** You understand what you can and can't do with an unconstrained `T`.
 
 ---
 
-### Lesson 25 — Trait Bounds
-**Learn:** `T: Ord + Copy`, `where` clauses, unlocking methods via bounds
-**Exercise:** Write a generic `largest<T>` that works on any comparable, copyable type.
-**You're done when:** You can explain what each bound enables and pick the minimum bounds needed.
+### Lesson 28 — Trait Bounds
+**Learn:** `T: Ord` — constraining generics so you can compare, copy, or use specific methods
+**Exercise:** Write `larger<T: Ord>(a, b) -> T` that returns the bigger of two values.
+**You're done when:** You can pick the minimum bounds needed for a generic function.
 
 ---
 
-### Lesson 26 — Lifetimes Intro
+### Lesson 29 — Lifetimes Intro
 **Learn:** `'a` annotations, why the borrow checker needs them, elision rules
 **Exercise:** Write `longer<'a>(a: &'a str, b: &'a str) -> &'a str` that returns the longer slice.
 **You're done when:** You can annotate a function that returns a borrowed reference.
 
 ---
 
-### Lesson 27 — `Box<T>` — Heap Allocation
+### Lesson 30 — `Box<T>` — Heap Allocation
 **Learn:** `Box::new()`, heap allocation, recursive types (cons-lists), auto-deref
 **Exercise:** Wrap an integer in a `Box`.
 **You're done when:** You can explain when boxing is necessary (recursive types, trait objects).
 
 ---
 
-### Lesson 28 — `Rc<T>` and `Arc<T>` — Shared Ownership
-**Learn:** Reference-counted shared ownership, `Rc::clone()`, `Rc::strong_count()`, `Arc` for threads
+### Lesson 31 — `Rc<T>` — Shared Ownership
+**Learn:** Reference-counted shared ownership, `Rc::clone()`, `Rc::strong_count()`
 **Exercise:** Create an `Rc`, clone it twice, and return the current strong count.
 **You're done when:** You can share data between multiple owners without the compiler complaining.
 
 ---
 
-### Lesson 29 — Modules and Visibility
+### Lesson 32 — Modules and Visibility
 **Learn:** `mod`, `pub`, `use`, file-based modules via `#[path]`
 **Exercise:** Complete a `Counter` struct in a separate module with private fields.
 **You're done when:** You can organise code across files and control visibility with `pub`.
 
 ---
 
-### Lesson 30 — Capstone: Gradebook
+### Lesson 33 — Capstone: Gradebook
 **Learn:** Everything combined — modules + HashMap + Vec + Option + methods
 **Exercise:** Complete a `Gradebook` struct in a separate module — add scores and compute averages.
-**You're done when:** You can run `cargo test` and all 30 lesson tests pass.
+**You're done when:** You can run `cargo test` and all 33 lesson tests pass.
 
 ---
 
-### Beyond Chapter 30
+### Beyond Chapter 33
 The lessons above cover the core language in depth. Once you finish them, good next topics are:
+- Custom error enums + `thiserror` / `anyhow`
 - Async / `tokio` — concurrent and asynchronous programming
 - `RefCell<T>` and interior mutability
 - Custom iterators (`impl Iterator`)

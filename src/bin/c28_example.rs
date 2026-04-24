@@ -1,12 +1,8 @@
-use std::rc::Rc;
+fn larger<T: Ord>(a: T, b: T) -> T {
+    if a >= b { a } else { b }
+}
 
 fn main() {
-    let shared = Rc::new(String::from("hello"));
-    let a = Rc::clone(&shared);
-    let b = Rc::clone(&shared);
-
-    println!("shared = {shared}");
-    println!("a      = {a}");
-    println!("b      = {b}");
-    println!("strong count = {}", Rc::strong_count(&shared));
+    println!("{}", larger(3, 7));
+    println!("{}", larger("apple", "banana"));
 }

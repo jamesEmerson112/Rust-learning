@@ -1,11 +1,7 @@
-fn swap<T>(a: T, b: T) -> (T, T) {
-    (b, a)
+fn product(nums: &[i32]) -> i32 {
+    nums.iter().fold(1, |acc, &n| acc * n)
 }
 
 fn main() {
-    let (a, b) = swap(1, 2);
-    println!("swap(1, 2) = ({a}, {b})");
-
-    let (x, y) = swap("hello", "world");
-    println!("swap strs = ({x}, {y})");
+    println!("product = {}", product(&[1, 2, 3, 4]));
 }

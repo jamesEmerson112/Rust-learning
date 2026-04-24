@@ -2,20 +2,19 @@
 #[allow(dead_code)]
 mod c22_exercise;
 
-use c22_exercise::sum_of_squares;
+use c22_exercise::squared_evens;
 
 #[test]
-fn basic() {
-    // 1 + 4 + 9 + 16 = 30
-    assert_eq!(sum_of_squares(&[1, 2, 3, 4]), 30);
+fn squares_evens_only() {
+    assert_eq!(squared_evens(&[1, 2, 3, 4]), vec![4, 16]);
 }
 
 #[test]
-fn handles_zeros_and_negatives() {
-    assert_eq!(sum_of_squares(&[-3, 0, 4]), 9 + 0 + 16);
+fn empty_input_yields_empty() {
+    assert_eq!(squared_evens(&[]), Vec::<i32>::new());
 }
 
 #[test]
-fn empty_is_zero() {
-    assert_eq!(sum_of_squares(&[]), 0);
+fn no_evens_yields_empty() {
+    assert_eq!(squared_evens(&[1, 3, 5, 7]), Vec::<i32>::new());
 }

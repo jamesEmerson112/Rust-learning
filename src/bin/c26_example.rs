@@ -1,9 +1,26 @@
-fn longer<'a>(a: &'a str, b: &'a str) -> &'a str {
-    if a.len() >= b.len() { a } else { b }
+trait Describable {
+    fn describe(&self) -> String;
+}
+
+struct Item {
+    name: String,
+    price: f64,
+}
+
+impl Describable for Item {
+    fn describe(&self) -> String {
+        format!("{}: ${:.2}", self.name, self.price)
+    }
+}
+
+fn print_description(item: &impl Describable) {
+    println!("{}", item.describe());
 }
 
 fn main() {
-    let s1 = String::from("short");
-    let s2 = String::from("a much longer sentence");
-    println!("longer = {:?}", longer(&s1, &s2));
+    let item = Item {
+        name: "Widget".to_string(),
+        price: 9.99,
+    };
+    print_description(&item);
 }

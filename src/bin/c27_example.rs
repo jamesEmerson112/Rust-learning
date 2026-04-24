@@ -1,9 +1,11 @@
-fn boxed_number(n: i32) -> Box<i32> {
-    Box::new(n)
+fn swap<T>(a: T, b: T) -> (T, T) {
+    (b, a)
 }
 
 fn main() {
-    let b = boxed_number(42);
-    println!("boxed = {b}");
-    println!("deref = {}", *b);
+    let (a, b) = swap(1, 2);
+    println!("swap(1, 2) = ({a}, {b})");
+
+    let (x, y) = swap("hello", "world");
+    println!("swap strs = ({x}, {y})");
 }

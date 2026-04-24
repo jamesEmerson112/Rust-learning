@@ -1,11 +1,9 @@
-pub fn largest<T: Ord + Copy>(items: &[T]) -> Option<T> {
-    // TODO: Return the largest item, or None when the slice is empty.
-    // The bounds `T: Ord + Copy` mean you can use `>` and copy values out.
-    let _ = items;
-    None
+pub fn debug_string(items: &[i32]) -> String {
+    // TODO: Return the Debug format of `items` as a String.
+    // Hint: format!("{:?}", ...)
+    format!("{:?}", items)
 }
 
 fn main() {
-    let values = [4, 1, 8, 3];
-    println!("Largest: {:?}", largest(&values));
+    println!("{}", debug_string(&[1, 2, 3]));
 }

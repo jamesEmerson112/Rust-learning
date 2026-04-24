@@ -9,12 +9,12 @@ cargo build                      # Build everything
 cargo run --bin c05_example      # Run a lesson example
 cargo run --bin c05_exercise     # Run a lesson exercise
 cargo test --test c05_tests      # Test a specific lesson
-cargo test --tests               # Run all 30 lesson tests
+cargo test --tests               # Run all 33 lesson tests
 ```
 
 ## Architecture
 
-A 30-lesson Rust curriculum. Each lesson is self-contained with three files:
+A 33-lesson Rust curriculum. Each lesson is self-contained with three files:
 
 - `src/bin/cXX_example.rs` — Complete reference implementation (read-only)
 - `src/bin/cXX_exercise.rs` — Starter stubs with `TODO` comments (learner edits these)
@@ -22,7 +22,7 @@ A 30-lesson Rust curriculum. Each lesson is self-contained with three files:
 
 Tests import exercises as modules via `#[path = "../src/bin/cXX_exercise.rs"]` and test their `pub` functions. There is no `lib.rs`; lessons have no cross-dependencies.
 
-**Lessons 29–30** introduce file-based modules in `src/lesson29/` and `src/lesson30/` (e.g., `exercise_counter.rs`, `exercise_gradebook.rs`). Their bin files and tests use `#[path]` attributes to import these modules.
+**Lessons 32–33** introduce file-based modules in `src/lesson32/` and `src/lesson33/` (e.g., `exercise_counter.rs`, `exercise_gradebook.rs`). Their bin files and tests use `#[path]` attributes to import these modules.
 
 ## Progress Tracker
 
@@ -85,3 +85,11 @@ Tests import exercises as modules via `#[path = "../src/bin/cXX_exercise.rs"]` a
 - [research] Teacher's "how useful are you now?" assessment after c20: reachable ~70-75% of LeetCode Easy; can write small CLI tools with proper error handling; cannot yet write idiomatic iterator chains (c21+), generic helpers (c23+), or borrowing structs (c26). c20 framed as the "quiet turning point" — closures + upcoming iterators (c21-22) shift the code from procedural to idiomatic Rust.
 - [todo] Next: c21 Iterator Combinators I (map/filter/collect). Expected to be the "this language is elegant" moment.
 - [ref] Unrelated cleanup flagged but not done: `src/bin/c17_exercise.rs:1` has `use std::fmt::format;` leftover (unused import warning).
+
+### 2026-04-22
+- [refactor] Expanded curriculum from 30 to 33 lessons to enforce one-concept-per-lesson rule. c21 (map+filter+collect) was overloaded with 3 new concepts; c22 (fold+sum+turbofish) also overloaded; c25 (trait bounds) used `.copied()` and `?` on Option which hadn't been taught.
+- [refactor] Split old c21 → new c21 (Map+Collect) + c22 (Filter). Split old c22 → new c23 (Sum) + c24 (Fold). Added brand new c25 (Debug Format — `{:?}`). Simplified old c25 (trait bounds) → new c28 with `larger<T: Ord>` instead of complex iterator-based `largest`.
+- [refactor] Renamed old c23→c26, c24→c27, c25→c28, c26→c29, c27→c30, c28→c31, c29→c32, c30→c33. Directories: lesson29/→lesson32/, lesson30/→lesson33/.
+- [feat] progress.rs now dynamic: `NUM_LESSONS` and `MAX_XP` derived from `LESSONS.len()`. Stat bars scale to group size. Added "Debug Console" stat group, "Neon Sovereign" rank at L30, final rank at L33. 10 ranks, 16 stat groups, 33 abilities.
+- [decision] No upper bound on lesson count. One concept per lesson is the hard rule; if a lesson smuggles extras, split it. Saved as durable feedback memory.
+- [decision] c25 (Debug Format) placed as bridge between iterators and traits — motivates "what IS a trait?" before c26 formally teaches it.

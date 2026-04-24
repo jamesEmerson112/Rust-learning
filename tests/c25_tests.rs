@@ -2,20 +2,19 @@
 #[allow(dead_code)]
 mod c25_exercise;
 
-use c25_exercise::largest;
+use c25_exercise::debug_string;
 
 #[test]
-fn largest_on_integers() {
-    assert_eq!(largest(&[3, 9, 2, 14, 5]), Some(14));
+fn debug_basic() {
+    assert_eq!(debug_string(&[1, 2, 3]), "[1, 2, 3]");
 }
 
 #[test]
-fn largest_on_chars() {
-    assert_eq!(largest(&['a', 'z', 'm']), Some('z'));
+fn debug_empty() {
+    assert_eq!(debug_string(&[]), "[]");
 }
 
 #[test]
-fn largest_on_empty_slice() {
-    let empty: [i32; 0] = [];
-    assert_eq!(largest(&empty), None);
+fn debug_single() {
+    assert_eq!(debug_string(&[42]), "[42]");
 }

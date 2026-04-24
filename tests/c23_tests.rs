@@ -2,22 +2,19 @@
 #[allow(dead_code)]
 mod c23_exercise;
 
-use c23_exercise::{Describable, Item};
+use c23_exercise::total;
 
 #[test]
-fn describe_item_basic() {
-    let item = Item {
-        name: "Widget".to_string(),
-        price: 9.99,
-    };
-    assert_eq!(item.describe(), "Widget: $9.99");
+fn total_basic() {
+    assert_eq!(total(&[1, 2, 3, 4]), 10);
 }
 
 #[test]
-fn describe_item_whole_number() {
-    let item = Item {
-        name: "Bolt".to_string(),
-        price: 3.0,
-    };
-    assert_eq!(item.describe(), "Bolt: $3.00");
+fn total_empty() {
+    assert_eq!(total(&[]), 0);
+}
+
+#[test]
+fn total_negatives() {
+    assert_eq!(total(&[-1, 2, -3]), -2);
 }

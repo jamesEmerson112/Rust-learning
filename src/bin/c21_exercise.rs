@@ -1,10 +1,9 @@
-pub fn squared_evens(nums: &[i32]) -> Vec<i32> {
-    // TODO: Return a Vec containing the squares of the even numbers in `nums`.
-    // Use .iter().filter(...).map(...).collect().
-    let _ = nums;
-    Vec::new()
+pub fn doubled(nums: &[i32]) -> Vec<i32> {
+    // TODO: Return a Vec where every element of `nums` is doubled.
+    // Hint: nums.iter().map(|&n| ...).collect()
+    nums.iter().map(|&n| n*2).collect()
 }
 
 fn main() {
-    println!("{:?}", squared_evens(&[1, 2, 3, 4, 5, 6]));
+    println!("{:?}", doubled(&[1, 2, 3, 4]));
 }

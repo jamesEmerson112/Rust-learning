@@ -1,12 +1,11 @@
-#[path = "../lesson30/exercise_gradebook.rs"]
-mod gradebook;
-
-pub use gradebook::Gradebook;
+pub fn boxed_number(n: i32) -> Box<i32> {
+    // TODO: Return `n` inside a Box (heap-allocated).
+    // Hint: Box::new(...)
+    let _ = n;
+    Box::new(0)
+}
 
 fn main() {
-    let mut gradebook = Gradebook::new();
-    gradebook.add_score("Sam", 80);
-    gradebook.add_score("Sam", 100);
-
-    println!("Sam average: {:?}", gradebook.average("Sam"));
+    let b = boxed_number(42);
+    println!("boxed = {b}");
 }

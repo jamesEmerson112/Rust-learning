@@ -2,19 +2,19 @@
 #[allow(dead_code)]
 mod c24_exercise;
 
-use c24_exercise::swap;
+use c24_exercise::product;
 
 #[test]
-fn swap_integers() {
-    assert_eq!(swap(1, 2), (2, 1));
+fn product_basic() {
+    assert_eq!(product(&[1, 2, 3, 4]), 24);
 }
 
 #[test]
-fn swap_strings() {
-    assert_eq!(swap("a", "b"), ("b", "a"));
+fn product_empty() {
+    assert_eq!(product(&[]), 1);
 }
 
 #[test]
-fn swap_bools() {
-    assert_eq!(swap(true, false), (false, true));
+fn product_with_zero() {
+    assert_eq!(product(&[5, 0, 3]), 0);
 }

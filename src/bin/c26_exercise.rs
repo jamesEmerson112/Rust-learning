@@ -1,14 +1,25 @@
-pub fn longer<'a>(a: &'a str, b: &'a str) -> &'a str {
-    // TODO: Return whichever of `a` or `b` has the longer length.
-    // If they're equal, return `a`.
-    // The lifetime 'a means: the output reference lives at least as long
-    // as the shorter-lived of the two inputs.
-    let _ = (a, b);
-    ""
+pub trait Describable {
+    fn describe(&self) -> String;
+}
+
+pub struct Item {
+    pub name: String,
+    pub price: f64,
+}
+
+impl Describable for Item {
+    fn describe(&self) -> String {
+        // TODO: Return "<name>: $<price>" with price to 2 decimal places.
+        let _ = &self.name;
+        let _ = self.price;
+        String::new()
+    }
 }
 
 fn main() {
-    let s1 = "hello";
-    let s2 = "hi";
-    println!("{}", longer(s1, s2));
+    let item = Item {
+        name: "Widget".to_string(),
+        price: 9.99,
+    };
+    println!("{}", item.describe());
 }
