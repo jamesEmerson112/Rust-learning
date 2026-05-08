@@ -10,9 +10,9 @@ pub struct Item {
 impl Describable for Item {
     fn describe(&self) -> String {
         // TODO: Return "<name>: $<price>" with price to 2 decimal places.
-        let _ = &self.name;
-        let _ = self.price;
-        String::new()
+        let a = &self.name;
+        let b = self.price;
+        format!("{}: ${:.2}", a, b)
     }
 }
 

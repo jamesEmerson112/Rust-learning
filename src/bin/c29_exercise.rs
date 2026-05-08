@@ -3,8 +3,7 @@ pub fn longer<'a>(a: &'a str, b: &'a str) -> &'a str {
     // If they're equal, return `a`.
     // The lifetime 'a means: the output reference lives at least as long
     // as the shorter-lived of the two inputs.
-    let _ = (a, b);
-    ""
+    if a.len() >= b.len() {a} else {b}
 }
 
 fn main() {
