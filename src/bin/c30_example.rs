@@ -1,9 +1,8 @@
-fn boxed_number(n: i32) -> Box<i32> {
-    Box::new(n)
+fn boxed_price(cents: i32) -> Box<i32> {
+    Box::new(cents)
 }
 
 fn main() {
-    let b = boxed_number(42);
-    println!("boxed = {b}");
-    println!("deref = {}", *b);
+    let price = boxed_price(4500);
+    println!("Gel Manicure: {} cents", *price);
 }

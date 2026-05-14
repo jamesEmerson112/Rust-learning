@@ -1,6 +1,6 @@
 # Rust Learning
 
-See [ROADMAP.md](ROADMAP.md) for a scannable overview of all 33 lessons.
+See [ROADMAP.md](ROADMAP.md) for a scannable overview of all 54 lessons.
 
 This repo contains small Rust lessons, each with:
 - an `example` binary (complete reference)
@@ -8,9 +8,9 @@ This repo contains small Rust lessons, each with:
 - an integration test file for validation
 
 ## File layout
-- `src/bin/c01_example.rs` ... `src/bin/c33_example.rs`
-- `src/bin/c01_exercise.rs` ... `src/bin/c33_exercise.rs`
-- `tests/c01_tests.rs` ... `tests/c33_tests.rs`
+- `src/bin/c01_example.rs` ... `src/bin/c54_example.rs`
+- `src/bin/c01_exercise.rs` ... `src/bin/c54_exercise.rs`
+- `tests/c01_tests.rs` ... `tests/c54_tests.rs`
 
 ## Lesson flow (~15 minutes each)
 1. Read and run the example.
@@ -249,38 +249,184 @@ Work through one lesson at a time. Read the example, then complete the exercise.
 ---
 
 ### Lesson 30 — `Box<T>` — Heap Allocation
-**Learn:** `Box::new()`, heap allocation, recursive types (cons-lists), auto-deref
-**Exercise:** Wrap an integer in a `Box`.
+**Learn:** `Box::new()`, heap allocation, auto-deref
+**Exercise:** Write `boxed_price(cents) -> Box<i32>` to heap-allocate a salon service price.
 **You're done when:** You can explain when boxing is necessary (recursive types, trait objects).
 
 ---
 
 ### Lesson 31 — `Rc<T>` — Shared Ownership
 **Learn:** Reference-counted shared ownership, `Rc::clone()`, `Rc::strong_count()`
-**Exercise:** Create an `Rc`, clone it twice, and return the current strong count.
+**Exercise:** 3 stations share one price list via `Rc` — return the strong count.
 **You're done when:** You can share data between multiple owners without the compiler complaining.
 
 ---
 
 ### Lesson 32 — Modules and Visibility
 **Learn:** `mod`, `pub`, `use`, file-based modules via `#[path]`
-**Exercise:** Complete a `Counter` struct in a separate module with private fields.
+**Exercise:** Complete a `ClientCounter` walk-in tracker in a separate module.
 **You're done when:** You can organise code across files and control visibility with `pub`.
 
 ---
 
-### Lesson 33 — Capstone: Gradebook
+### Lesson 33 — Capstone: Service Log
 **Learn:** Everything combined — modules + HashMap + Vec + Option + methods
-**Exercise:** Complete a `Gradebook` struct in a separate module — add scores and compute averages.
-**You're done when:** You can run `cargo test` and all 33 lesson tests pass.
+**Exercise:** Complete a `ServiceLog` — track revenue per technician (Mai, Linh, Trang).
+**You're done when:** All 33 core lesson tests pass.
 
 ---
 
-### Beyond Chapter 33
-The lessons above cover the core language in depth. Once you finish them, good next topics are:
-- Custom error enums + `thiserror` / `anyhow`
-- Async / `tokio` — concurrent and asynchronous programming
-- `RefCell<T>` and interior mutability
-- Custom iterators (`impl Iterator`)
-- Procedural macros and `derive` macros
-- Building a small CLI or web service to apply everything
+### Lesson 34 — Custom Error Enum
+**Learn:** `enum BookingError { SlotTaken, TechnicianOff }` — typed error variants
+**Exercise:** Write `validate_booking()` returning the correct error variant.
+**You're done when:** You can define and return custom errors from functions.
+
+---
+
+### Lesson 35 — `impl Display` for Errors
+**Learn:** `fmt::Display` trait — how errors become human-readable strings
+**Exercise:** Implement `Display` for `BookingError` with descriptive messages.
+**You're done when:** Your errors print friendly messages, not just `{:?}` debug output.
+
+---
+
+### Lesson 36 — `impl Error` Trait
+**Learn:** `std::error::Error` — the trait that makes errors composable
+**Exercise:** Wire `BookingError` into `Box<dyn Error>` by implementing the Error trait.
+**You're done when:** Your custom error works anywhere `Box<dyn Error>` is expected.
+
+---
+
+### Lesson 37 — `thiserror` Derive
+**Learn:** `#[derive(thiserror::Error)]` — the boilerplate vanishes
+**Exercise:** Replace manual Display + Error impls with `thiserror` derive macros.
+**You're done when:** You see the same behavior with a fraction of the code.
+
+---
+
+### Lesson 38 — `anyhow` Catch-All
+**Learn:** `anyhow::Result`, `bail!`, `.context()` — one Result type for everything
+**Exercise:** Write `process_booking()` that can fail 3 ways — `anyhow` catches all.
+**You're done when:** You can handle mixed error types without custom enums.
+
+---
+
+### Lesson 39 — Slices `&[T]`
+**Learn:** Explicit slices, DST semantics, `&vec[..]`
+**Exercise:** Write `daily_revenue(prices: &[u32]) -> u32` — sum a slice of service prices.
+**You're done when:** You can accept and operate on slices without owning the data.
+
+---
+
+### Lesson 40 — Struct Lifetimes
+**Learn:** `struct Appointment<'a>` — structs that borrow data
+**Exercise:** Create an `Appointment` with borrowed client and service names.
+**You're done when:** You can embed references in structs with lifetime annotations.
+
+---
+
+### Lesson 41 — Lifetime Elision
+**Learn:** When Rust infers lifetimes for you — elision rules on methods
+**Exercise:** Write methods on `Appointment` that return `&str` without explicit `'a`.
+**You're done when:** You know when you can omit lifetime annotations.
+
+---
+
+### Lesson 42 — `Cell<T>`
+**Learn:** Interior mutability with `Cell` — mutate through `&self`
+**Exercise:** Build a `TipJar` where `add()` takes `&self` (not `&mut self`).
+**You're done when:** You can mutate `Copy` types through shared references.
+
+---
+
+### Lesson 43 — `RefCell<T>`
+**Learn:** Runtime borrow checking with `RefCell` — `borrow()` / `borrow_mut()`
+**Exercise:** Build a `Schedule` that pushes appointments through `&self`.
+**You're done when:** You can mutate non-Copy types through shared references.
+
+---
+
+### Lesson 44 — `Rc<RefCell<T>>`
+**Learn:** Shared + mutable — the `Rc<RefCell<T>>` pattern
+**Exercise:** Two stations share and mutate one appointment book.
+**You're done when:** You can share mutable state between multiple owners.
+
+---
+
+### Lesson 45 — Custom Iterator
+**Learn:** `impl Iterator for MyType` — the `next()` method
+**Exercise:** Implement `Iterator` for `WalkInQueue` — yields waiting clients one by one.
+**You're done when:** You can `for client in queue` over your custom type.
+
+---
+
+### Lesson 46 — Iterator Adaptors on Custom Type
+**Learn:** `.filter()` and `.map()` work on any `Iterator` — including yours
+**Exercise:** Filter `WalkInQueue` by service type, map to prices.
+**You're done when:** You can chain standard adaptors on your custom iterator.
+
+---
+
+### Lesson 47 — File Read
+**Learn:** `fs::read_to_string` — loading data from disk
+**Exercise:** Write `load_price_list(path)` that reads a CSV-style services file.
+**You're done when:** You can read files and parse structured text data.
+
+---
+
+### Lesson 48 — File Write
+**Learn:** `fs::write` — persisting data to disk
+**Exercise:** Write `save_daily_log(path, entries)` — output today's services to a file.
+**You're done when:** You can write formatted data to files with error handling.
+
+---
+
+### Lesson 49 — Serde JSON
+**Learn:** `#[derive(Serialize, Deserialize)]` — automatic JSON conversion
+**Exercise:** Serialize and deserialize a `ServiceEntry` struct as JSON.
+**You're done when:** You can round-trip Rust structs through JSON.
+
+---
+
+### Lesson 50 — `async fn` + tokio
+**Learn:** `async fn`, `.await`, `#[tokio::main]`
+**Exercise:** Write `check_availability(slot)` — your first async function.
+**You're done when:** You can write and await async functions.
+
+---
+
+### Lesson 51 — `tokio::spawn`
+**Learn:** Spawning concurrent tasks
+**Exercise:** Two clients booking concurrently — spawn tasks, collect results.
+**You're done when:** You can run independent work concurrently with `tokio::spawn`.
+
+---
+
+### Lesson 52 — Async Channels
+**Learn:** `tokio::sync::mpsc` — message passing between tasks
+**Exercise:** Technician sends "done" on a channel, front desk receives.
+**You're done when:** You can communicate between async tasks.
+
+---
+
+### Lesson 53 — `clap` Arg Parsing
+**Learn:** `#[derive(Parser)]` — structured CLI argument parsing
+**Exercise:** Parse `--technician "Mai" --service "Gel Manicure" --price 45`.
+**You're done when:** You can build type-safe CLI interfaces.
+
+---
+
+### Lesson 54 — Capstone: Salon CLI
+**Learn:** Everything combined — structs, HashMap, methods, CLI
+**Exercise:** Full salon scheduler: book, list, revenue by technician.
+**You're done when:** All 54 lesson tests pass. You ship software.
+
+---
+
+### Beyond Chapter 54
+The lessons above cover the core language plus practical application. Next topics:
+- Procedural and derive macros
+- Advanced async (`select!`, `RwLock`, cancellation)
+- Web server with `axum` or `actix-web`
+- Database with `sqlx` or `diesel`
+- Building the salon scheduler as a web API

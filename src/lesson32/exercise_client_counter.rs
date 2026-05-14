@@ -1,8 +1,8 @@
-pub struct Counter {
+pub struct ClientCounter {
     count: u32,
 }
 
-impl Counter {
+impl ClientCounter {
     pub fn new() -> Self {
         // TODO: Initialize a counter starting at 0.
         Self { count: 0 }

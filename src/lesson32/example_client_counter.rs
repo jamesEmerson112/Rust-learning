@@ -1,8 +1,8 @@
-pub struct Counter {
+pub struct ClientCounter {
     count: u32,
 }
 
-impl Counter {
+impl ClientCounter {
     pub fn new() -> Self {
         Self { count: 0 }
     }

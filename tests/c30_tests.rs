@@ -2,22 +2,22 @@
 #[allow(dead_code)]
 mod c30_exercise;
 
-use c30_exercise::boxed_number;
+use c30_exercise::boxed_price;
 
 #[test]
-fn boxed_holds_value() {
-    let b = boxed_number(7);
-    assert_eq!(*b, 7);
+fn boxed_holds_price() {
+    let b = boxed_price(4500);
+    assert_eq!(*b, 4500);
+}
+
+#[test]
+fn boxed_handles_zero() {
+    let b = boxed_price(0);
+    assert_eq!(*b, 0);
 }
 
 #[test]
 fn boxed_handles_negative() {
-    let b = boxed_number(-42);
-    assert_eq!(*b, -42);
-}
-
-#[test]
-fn boxed_zero() {
-    let b = boxed_number(0);
-    assert_eq!(*b, 0);
+    let b = boxed_price(-100);
+    assert_eq!(*b, -100);
 }

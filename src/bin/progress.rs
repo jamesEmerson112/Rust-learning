@@ -83,7 +83,7 @@ struct LessonMeta {
 const NUM_LESSONS: u32 = LESSONS.len() as u32;
 const MAX_XP: u32 = NUM_LESSONS * 100;
 
-const LESSONS: [LessonMeta; 33] = [
+const LESSONS: [LessonMeta; 54] = [
     LessonMeta { number: 1,  title: "Hello Variables",                      stat_group: "Core Firmware" },
     LessonMeta { number: 2,  title: "Strings and Formatting",              stat_group: "Core Firmware" },
     LessonMeta { number: 3,  title: "Arrays and Iteration",                stat_group: "Data Cortex" },
@@ -116,10 +116,31 @@ const LESSONS: [LessonMeta; 33] = [
     LessonMeta { number: 30, title: "Box<T> — Heap Allocation",            stat_group: "Pointer Grid" },
     LessonMeta { number: 31, title: "Rc<T> — Shared Ownership",            stat_group: "Pointer Grid" },
     LessonMeta { number: 32, title: "Modules and Visibility",              stat_group: "System Kernel" },
-    LessonMeta { number: 33, title: "Capstone: Gradebook",                 stat_group: "System Kernel" },
+    LessonMeta { number: 33, title: "Capstone: Service Log",               stat_group: "System Kernel" },
+    LessonMeta { number: 34, title: "Custom Error Enum",                   stat_group: "Error Forge" },
+    LessonMeta { number: 35, title: "impl Display for Errors",             stat_group: "Error Forge" },
+    LessonMeta { number: 36, title: "impl Error Trait",                    stat_group: "Error Forge" },
+    LessonMeta { number: 37, title: "thiserror Derive",                    stat_group: "Error Forge" },
+    LessonMeta { number: 38, title: "anyhow Catch-All",                    stat_group: "Error Forge" },
+    LessonMeta { number: 39, title: "Slices &[T]",                         stat_group: "Slice Wire" },
+    LessonMeta { number: 40, title: "Struct Lifetimes",                    stat_group: "Slice Wire" },
+    LessonMeta { number: 41, title: "Lifetime Elision",                    stat_group: "Slice Wire" },
+    LessonMeta { number: 42, title: "Cell<T>",                             stat_group: "Mutation Core" },
+    LessonMeta { number: 43, title: "RefCell<T>",                          stat_group: "Mutation Core" },
+    LessonMeta { number: 44, title: "Rc<RefCell<T>>",                      stat_group: "Mutation Core" },
+    LessonMeta { number: 45, title: "Custom Iterator",                     stat_group: "Iterator Engine" },
+    LessonMeta { number: 46, title: "Iterator Adaptors",                   stat_group: "Iterator Engine" },
+    LessonMeta { number: 47, title: "File Read",                           stat_group: "Data Pipeline" },
+    LessonMeta { number: 48, title: "File Write",                          stat_group: "Data Pipeline" },
+    LessonMeta { number: 49, title: "Serde JSON",                          stat_group: "Data Pipeline" },
+    LessonMeta { number: 50, title: "async fn + tokio",                    stat_group: "Async Grid" },
+    LessonMeta { number: 51, title: "tokio::spawn",                        stat_group: "Async Grid" },
+    LessonMeta { number: 52, title: "Async Channels",                      stat_group: "Async Grid" },
+    LessonMeta { number: 53, title: "clap Arg Parsing",                    stat_group: "Command Shell" },
+    LessonMeta { number: 54, title: "Capstone: Salon CLI",                 stat_group: "Command Shell" },
 ];
 
-const STAT_GROUPS: [&str; 16] = [
+const STAT_GROUPS: [&str; 23] = [
     "Core Firmware",
     "Data Cortex",
     "Logic Matrix",
@@ -136,6 +157,13 @@ const STAT_GROUPS: [&str; 16] = [
     "Bound Compiler",
     "Pointer Grid",
     "System Kernel",
+    "Error Forge",
+    "Slice Wire",
+    "Mutation Core",
+    "Iterator Engine",
+    "Data Pipeline",
+    "Async Grid",
+    "Command Shell",
 ];
 
 // ─── Abilities ─────────────────────────────────────────────────────────────
@@ -146,49 +174,76 @@ struct Ability {
     lesson: u32,
 }
 
-const ABILITIES: [Ability; 33] = [
-    // Script Kiddie (L1–4)
+const ABILITIES: [Ability; 54] = [
+    // Script Kiddie (L1-4)
     Ability { name: "Stack Injection",         description: "Bind data to the stack with `let` and `mut`.",                       lesson: 1  },
     Ability { name: "String Splice",           description: "Manipulate heap strings and format output into the datastream.",     lesson: 2  },
     Ability { name: "Array Scan",              description: "Iterate fixed-size memory blocks and extract aggregate signals.",    lesson: 3  },
     Ability { name: "Tuple Decode",            description: "Destructure multi-value payloads and cast between data types.",      lesson: 4  },
-    // Netrunner (L5–8)
+    // Netrunner (L5-8)
     Ability { name: "Logic Gate Bypass",       description: "Route execution through conditional branches and loops.",            lesson: 5  },
     Ability { name: "Pattern Lock Crack",      description: "Match data against patterns and build string payloads.",             lesson: 6  },
     Ability { name: "Memory Ownership Hack",   description: "Seize exclusive control of heap-allocated data.",                    lesson: 7  },
     Ability { name: "Slice Wire Tap",          description: "Extract views into string memory without copying.",                  lesson: 8  },
-    // ICE Breaker (L9–12)
+    // ICE Breaker (L9-12)
     Ability { name: "Struct Fabrication",      description: "Forge custom data structures with named fields.",                    lesson: 9  },
     Ability { name: "Method Implant",          description: "Graft behavior onto structures with `impl` blocks.",                 lesson: 10 },
     Ability { name: "Enum Polymorphism",       description: "Define variant types that carry different payloads.",                lesson: 11 },
     Ability { name: "Null Shield",             description: "Handle absent data safely with `Option<T>` — no null crashes.",      lesson: 12 },
-    // Chrome Operative (L13–16)
+    // Chrome Operative (L13-16)
     Ability { name: "Hash Map Infiltration",   description: "Index and query key-value data stores at O(1).",                     lesson: 13 },
     Ability { name: "Entry Point Exploit",     description: "Use the entry API to atomically insert-or-update.",                  lesson: 14 },
     Ability { name: "String Normalizer",       description: "Sanitize raw text — trim punctuation, lowercase, prep for lookup.",  lesson: 15 },
     Ability { name: "Word Count Weave",        description: "Combine HashMap + string normalization into frequency analysis.",    lesson: 16 },
-    // Ghost in the Wire (L17–20)
+    // Ghost in the Wire (L17-20)
     Ability { name: "Error Channel",           description: "Propagate failure signals through `Result<T, E>`.",                  lesson: 17 },
     Ability { name: "Fault Cascade",           description: "Chain fallible operations with `?` without losing context.",         lesson: 18 },
     Ability { name: "Exception Gadget",        description: "Convert error types with `map_err` and bridge disparate failures.",  lesson: 19 },
     Ability { name: "Lambda Grenade",          description: "Deploy closures as first-class functions that capture scope.",       lesson: 20 },
-    // Neon Assassin (L21–24)
+    // Neon Assassin (L21-24)
     Ability { name: "Map Transmuter",          description: "Transform every element with `.map()` and `.collect()` into a Vec.", lesson: 21 },
     Ability { name: "Filter Prism",            description: "Select elements with `.filter()` — mastering the double-reference.", lesson: 22 },
     Ability { name: "Sum Aggregator",          description: "Collapse an iterator into one value with `.sum()`.",                 lesson: 23 },
     Ability { name: "Fold Reducer",            description: "Custom-reduce any sequence with `.fold(init, |acc, x| ...)`.",       lesson: 24 },
-    // Silicon Shaman (L25–29)
+    // Silicon Shaman (L25-29)
     Ability { name: "Debug Lens",              description: "Inspect any `#[derive(Debug)]` type with `{:?}` formatting.",        lesson: 25 },
     Ability { name: "Trait Interface",         description: "Define shared behavior contracts across disparate types.",           lesson: 26 },
     Ability { name: "Generic Protocol",        description: "Write type-agnostic code with parametric polymorphism.",             lesson: 27 },
     Ability { name: "Bounded Channel",         description: "Constrain generics with trait bounds to unlock comparison.",         lesson: 28 },
     Ability { name: "Lifetime Weaver",         description: "Annotate `'a` so references never outlive the data they point to.", lesson: 29 },
-    // Neon Sovereign (L30–32)
+    // Neon Sovereign (L30-33)
     Ability { name: "Heap Injector",           description: "Box values onto the heap and break recursive type cycles.",          lesson: 30 },
     Ability { name: "Ownership Broadcast",     description: "Share one allocation via `Rc` with reference counting.",             lesson: 31 },
     Ability { name: "Module Firewall",         description: "Partition code into modules with controlled visibility.",            lesson: 32 },
-    // Zero-Day Sovereign (L33)
-    Ability { name: "Full System Access",      description: "All subsystems integrated. The compiler bends to your will.",        lesson: 33 },
+    Ability { name: "Full System Access",      description: "All core subsystems integrated. The compiler bends to your will.",   lesson: 33 },
+    // Protocol Architect (L34-38)
+    Ability { name: "Error Enum Forge",        description: "Define custom error enums with distinct failure variants.",          lesson: 34 },
+    Ability { name: "Display Renderer",        description: "Implement `Display` so errors print human-readable messages.",       lesson: 35 },
+    Ability { name: "Error Trait Wire",        description: "Wire custom errors into `std::error::Error` for composability.",     lesson: 36 },
+    Ability { name: "Derive Shortcut",         description: "Derive error boilerplate away with `thiserror`.",                    lesson: 37 },
+    Ability { name: "Anyhow Absorber",         description: "Catch any error type with `anyhow::Result` — zero boilerplate.",    lesson: 38 },
+    // Memory Surgeon (L39-41)
+    Ability { name: "Slice Scanner",           description: "Operate on contiguous memory views without allocation.",             lesson: 39 },
+    Ability { name: "Struct Borrow Bind",      description: "Embed borrowed references inside structs with lifetime params.",    lesson: 40 },
+    Ability { name: "Elision Insight",         description: "Read the compiler's lifetime elision rules fluently.",              lesson: 41 },
+    // (L42-44)
+    Ability { name: "Cell Mutator",            description: "Mutate through shared references with `Cell<T>`.",                  lesson: 42 },
+    Ability { name: "RefCell Override",         description: "Runtime borrow-check with `RefCell<T>` for complex interiors.",     lesson: 43 },
+    Ability { name: "Shared Mutable Link",     description: "Combine `Rc` and `RefCell` for shared mutable state.",              lesson: 44 },
+    // Stream Weaver (L45-46)
+    Ability { name: "Iterator Constructor",    description: "Implement the `Iterator` trait on a custom struct.",                 lesson: 45 },
+    Ability { name: "Adaptor Chain",           description: "Compose filter/map on custom iterators — full pipeline.",            lesson: 46 },
+    // (L47-49)
+    Ability { name: "File Reader",             description: "Load data from disk with `fs::read_to_string`.",                    lesson: 47 },
+    Ability { name: "File Writer",             description: "Persist data to disk with `fs::write`.",                            lesson: 48 },
+    Ability { name: "Serde Codec",             description: "Serialize and deserialize structs as JSON.",                         lesson: 49 },
+    // Async Phantom (L50-52)
+    Ability { name: "Async Ignition",          description: "Write your first `async fn` and `.await` it.",                      lesson: 50 },
+    Ability { name: "Task Spawner",            description: "Run concurrent work with `tokio::spawn`.",                          lesson: 51 },
+    Ability { name: "Channel Relay",           description: "Send messages between async tasks with `mpsc`.",                    lesson: 52 },
+    // Salon Sovereign (L53-54)
+    Ability { name: "Arg Parser",              description: "Parse CLI arguments with `clap` derive macros.",                    lesson: 53 },
+    Ability { name: "Salon Sovereign",         description: "Full salon scheduler. Every system integrated. You ship software.", lesson: 54 },
 ];
 
 // ─── Ranks ─────────────────────────────────────────────────────────────────
@@ -199,7 +254,7 @@ struct Rank {
     quote: &'static str,
 }
 
-const RANKS: [Rank; 10] = [
+const RANKS: [Rank; 14] = [
     Rank { min_level: 0,  name: "Disconnected",        quote: "No signal detected. Jack in to begin." },
     Rank { min_level: 1,  name: "Script Kiddie",        quote: "You've breached the first firewall. The grid recognizes you." },
     Rank { min_level: 5,  name: "Netrunner",            quote: "The heap sprawls before you — an endless neon datascape." },
@@ -209,7 +264,11 @@ const RANKS: [Rank; 10] = [
     Rank { min_level: 21, name: "Neon Assassin",        quote: "Streams bend to your will — one combinator at a time." },
     Rank { min_level: 25, name: "Silicon Shaman",       quote: "Lifetimes, pointers, and shared memory answer to your incantations." },
     Rank { min_level: 30, name: "Neon Sovereign",        quote: "Heap and stack are yours. Pointers and modules obey." },
-    Rank { min_level: 33, name: "Zero-Day Sovereign",   quote: "You own the system. Every compiler warning bows to your will. 🦀" },
+    Rank { min_level: 34, name: "Protocol Architect",   quote: "Errors are data. You design the failure paths." },
+    Rank { min_level: 40, name: "Memory Surgeon",       quote: "Slices, lifetimes, interior mutability — you operate at the edge." },
+    Rank { min_level: 45, name: "Stream Weaver",        quote: "Custom iterators, file pipelines, data in motion." },
+    Rank { min_level: 50, name: "Async Phantom",        quote: "Concurrent tasks bend to your will. Nothing blocks you." },
+    Rank { min_level: 54, name: "Salon Sovereign",      quote: "You own the system. The salon runs on your code. 🦀" },
 ];
 
 const CLASSES: [&str; 4] = [
@@ -292,7 +351,7 @@ fn create_character() -> SaveFile {
     println!("{}",   color::bold_cyan("╚══════════════════════════════════════════════╝"));
     println!();
     println!("  Before you lies a grid of {} data nodes.", color::bold(&NUM_LESSONS.to_string()));
-    println!("  Master them all to earn the rank of {}.", color::bold_yellow("Zero-Day Sovereign"));
+    println!("  Master them all to earn the rank of {}.", color::bold_yellow("Salon Sovereign"));
     println!();
 
     // Name
@@ -696,7 +755,7 @@ fn display_character_sheet(save: &SaveFile) {
         println!("  {}",   color::bold_cyan("║        🦀  SYSTEM FULLY COMPROMISED  🦀                ║"));
         println!("  {}", color::bold_cyan("╚══════════════════════════════════════════════════════════╝"));
         println!();
-        println!("  {}",   color::bold_green("  You are the Zero-Day Sovereign. The Rust Underground salutes you."));
+        println!("  {}",   color::bold_green("  You are the Salon Sovereign. The Rust Underground salutes you."));
         println!("  {}",   color::dim(&format!("  Check the README for suggested next topics beyond chapter {}.", NUM_LESSONS)));
     } else {
         let next = LESSONS.iter().find(|l| {

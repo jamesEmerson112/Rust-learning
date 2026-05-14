@@ -1,11 +1,11 @@
-#[path = "../lesson32/exercise_counter.rs"]
+#[path = "../lesson32/exercise_client_counter.rs"]
 mod counter;
 
-pub use counter::Counter;
+pub use counter::ClientCounter;
 
 fn main() {
-    let mut c = Counter::new();
+    let mut c = ClientCounter::new();
     c.increment();
     c.increment();
-    println!("Count: {}", c.value());
+    println!("Walk-ins: {}", c.value());
 }

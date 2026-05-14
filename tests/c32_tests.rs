@@ -2,17 +2,17 @@
 #[allow(dead_code)]
 mod c32_exercise;
 
-use c32_exercise::Counter;
+use c32_exercise::ClientCounter;
 
 #[test]
 fn new_counter_is_zero() {
-    let c = Counter::new();
+    let c = ClientCounter::new();
     assert_eq!(c.value(), 0);
 }
 
 #[test]
 fn increment_works() {
-    let mut c = Counter::new();
+    let mut c = ClientCounter::new();
     c.increment();
     c.increment();
     assert_eq!(c.value(), 2);
@@ -20,8 +20,8 @@ fn increment_works() {
 
 #[test]
 fn independent_instances() {
-    let mut a = Counter::new();
-    let mut b = Counter::new();
+    let mut a = ClientCounter::new();
+    let mut b = ClientCounter::new();
     a.increment();
     a.increment();
     b.increment();

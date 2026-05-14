@@ -1,12 +1,12 @@
-#[path = "../lesson33/exercise_gradebook.rs"]
-mod gradebook;
+#[path = "../lesson33/exercise_service_log.rs"]
+mod service_log;
 
-pub use gradebook::Gradebook;
+pub use service_log::ServiceLog;
 
 fn main() {
-    let mut gradebook = Gradebook::new();
-    gradebook.add_score("Sam", 80);
-    gradebook.add_score("Sam", 100);
+    let mut log = ServiceLog::new();
+    log.add_service("Mai", 4500);
+    log.add_service("Mai", 5500);
 
-    println!("Sam average: {:?}", gradebook.average("Sam"));
+    println!("Mai avg revenue: {:?}", log.average_revenue("Mai"));
 }

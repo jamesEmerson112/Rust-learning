@@ -2,31 +2,31 @@
 #[allow(dead_code)]
 mod c33_exercise;
 
-use c33_exercise::Gradebook;
+use c33_exercise::ServiceLog;
 
 #[test]
-fn average_for_known_student() {
-    let mut gradebook = Gradebook::new();
-    gradebook.add_score("Sam", 80);
-    gradebook.add_score("Sam", 100);
+fn average_for_known_technician() {
+    let mut log = ServiceLog::new();
+    log.add_service("Mai", 4000);
+    log.add_service("Mai", 6000);
 
-    let avg = gradebook.average("Sam").expect("expected average for Sam");
-    assert!((avg - 90.0).abs() < 1e-9);
+    let avg = log.average_revenue("Mai").expect("expected average for Mai");
+    assert!((avg - 5000.0).abs() < 1e-9);
 }
 
 #[test]
-fn average_for_unknown_student_is_none() {
-    let gradebook = Gradebook::new();
-    assert_eq!(gradebook.average("Unknown"), None);
+fn average_for_unknown_technician_is_none() {
+    let log = ServiceLog::new();
+    assert_eq!(log.average_revenue("Unknown"), None);
 }
 
 #[test]
-fn average_precision_to_two_decimals() {
-    let mut gradebook = Gradebook::new();
-    gradebook.add_score("Ava", 89);
-    gradebook.add_score("Ava", 90);
+fn average_precision() {
+    let mut log = ServiceLog::new();
+    log.add_service("Linh", 4500);
+    log.add_service("Linh", 5500);
 
-    let avg = gradebook.average("Ava").expect("expected average for Ava");
+    let avg = log.average_revenue("Linh").expect("expected average for Linh");
     let rounded = (avg * 100.0).round() / 100.0;
-    assert_eq!(rounded, 89.5);
+    assert_eq!(rounded, 5000.0);
 }

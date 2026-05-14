@@ -9,12 +9,12 @@ cargo build                      # Build everything
 cargo run --bin c05_example      # Run a lesson example
 cargo run --bin c05_exercise     # Run a lesson exercise
 cargo test --test c05_tests      # Test a specific lesson
-cargo test --tests               # Run all 33 lesson tests
+cargo test --tests               # Run all 54 lesson tests
 ```
 
 ## Architecture
 
-A 33-lesson Rust curriculum. Each lesson is self-contained with three files:
+A 54-lesson Rust curriculum. Each lesson is self-contained with three files:
 
 - `src/bin/cXX_example.rs` — Complete reference implementation (read-only)
 - `src/bin/cXX_exercise.rs` — Starter stubs with `TODO` comments (learner edits these)
@@ -22,7 +22,9 @@ A 33-lesson Rust curriculum. Each lesson is self-contained with three files:
 
 Tests import exercises as modules via `#[path = "../src/bin/cXX_exercise.rs"]` and test their `pub` functions. There is no `lib.rs`; lessons have no cross-dependencies.
 
-**Lessons 32–33** introduce file-based modules in `src/lesson32/` and `src/lesson33/` (e.g., `exercise_counter.rs`, `exercise_gradebook.rs`). Their bin files and tests use `#[path]` attributes to import these modules.
+**Lessons 32-33** introduce file-based modules in `src/lesson32/` and `src/lesson33/` (e.g., `exercise_client_counter.rs`, `exercise_service_log.rs`). Their bin files and tests use `#[path]` attributes to import these modules.
+
+**Lessons 34-54** are nail salon themed (the user runs a salon and is building a scheduler). Vietnamese technician names throughout (Mai, Linh, Trang). Topics: error handling II (c34-c38), slices/lifetimes II (c39-c41), interior mutability (c42-c44), custom iterators (c45-c46), file I/O (c47-c49), async/tokio (c50-c52), CLI with clap (c53-c54).
 
 ## Progress Tracker
 

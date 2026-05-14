@@ -1,6 +1,6 @@
 # Rust Learning — Roadmap
 
-**33 lessons, ~15 minutes each, one new concept per lesson.**
+**54 lessons, ~15 minutes each, one new concept per lesson.**
 
 Each lesson is a triple:
 - `src/bin/cXX_example.rs` — complete reference (read it)
@@ -44,10 +44,31 @@ Run the tracker: `cargo run --bin progress`
 | 27 | Generics                              | `<T>`                                    |
 | 28 | Trait Bounds                          | `T: Ord` constrains generics             |
 | 29 | Lifetimes Intro                       | `'a` on fn signatures                    |
-| 30 | `Box<T>` — Heap Allocation            | `Box::new`, recursive types              |
-| 31 | `Rc<T>` — Shared Ownership            | `Rc::clone`, reference counting          |
-| 32 | Modules and Visibility                | `mod`, `pub`, `use`                      |
-| 33 | Capstone: Gradebook                   | everything combined                      |
+| 30 | `Box<T>` — Heap Allocation            | `Box::new`, salon service prices         |
+| 31 | `Rc<T>` — Shared Ownership            | `Rc::clone`, shared station price lists  |
+| 32 | Modules and Visibility                | `mod`, `pub`, `ClientCounter`            |
+| 33 | Capstone: Service Log                 | `ServiceLog` — revenue per technician    |
+| 34 | Custom Error Enum                     | `enum BookingError`, `validate_booking()`|
+| 35 | `impl Display` for Errors             | human-readable error messages            |
+| 36 | `impl Error` Trait                    | wire into `std::error::Error`            |
+| 37 | `thiserror` Derive                    | `#[derive(Error)]` — no boilerplate      |
+| 38 | `anyhow` Catch-All                    | `anyhow::Result` for mixed errors        |
+| 39 | Slices `&[T]`                         | `daily_revenue(prices: &[u32])`          |
+| 40 | Struct Lifetimes                      | `Appointment<'a>` borrows client data    |
+| 41 | Lifetime Elision                      | methods returning `&str` — Rust infers   |
+| 42 | `Cell<T>`                             | `TipJar` — mutate through `&self`        |
+| 43 | `RefCell<T>`                          | `Schedule` — push through `&self`        |
+| 44 | `Rc<RefCell<T>>`                      | two stations share one appointment book  |
+| 45 | Custom Iterator                       | `WalkInQueue` yields client names        |
+| 46 | Iterator Adaptors                     | filter + map on `WalkInQueue`            |
+| 47 | File Read                             | `load_price_list()` from services.txt    |
+| 48 | File Write                            | `save_daily_log()` to disk               |
+| 49 | Serde JSON                            | `ServiceEntry` serialize/deserialize     |
+| 50 | `async fn` + tokio                    | `check_availability()` with `.await`     |
+| 51 | `tokio::spawn`                        | concurrent bookings                      |
+| 52 | Async Channels                        | technician sends "done" on `mpsc`        |
+| 53 | `clap` Arg Parsing                    | `--technician --service --price`         |
+| 54 | Capstone: Salon CLI                   | full scheduler — book, list, revenue     |
 
 See [README.md](README.md) Study Plan for the **Learn / Exercise / Done-when** detail on every lesson.
 
@@ -55,25 +76,37 @@ See [README.md](README.md) Study Plan for the **Learn / Exercise / Done-when** d
 
 ## Phases
 
-**Foundations (c01–c06)** — syntax, control flow, primitives. How to write a compilable Rust program.
+**Foundations (c01-c06)** — syntax, control flow, primitives. How to write a compilable Rust program.
 
-**Ownership Era (c07–c08)** — the one Rust idea other languages don't have. Everything downstream builds on this.
+**Ownership Era (c07-c08)** — the one Rust idea other languages don't have. Everything downstream builds on this.
 
-**Data Modeling (c09–c16)** — structs, enums, `Option`, `HashMap`, strings. Shape your data.
+**Data Modeling (c09-c16)** — structs, enums, `Option`, `HashMap`, strings. Shape your data.
 
-**Error Handling (c17–c19)** — `Result`, then `?`, then `map_err`. Each lesson answers the question the previous one raised.
+**Error Handling I (c17-c19)** — `Result`, then `?`, then `map_err`. Each lesson answers the question the previous one raised.
 
-**Functional Rust (c20–c24)** — closures are the prerequisite for iterator combinators, which unfold one at a time: collect, filter, sum, fold.
+**Functional Rust (c20-c24)** — closures are the prerequisite for iterator combinators, which unfold one at a time: collect, filter, sum, fold.
 
 **Debugging (c25)** — the `{:?}` format and the Debug trait. Bridges naturally into "what IS a trait?"
 
-**Abstractions (c26–c29)** — traits define contracts, generics consume them, bounds constrain them, lifetimes borrow through them.
+**Abstractions (c26-c29)** — traits define contracts, generics consume them, bounds constrain them, lifetimes borrow through them.
 
-**Heap & Sharing (c30–c31)** — `Box` for single owners, `Rc` for many.
+**Heap & Sharing (c30-c31)** — `Box` for single owners, `Rc` for many. Salon-themed: service prices on the heap, shared price lists.
 
-**Code Organization (c32)** — `mod` and `pub`. Comes late because you don't need it to learn the language.
+**Code Organization (c32-c33)** — modules + capstone. `ClientCounter` walk-in tracker, `ServiceLog` revenue tracker.
 
-**Capstone (c33)** — integrate everything into one working project.
+**Error Handling II (c34-c38)** — custom error enums, Display, Error trait, then see the boilerplate vanish with `thiserror` and `anyhow`. All themed around salon booking errors.
+
+**Slices & Lifetimes II (c39-c41)** — explicit `&[T]` slices, struct lifetimes with `Appointment<'a>`, lifetime elision on methods.
+
+**Interior Mutability (c42-c44)** — `Cell<T>` tip jar, `RefCell<T>` schedule, `Rc<RefCell<T>>` shared appointment book.
+
+**Custom Iterators (c45-c46)** — `impl Iterator` for `WalkInQueue`, then filter/map adaptors on it.
+
+**File I/O (c47-c49)** — read a price list, write a daily log, serialize/deserialize with serde JSON.
+
+**Async (c50-c52)** — first `async fn` + `.await`, then `tokio::spawn` for concurrent bookings, then `mpsc` channels.
+
+**CLI Project (c53-c54)** — `clap` arg parsing, then the capstone: a full salon scheduler CLI.
 
 ---
 
@@ -97,60 +130,59 @@ c01 → c02 → c03 → c04 → c05 → c06
                           c13 (HashMap) → c14 (entry) → c15 (normalize) → c16 (word count)
                                                                            │
                                                                            ▼
-                                                                          c17 (Result)
-                                                                           │
-                                                                           ▼
-                                                                          c18 (?)
-                                                                           │
-                                                                           ▼
-                                                                          c19 (map_err)
-                                                                           │
-                                                                           ▼
-                                                                          c20 (closures)
-                                                                           │
-                                                                           ▼
+                                                                          c17 (Result) → c18 (?) → c19 (map_err)
+                                                                                                     │
+                                                                                                     ▼
+                                                                                                    c20 (closures)
+                                                                                                     │
+                                                                                                     ▼
                                                           c21 (collect) → c22 (filter) → c23 (sum) → c24 (fold)
                                                                                                        │
                                                                                                        ▼
                                                                                                       c25 (debug)
                                                                                                        │
                                                                                                        ▼
-                                                                          c26 (traits) → c27 (generics) → c28 (bounds)
-                                                                                                           │
-                                                                                                           ▼
-                                                                                                          c29 (lifetimes)
-                                                                                                           │
-                                                                                                           ▼
-                                                                                                          c30 (Box) → c31 (Rc)
-                                                                                                                       │
-                                                                                                                       ▼
-                                                                                                                      c32 (modules)
-                                                                                                                       │
-                                                                                                                       ▼
-                                                                                                                      c33 (capstone)
+                                                          c26 (traits) → c27 (generics) → c28 (bounds) → c29 (lifetimes)
+                                                                                                            │
+                                                                                                            ▼
+                                                                                               c30 (Box) → c31 (Rc) → c32 (modules) → c33 (capstone)
+                                                                                                                                          │
+                                                                                                                                          ▼
+                                                                          c34 (error enum) → c35 (Display) → c36 (Error) → c37 (thiserror) → c38 (anyhow)
+                                                                                                                                                  │
+                                                                                                                                                  ▼
+                                                                                                          c39 (slices) → c40 (struct lifetimes) → c41 (elision)
+                                                                                                                                                     │
+                                                                                                                                                     ▼
+                                                                                                               c42 (Cell) → c43 (RefCell) → c44 (Rc<RefCell>)
+                                                                                                                                                  │
+                                                                                                                                                  ▼
+                                                                                                                     c45 (custom iter) → c46 (adaptors)
+                                                                                                                                              │
+                                                                                                                                              ▼
+                                                                                                     c47 (file read) → c48 (file write) → c49 (serde)
+                                                                                                                                              │
+                                                                                                                                              ▼
+                                                                                               c50 (async fn) → c51 (spawn) → c52 (channels)
+                                                                                                                                   │
+                                                                                                                                   ▼
+                                                                                                              c53 (clap) → c54 (salon CLI capstone)
 ```
-
-Read: each arrow means "the concept on the right depends on the one on the left." You can skip sideways (e.g., start c13 before finishing c12) but don't skip forward across an arrow.
 
 ---
 
-## Post-33 Track
+## Post-54 Track
 
-The 33-lesson curriculum covers the core language. Once you clear c33, these are the highest-value next concepts — roughly in the order a teacher would tackle them:
+The 54-lesson curriculum covers the core language plus practical application. Once you clear c54, good next topics:
 
-1. **Custom Error Enums** — `enum AppError { Io(io::Error), Parse(ParseIntError) }` + `impl Display` + `impl std::error::Error`. Real Rust codebases use these instead of `String` errors. This is the single biggest gap in c01–c33.
-2. **Slices `&[T]`** — explicit lesson on slice semantics (DST, bounds, `&vec[..]`). Used implicitly throughout c01–c33.
-3. **Struct lifetimes** — `struct Parser<'a> { source: &'a str }`. Extends c29 to the more common real-world case.
-4. **`RefCell<T>`** and `Rc<RefCell<T>>` — interior mutability, shared mutable state.
-5. **`thiserror` / `anyhow`** — ergonomic error crates once you understand custom error enums.
-6. **Custom iterators** — `impl Iterator for MyType`.
-7. **Async / `tokio`** — concurrent and asynchronous programming.
-8. **Procedural and derive macros** — code generation.
-
-After that: build a small CLI or web service. That forces every concept above into use.
+1. **Procedural and derive macros** — `macro_rules!`, `#[derive(...)]` custom macros.
+2. **Advanced async** — `select!`, `tokio::sync::RwLock`, cancellation, backpressure.
+3. **Web server** — `axum` or `actix-web` with the salon scheduler as an API.
+4. **Database** — `sqlx` or `diesel` for persistent salon data.
+5. **Testing patterns** — property-based testing, mocking, integration test organization.
 
 ---
 
 ## One Rule
 
-**One new concept per lesson.** If a lesson introduces more than one new thing, it's a bug — flag it and we'll split it. (c17 was rewritten for exactly this reason; c21/c22 were split during the 30→33 expansion for the same reason.)
+**One new concept per lesson.** If a lesson introduces more than one new thing, it's a bug — flag it and we'll split it.
