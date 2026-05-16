@@ -1,8 +1,7 @@
 pub fn boxed_price(cents: i32) -> Box<i32> {
     // TODO: Return `cents` inside a Box (heap-allocated).
     // Hint: Box::new(...)
-    let _ = cents;
-    Box::new(0)
+    Box::new(cents)
 }
 
 fn main() {

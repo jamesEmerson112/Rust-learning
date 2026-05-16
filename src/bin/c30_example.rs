@@ -6,3 +6,4 @@ fn main() {
     let price = boxed_price(4500);
     println!("Gel Manicure: {} cents", *price);
 }
+ 
