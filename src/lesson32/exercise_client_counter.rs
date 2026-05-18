@@ -10,12 +10,11 @@ impl ClientCounter {
 
     pub fn increment(&mut self) {
         // TODO: Add 1 to the count.
-        let _ = &self.count;
+        self.count += 1;
     }
 
     pub fn value(&self) -> u32 {
         // TODO: Return the current count.
-        let _ = &self.count;
-        0
+        self.count
     }
 }

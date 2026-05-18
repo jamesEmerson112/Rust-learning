@@ -1,3 +1,7 @@
+// EXERCISE: Edit src/lesson33/exercise_service_log.rs
+// Complete the ServiceLog methods: add_service() and average_revenue().
+// This file demonstrates module re-exports with `pub use`.
+
 #[path = "../lesson33/exercise_service_log.rs"]
 mod service_log;
 
