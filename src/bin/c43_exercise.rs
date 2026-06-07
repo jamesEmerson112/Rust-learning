@@ -12,12 +12,12 @@ impl Schedule {
     pub fn add(&self, name: &str) {
         // TODO: Push name into the Vec using borrow_mut().
         // Note: &self, not &mut self!
-        let _ = name;
+        self.appts.borrow_mut().push(name.to_string());
     }
 
     pub fn count(&self) -> usize {
         // TODO: Return the number of appointments using borrow().
-        0
+        self.appts.borrow().len()
     }
 }
 

@@ -12,12 +12,12 @@ impl TipJar {
     pub fn add(&self, amount: u32) {
         // TODO: Add amount to total using Cell::get and Cell::set.
         // Note: &self, not &mut self!
-        let _ = amount;
+        self.total.set(self.total.get() + amount);
     }
 
     pub fn total(&self) -> u32 {
         // TODO: Return the current total.
-        0
+        self.total.get()
     }
 }
 

@@ -6,7 +6,15 @@ pub fn shared_book_count() -> usize {
     // Clone it to simulate two stations.
     // Each station pushes one appointment string.
     // Return the total count from the original Rc.
-    0
+    let book_list = Rc::new(RefCell::new(Vec::new()));
+
+    let station_a = Rc::clone(&book_list);
+    let station_b = Rc::clone(&book_list);
+
+    station_a.borrow_mut().push("Mai is taking a pedicure");
+    station_b.borrow_mut().push("Jen is taking the gel manicure");
+
+    return book_list.borrow().len()
 }
 
 fn main() {

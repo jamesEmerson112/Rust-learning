@@ -6,12 +6,12 @@ pub struct Appointment<'a> {
 impl<'a> Appointment<'a> {
     pub fn client_name(&self) -> &str {
         // TODO: Return the client's name. Rust elides the lifetime here.
-        ""
+        self.client
     }
 
     pub fn service_name(&self) -> &str {
         // TODO: Return the service name.
-        ""
+        self.service
     }
 }
 

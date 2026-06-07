@@ -15,7 +15,13 @@ impl Iterator for WalkInQueue {
     fn next(&mut self) -> Option<Self::Item> {
         // TODO: If index < names.len(), clone the name at index,
         // advance index, and return Some(name). Otherwise None.
-        None
+        if self.index < self.names.len() {
+            let name = self.names[self.index].clone();
+            self.index += 1;
+            Some(name)
+        } else {
+            None
+        }
     }
 }
 

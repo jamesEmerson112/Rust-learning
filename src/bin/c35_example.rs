@@ -16,7 +16,7 @@ impl fmt::Display for BookingError {
 }
 
 fn main() {
-    let err = BookingError::SlotTaken;
+    let err: BookingError = BookingError::SlotTaken;
     println!("Error: {err}");
     println!("Debug: {err:?}");
 }

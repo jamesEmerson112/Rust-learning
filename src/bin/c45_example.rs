@@ -24,7 +24,7 @@ impl Iterator for WalkInQueue {
 }
 
 fn main() {
-    let queue = WalkInQueue::new(vec![
+    let queue: WalkInQueue = WalkInQueue::new(vec![
         "Mai".to_string(),
         "Linh".to_string(),
         "Trang".to_string(),

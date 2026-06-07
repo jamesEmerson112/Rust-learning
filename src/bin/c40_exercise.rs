@@ -5,8 +5,7 @@ pub struct Appointment<'a> {
 
 pub fn describe<'a>(appt: &Appointment<'a>) -> String {
     // TODO: Return "{client} booked for {service}".
-    let _ = appt;
-    String::new()
+    format!("{} is booked for a {}", appt.client, appt.service)
 }
 
 fn main() {
