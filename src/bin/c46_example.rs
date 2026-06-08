@@ -33,7 +33,11 @@ fn main() {
     let gel_prices: Vec<u32> = queue
         .filter(|entry| entry.contains("Gel"))
         .map(|entry| {
-            entry.split(':').nth(2).unwrap().parse::<u32>().unwrap()
+            entry.split(':')
+            .nth(2)
+            .unwrap()
+            .parse::<u32>()
+            .unwrap()
         })
         .collect();
 

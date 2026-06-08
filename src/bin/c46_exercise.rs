@@ -26,8 +26,11 @@ impl Iterator for WalkInQueue {
 pub fn gel_prices(queue: WalkInQueue) -> Vec<u32> {
     // TODO: Filter entries containing "Gel", then map each to its price.
     // Each entry is "Name:Service:Price" — split on ':', take index 2, parse as u32.
-    let _ = queue;
-    Vec::new()
+    let gel_prices: Vec<u32> = queue.filter(|entry| entry.contains("Gel"))
+        .map(|entry| {
+            entry.split(":").nth(2).unwrap().parse::<u32>().unwrap()
+        }).collect();
+    gel_prices
 }
 
 fn main() {
