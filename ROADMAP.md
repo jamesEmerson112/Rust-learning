@@ -1,6 +1,6 @@
 # Rust Learning — Roadmap
 
-**54 lessons, ~15 minutes each, one new concept per lesson.**
+**68 lessons, ~15 minutes each, one new concept per lesson.** (⚡ = light DSA warmup)
 
 Each lesson is a triple:
 - `src/bin/cXX_example.rs` — complete reference (read it)
@@ -69,6 +69,20 @@ Run the tracker: `cargo run --bin progress`
 | 52 | Async Channels                        | technician sends "done" on `mpsc`        |
 | 53 | `clap` Arg Parsing                    | `--technician --service --price`         |
 | 54 | Capstone: Salon CLI                   | full scheduler — book, list, revenue     |
+| ⚡ 55 | Warmup: Fibonacci                  | iterative loop, tuple swap               |
+| 56 | Recursive Types with Box              | `enum` + `Box` for self-referential data |
+| 57 | Trait Objects `Box<dyn>`              | dynamic dispatch over mixed types        |
+| 58 | Deref — Custom Smart Pointer          | `impl Deref`, auto-deref coercion        |
+| ⚡ 59 | Warmup: Two Sum                    | one-pass HashMap complement lookup       |
+| 60 | `Drop` (RAII)                         | deterministic cleanup, LIFO drop order   |
+| 61 | `Weak<T>` and Cycles                  | `downgrade`/`upgrade`, leak-proof refs   |
+| ⚡ 62 | Warmup: Reverse a Vec             | two-pointer in-place swap                |
+| 63 | `Cell<T>` Full API                    | `replace` / `take` through `&self`       |
+| 64 | RefCell Runtime Borrow                | `try_borrow_mut`, runtime borrow check   |
+| ⚡ 65 | Warmup: Contains Duplicate        | HashSet membership in one pass           |
+| 66 | `Arc<T>` Across Threads               | shared immutable state, `thread::spawn`  |
+| 67 | `Arc<Mutex<T>>`                       | shared mutable state across threads      |
+| 68 | `RwLock<T>`                           | many readers / one writer                |
 
 See [README.md](README.md) Study Plan for the **Learn / Exercise / Done-when** detail on every lesson.
 
@@ -107,6 +121,16 @@ See [README.md](README.md) Study Plan for the **Learn / Exercise / Done-when** d
 **Async (c50-c52)** — first `async fn` + `.await`, then `tokio::spawn` for concurrent bookings, then `mpsc` channels.
 
 **CLI Project (c53-c54)** — `clap` arg parsing, then the capstone: a full salon scheduler CLI.
+
+**DSA Warmups (c55, c59, c62, c65)** — light, recognizable interview problems (Fibonacci, Two Sum, reverse-in-place, contains-duplicate) interleaved as a gentle on-ramp before each smart-pointer cluster. Solvable with everything from c01-c54 — pure confidence reps, no new syntax.
+
+**Box, Properly (c56-c58)** — the two real reasons `Box` exists: recursive types and trait objects (`Box<dyn Trait>`), then `Deref` to demystify how every smart pointer works.
+
+**Lifecycle & Cycles (c60-c61)** — `Drop` for RAII cleanup, then `Weak<T>` to break the reference cycles that would otherwise leak.
+
+**Interior Mutability, Deeper (c63-c64)** — the full `Cell` API, then deliberately tripping `RefCell`'s runtime borrow check to feel the compile-time-vs-runtime trade.
+
+**Concurrency Siblings (c66-c68)** — `Arc` to share across threads, `Arc<Mutex<T>>` (the threaded mirror of c44's `Rc<RefCell<T>>`), and `RwLock` for many-readers/one-writer.
 
 ---
 
@@ -167,13 +191,25 @@ c01 → c02 → c03 → c04 → c05 → c06
                                                                                                                                    │
                                                                                                                                    ▼
                                                                                                               c53 (clap) → c54 (salon CLI capstone)
+                                                                                                                                        │
+                                                                                                                                        ▼
+            ⚡c55 (warmup) → c56 (recursive Box) → c57 (Box<dyn>) → c58 (Deref)
+                                                                       │
+                                                                       ▼
+            ⚡c59 (warmup) → c60 (Drop) → c61 (Weak)
+                                             │
+                                             ▼
+            ⚡c62 (warmup) → c63 (Cell API) → c64 (RefCell borrow)
+                                                  │
+                                                  ▼
+            ⚡c65 (warmup) → c66 (Arc) → c67 (Arc<Mutex>) → c68 (RwLock)
 ```
 
 ---
 
-## Post-54 Track
+## Post-68 Track
 
-The 54-lesson curriculum covers the core language plus practical application. Once you clear c54, good next topics:
+The 68-lesson curriculum covers the core language plus practical application. Once you clear c68, good next topics:
 
 1. **Procedural and derive macros** — `macro_rules!`, `#[derive(...)]` custom macros.
 2. **Advanced async** — `select!`, `tokio::sync::RwLock`, cancellation, backpressure.

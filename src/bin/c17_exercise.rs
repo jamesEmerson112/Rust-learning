@@ -1,5 +1,3 @@
-use std::fmt::format;
-
 pub fn parse_age(input: &str) -> Result<u8, String> {
     // TODO: Use `match` on `input.trim().parse::<u8>()`:
     //   Ok(n)  => Ok(n)

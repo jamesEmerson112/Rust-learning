@@ -1,6 +1,6 @@
 # Rust Learning
 
-See [ROADMAP.md](ROADMAP.md) for a scannable overview of all 54 lessons.
+See [ROADMAP.md](ROADMAP.md) for a scannable overview of all 68 lessons.
 
 This repo contains small Rust lessons, each with:
 - an `example` binary (complete reference)
@@ -8,9 +8,9 @@ This repo contains small Rust lessons, each with:
 - an integration test file for validation
 
 ## File layout
-- `src/bin/c01_example.rs` ... `src/bin/c54_example.rs`
-- `src/bin/c01_exercise.rs` ... `src/bin/c54_exercise.rs`
-- `tests/c01_tests.rs` ... `tests/c54_tests.rs`
+- `src/bin/c01_example.rs` ... `src/bin/c68_example.rs`
+- `src/bin/c01_exercise.rs` ... `src/bin/c68_exercise.rs`
+- `tests/c01_tests.rs` ... `tests/c68_tests.rs`
 
 ## Lesson flow (~15 minutes each)
 1. Read and run the example.
@@ -419,11 +419,115 @@ Work through one lesson at a time. Read the example, then complete the exercise.
 ### Lesson 54 — Capstone: Salon CLI
 **Learn:** Everything combined — structs, HashMap, methods, CLI
 **Exercise:** Full salon scheduler: book, list, revenue by technician.
-**You're done when:** All 54 lesson tests pass. You ship software.
+**You're done when:** The salon scheduler runs end to end — book, list, and report revenue.
 
 ---
 
-### Beyond Chapter 54
+## Smart Pointers Deep Dive + Warmups (c55–c68)
+
+The c30/c31/c42–c44 lessons introduced `Box`, `Rc`, `Cell`, and `RefCell` at the surface. This block goes after the reasons those types exist — plus light DSA warmups (⚡) interleaved as a gentle on-ramp before each cluster.
+
+---
+
+### Lesson 55 — ⚡ Warmup: Fibonacci
+**Learn:** Iterative computation with a rolling pair — no recursion needed
+**Exercise:** Write `fib(n)` returning the n-th Fibonacci number (fib(0)=0, fib(1)=1).
+**You're done when:** You can turn a recurrence into a loop with `(a, b) = (b, a + b)`.
+
+---
+
+### Lesson 56 — Recursive Types with Box
+**Learn:** Why a self-referential `enum` needs `Box` (it would have infinite size otherwise)
+**Exercise:** Build a `Waitlist` cons-list; implement `waitlist_len` and `build_waitlist`.
+**You're done when:** You understand that `Box` gives a recursive type a fixed, known size.
+
+---
+
+### Lesson 57 — Trait Objects (Box\<dyn\>)
+**Learn:** `Box<dyn Trait>`, dynamic dispatch, heterogeneous collections
+**Exercise:** Implement `Service::price` for `Manicure`/`Pedicure` and sum a `Vec<Box<dyn Service>>`.
+**You're done when:** You can store different concrete types together and call shared methods at runtime.
+
+---
+
+### Lesson 58 — Deref — Custom Smart Pointer
+**Learn:** `impl Deref`, the `*` operator, and auto-deref coercion
+**Exercise:** Implement `Deref` for `MyBox<T>` and write `deref_double` using `**`.
+**You're done when:** You can explain how `*` and method auto-deref work on any smart pointer.
+
+---
+
+### Lesson 59 — ⚡ Warmup: Two Sum
+**Learn:** One-pass hashing — trade space for time
+**Exercise:** Return indices `(i, j)` whose values sum to `target`, using a HashMap.
+**You're done when:** You can find a complement in O(n) instead of a nested loop.
+
+---
+
+### Lesson 60 — Drop (RAII)
+**Learn:** `impl Drop`, deterministic cleanup, reverse (LIFO) drop order
+**Exercise:** Make a `Station` log "closing <name>" on drop; return the closing order.
+**You're done when:** You can run cleanup automatically when a value leaves scope — no GC.
+
+---
+
+### Lesson 61 — Weak\<T\> and Cycles
+**Learn:** `Rc::downgrade`, `Weak::upgrade`, why cycles leak and how `Weak` breaks them
+**Exercise:** Return `(strong, weak)` counts and prove a dropped owner makes `upgrade()` return `None`.
+**You're done when:** You can add a back-reference without keeping data alive or leaking.
+
+---
+
+### Lesson 62 — ⚡ Warmup: Reverse a Vec
+**Learn:** In-place mutation with two pointers
+**Exercise:** Reverse a `Vec<i32>` in place by swapping `i` with `n-1-i`.
+**You're done when:** You can mutate a collection in place without allocating a new one.
+
+---
+
+### Lesson 63 — Cell\<T\> Full API
+**Learn:** `Cell::replace` and `Cell::take` — mutate `Copy` data through `&self`
+**Exercise:** Add `replace_with` (returns old) and `take` (resets to 0) to a `Counter`.
+**You're done when:** You can swap interior state through a shared reference and recover the old value.
+
+---
+
+### Lesson 64 — RefCell Runtime Borrow
+**Learn:** Runtime borrow checking — `borrow_mut` panics, `try_borrow_mut` returns `Err`
+**Exercise:** Show a second mutable borrow fails while the first is alive, and succeeds after release.
+**You're done when:** You can explain the compile-time vs runtime borrow-check trade-off.
+
+---
+
+### Lesson 65 — ⚡ Warmup: Contains Duplicate
+**Learn:** `HashSet` membership — a HashMap with keys only
+**Exercise:** Return whether any value appears twice, in one pass.
+**You're done when:** You can use `HashSet::insert`'s return value to detect duplicates.
+
+---
+
+### Lesson 66 — Arc\<T\> Across Threads
+**Learn:** `Arc`, `thread::spawn`, `join` — sharing immutable data across threads
+**Exercise:** Spawn 3 threads that each sum a shared price list; return the grand total.
+**You're done when:** You understand why threads need `Arc` (it's `Send`) and `Rc` won't compile.
+
+---
+
+### Lesson 67 — Arc\<Mutex\<T\>\>
+**Learn:** `Mutex` for thread-safe mutation — the threaded sibling of `Rc<RefCell<T>>`
+**Exercise:** 10 threads each add 100 to a shared counter; return the total.
+**You're done when:** You can safely mutate shared state from many threads with `lock()`.
+
+---
+
+### Lesson 68 — RwLock\<T\>
+**Learn:** `RwLock` — many concurrent readers OR one exclusive writer
+**Exercise:** One writer adds an appointment, then 3 readers read the length concurrently.
+**You're done when:** All 68 lesson tests pass — you've mastered Rust's smart-pointer and concurrency core.
+
+---
+
+### Beyond Chapter 68
 The lessons above cover the core language plus practical application. Next topics:
 - Procedural and derive macros
 - Advanced async (`select!`, `RwLock`, cancellation)

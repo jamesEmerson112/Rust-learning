@@ -9,12 +9,12 @@ cargo build                      # Build everything
 cargo run --bin c05_example      # Run a lesson example
 cargo run --bin c05_exercise     # Run a lesson exercise
 cargo test --test c05_tests      # Test a specific lesson
-cargo test --tests               # Run all 54 lesson tests
+cargo test --tests               # Run all 68 lesson tests
 ```
 
 ## Architecture
 
-A 54-lesson Rust curriculum. Each lesson is self-contained with three files:
+A 68-lesson Rust curriculum. Each lesson is self-contained with three files:
 
 - `src/bin/cXX_example.rs` — Complete reference implementation (read-only)
 - `src/bin/cXX_exercise.rs` — Starter stubs with `TODO` comments (learner edits these)
@@ -25,6 +25,8 @@ Tests import exercises as modules via `#[path = "../src/bin/cXX_exercise.rs"]` a
 **Lessons 32-33** introduce file-based modules in `src/lesson32/` and `src/lesson33/` (e.g., `exercise_client_counter.rs`, `exercise_service_log.rs`). Their bin files and tests use `#[path]` attributes to import these modules.
 
 **Lessons 34-54** are nail salon themed (the user runs a salon and is building a scheduler). Vietnamese technician names throughout (Mai, Linh, Trang). Topics: error handling II (c34-c38), slices/lifetimes II (c39-c41), interior mutability (c42-c44), custom iterators (c45-c46), file I/O (c47-c49), async/tokio (c50-c52), CLI with clap (c53-c54).
+
+**Lessons 55-68** are the Smart Pointers Deep Dive — going past the surface intros of c30/c31/c42-c44. Four light DSA warmups (c55 Fibonacci, c59 Two Sum, c62 reverse-in-place, c65 contains-duplicate) are interleaved as a gentle on-ramp, each solvable with c01-c54 tools only. Topics: Box properly (recursive types c56, trait objects c57, Deref c58), lifecycle (Drop c60, Weak c61), interior-mutability depth (full Cell API c63, RefCell runtime borrow c64), concurrency siblings (Arc c66, Arc<Mutex> c67, RwLock c68). All `std`, no new deps; c66-c68 use `std::thread`.
 
 ## Progress Tracker
 
@@ -95,3 +97,14 @@ Tests import exercises as modules via `#[path = "../src/bin/cXX_exercise.rs"]` a
 - [feat] progress.rs now dynamic: `NUM_LESSONS` and `MAX_XP` derived from `LESSONS.len()`. Stat bars scale to group size. Added "Debug Console" stat group, "Neon Sovereign" rank at L30, final rank at L33. 10 ranks, 16 stat groups, 33 abilities.
 - [decision] No upper bound on lesson count. One concept per lesson is the hard rule; if a lesson smuggles extras, split it. Saved as durable feedback memory.
 - [decision] c25 (Debug Format) placed as bridge between iterators and traits — motivates "what IS a trait?" before c26 formally teaches it.
+
+### 2026-06-08
+- [feat] Expanded curriculum from 54 to 68 lessons: "Smart Pointers Deep Dive + DSA Warmups" (c55-c68). Goes past the surface intros of c30/c31/c42-c44 to the reasons those types exist. All `std`, no new deps; c66-c68 introduce `std::thread` (first use in the curriculum).
+- [feat] 10 deep-dive lessons: c56 Recursive Types with Box (Waitlist cons-list), c57 Trait Objects `Box<dyn>`, c58 Deref/`MyBox<T>`, c60 Drop/RAII (LIFO `closing_order`), c61 `Weak<T>` + cycles, c63 full Cell API (`replace`/`take`), c64 RefCell runtime borrow (`try_borrow_mut`), c66 `Arc<T>` across threads, c67 `Arc<Mutex<T>>`, c68 `RwLock<T>`. c67 is deliberately the threaded mirror of c44 `Rc<RefCell<T>>`.
+- [feat] 4 interleaved light-DSA warmups (one per cluster) for gentle progression into the difficulty spike: c55 Fibonacci (iterative), c59 Two Sum (HashMap), c62 reverse-in-place (two-pointer), c65 contains-duplicate (HashSet). All solvable with c01-c54 tools only — no new syntax. Grouped under a "Drill Matrix" stat group.
+- [decision] User asked for DSA warmups "for small progression" because the smart-pointer block (recursion, trait objects, threads) is a real difficulty jump. Cadence: one warmup per cluster (4 total), strictly easy. Saved rationale in plan `~/.claude/plans/ethereal-floating-yeti.md`.
+- [decision] Kept "Salon Sovereign" as the single end-game rank (no new final-rank name); moved its threshold L54→L68 and added 3 intermediate deep-dive ranks (Heap Warden @L55, Memory Reaper @L60, Concurrency Daemon @L66). Consequence: the L68 capstone now fires the "SYSTEM FULLY COMPROMISED" final screen instead of c54.
+- [feat] progress.rs: LESSONS 54→68, STAT_GROUPS 23→28 (added Drill Matrix, Heap Forge, Lifecycle Core, Borrow Runtime, Concurrency Lattice), ABILITIES 54→68, RANKS 14→17.
+- [process] Verification flow for new lessons: write solved exercises + tests, run all 14 suites green to prove wiring, THEN convert exercises to learner stubs (`let _ = ...;` placeholders + `#[allow(unused_imports)]`, matching c47-c54) and confirm each lesson fails as homework. Examples ship complete; all 14 run with correct output.
+- [verify] `cargo build` clean (only pre-existing c10_example warning). No `.rustacean_save.json` present — user runs `cargo run --bin progress -- --rescan` to pick up the new lessons.
+- [docs] Updated ROADMAP.md (68 rows, ⚡ warmup tag, new phase blocks, prereq chain, Post-68 Track), README.md (Study Plan c55-c68), and this file.

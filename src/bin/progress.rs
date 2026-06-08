@@ -83,7 +83,7 @@ struct LessonMeta {
 const NUM_LESSONS: u32 = LESSONS.len() as u32;
 const MAX_XP: u32 = NUM_LESSONS * 100;
 
-const LESSONS: [LessonMeta; 54] = [
+const LESSONS: [LessonMeta; 68] = [
     LessonMeta { number: 1,  title: "Hello Variables",                      stat_group: "Core Firmware" },
     LessonMeta { number: 2,  title: "Strings and Formatting",              stat_group: "Core Firmware" },
     LessonMeta { number: 3,  title: "Arrays and Iteration",                stat_group: "Data Cortex" },
@@ -138,9 +138,23 @@ const LESSONS: [LessonMeta; 54] = [
     LessonMeta { number: 52, title: "Async Channels",                      stat_group: "Async Grid" },
     LessonMeta { number: 53, title: "clap Arg Parsing",                    stat_group: "Command Shell" },
     LessonMeta { number: 54, title: "Capstone: Salon CLI",                 stat_group: "Command Shell" },
+    LessonMeta { number: 55, title: "Warmup: Fibonacci",                   stat_group: "Drill Matrix" },
+    LessonMeta { number: 56, title: "Recursive Types with Box",            stat_group: "Heap Forge" },
+    LessonMeta { number: 57, title: "Trait Objects (Box<dyn>)",            stat_group: "Heap Forge" },
+    LessonMeta { number: 58, title: "Deref — Custom Smart Pointer",        stat_group: "Heap Forge" },
+    LessonMeta { number: 59, title: "Warmup: Two Sum",                     stat_group: "Drill Matrix" },
+    LessonMeta { number: 60, title: "Drop (RAII)",                         stat_group: "Lifecycle Core" },
+    LessonMeta { number: 61, title: "Weak<T> and Cycles",                  stat_group: "Lifecycle Core" },
+    LessonMeta { number: 62, title: "Warmup: Reverse a Vec",              stat_group: "Drill Matrix" },
+    LessonMeta { number: 63, title: "Cell<T> Full API",                    stat_group: "Borrow Runtime" },
+    LessonMeta { number: 64, title: "RefCell Runtime Borrow",              stat_group: "Borrow Runtime" },
+    LessonMeta { number: 65, title: "Warmup: Contains Duplicate",          stat_group: "Drill Matrix" },
+    LessonMeta { number: 66, title: "Arc<T> Across Threads",               stat_group: "Concurrency Lattice" },
+    LessonMeta { number: 67, title: "Arc<Mutex<T>>",                       stat_group: "Concurrency Lattice" },
+    LessonMeta { number: 68, title: "RwLock<T>",                           stat_group: "Concurrency Lattice" },
 ];
 
-const STAT_GROUPS: [&str; 23] = [
+const STAT_GROUPS: [&str; 28] = [
     "Core Firmware",
     "Data Cortex",
     "Logic Matrix",
@@ -164,6 +178,11 @@ const STAT_GROUPS: [&str; 23] = [
     "Data Pipeline",
     "Async Grid",
     "Command Shell",
+    "Drill Matrix",
+    "Heap Forge",
+    "Lifecycle Core",
+    "Borrow Runtime",
+    "Concurrency Lattice",
 ];
 
 // ─── Abilities ─────────────────────────────────────────────────────────────
@@ -174,7 +193,7 @@ struct Ability {
     lesson: u32,
 }
 
-const ABILITIES: [Ability; 54] = [
+const ABILITIES: [Ability; 68] = [
     // Script Kiddie (L1-4)
     Ability { name: "Stack Injection",         description: "Bind data to the stack with `let` and `mut`.",                       lesson: 1  },
     Ability { name: "String Splice",           description: "Manipulate heap strings and format output into the datastream.",     lesson: 2  },
@@ -244,6 +263,21 @@ const ABILITIES: [Ability; 54] = [
     // Salon Sovereign (L53-54)
     Ability { name: "Arg Parser",              description: "Parse CLI arguments with `clap` derive macros.",                    lesson: 53 },
     Ability { name: "Salon Sovereign",         description: "Full salon scheduler. Every system integrated. You ship software.", lesson: 54 },
+    // Drill Matrix warmups + Smart Pointers Deep Dive (L55-68)
+    Ability { name: "Sequence Solver",         description: "Compute Fibonacci iteratively — warm up the loop muscles.",          lesson: 55 },
+    Ability { name: "Recursive Forge",         description: "Box a self-referential type — build lists the compiler can size.",   lesson: 56 },
+    Ability { name: "Dynamic Dispatch",        description: "Store mixed types behind `Box<dyn Trait>` and call via vtable.",      lesson: 57 },
+    Ability { name: "Deref Conjuration",       description: "Implement `Deref` — forge your own smart pointer with auto-deref.",   lesson: 58 },
+    Ability { name: "Pair Finder",             description: "Two-Sum in one pass with a HashMap — the classic warmup.",            lesson: 59 },
+    Ability { name: "Drop Ritual",             description: "Hook `Drop` for deterministic RAII cleanup — no garbage collector.",  lesson: 60 },
+    Ability { name: "Weak Link",               description: "Break reference cycles with `Weak<T>` — leak-proof shared graphs.",   lesson: 61 },
+    Ability { name: "Array Reversal",          description: "Reverse a slice in place with two pointers.",                         lesson: 62 },
+    Ability { name: "Cell Phase-Shift",        description: "Swap and take interior state through `&self` with the full Cell API.", lesson: 63 },
+    Ability { name: "Borrow Tripwire",         description: "Provoke and survive RefCell's runtime borrow check.",                 lesson: 64 },
+    Ability { name: "Dupe Scanner",            description: "Detect duplicates with a HashSet in one pass.",                       lesson: 65 },
+    Ability { name: "Atomic Broadcast",        description: "Share immutable data across threads with `Arc<T>`.",                  lesson: 66 },
+    Ability { name: "Mutex Lockdown",          description: "Guard shared mutable state across threads with `Arc<Mutex<T>>`.",     lesson: 67 },
+    Ability { name: "RwLock Mastery",          description: "Many readers, one writer — concurrent access with `RwLock<T>`.",      lesson: 68 },
 ];
 
 // ─── Ranks ─────────────────────────────────────────────────────────────────
@@ -254,7 +288,7 @@ struct Rank {
     quote: &'static str,
 }
 
-const RANKS: [Rank; 14] = [
+const RANKS: [Rank; 17] = [
     Rank { min_level: 0,  name: "Disconnected",        quote: "No signal detected. Jack in to begin." },
     Rank { min_level: 1,  name: "Script Kiddie",        quote: "You've breached the first firewall. The grid recognizes you." },
     Rank { min_level: 5,  name: "Netrunner",            quote: "The heap sprawls before you — an endless neon datascape." },
@@ -268,7 +302,10 @@ const RANKS: [Rank; 14] = [
     Rank { min_level: 40, name: "Memory Surgeon",       quote: "Slices, lifetimes, interior mutability — you operate at the edge." },
     Rank { min_level: 45, name: "Stream Weaver",        quote: "Custom iterators, file pipelines, data in motion." },
     Rank { min_level: 50, name: "Async Phantom",        quote: "Concurrent tasks bend to your will. Nothing blocks you." },
-    Rank { min_level: 54, name: "Salon Sovereign",      quote: "You own the system. The salon runs on your code. 🦀" },
+    Rank { min_level: 55, name: "Heap Warden",          quote: "The allocator answers to you — Box, trait objects, and Drop glue obey." },
+    Rank { min_level: 60, name: "Memory Reaper",        quote: "Cycles, weak links, interior cells — nothing leaks past your reach." },
+    Rank { min_level: 66, name: "Concurrency Daemon",   quote: "You fork reality across threads. Arc and locks are your instruments." },
+    Rank { min_level: 68, name: "Salon Sovereign",      quote: "You own the system. The salon runs on your code. 🦀" },
 ];
 
 const CLASSES: [&str; 4] = [
