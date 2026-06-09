@@ -130,8 +130,8 @@ const LESSONS: [LessonMeta; 68] = [
     LessonMeta { number: 44, title: "Rc<RefCell<T>>",                      stat_group: "Mutation Core" },
     LessonMeta { number: 45, title: "Custom Iterator",                     stat_group: "Iterator Engine" },
     LessonMeta { number: 46, title: "Iterator Adaptors",                   stat_group: "Iterator Engine" },
-    LessonMeta { number: 47, title: "File Read",                           stat_group: "Data Pipeline" },
-    LessonMeta { number: 48, title: "File Write",                          stat_group: "Data Pipeline" },
+    LessonMeta { number: 47, title: "CSV Read",                            stat_group: "Data Pipeline" },
+    LessonMeta { number: 48, title: "CSV Write",                           stat_group: "Data Pipeline" },
     LessonMeta { number: 49, title: "Serde JSON",                          stat_group: "Data Pipeline" },
     LessonMeta { number: 50, title: "async fn + tokio",                    stat_group: "Async Grid" },
     LessonMeta { number: 51, title: "tokio::spawn",                        stat_group: "Async Grid" },
@@ -253,8 +253,8 @@ const ABILITIES: [Ability; 68] = [
     Ability { name: "Iterator Constructor",    description: "Implement the `Iterator` trait on a custom struct.",                 lesson: 45 },
     Ability { name: "Adaptor Chain",           description: "Compose filter/map on custom iterators — full pipeline.",            lesson: 46 },
     // (L47-49)
-    Ability { name: "File Reader",             description: "Load data from disk with `fs::read_to_string`.",                    lesson: 47 },
-    Ability { name: "File Writer",             description: "Persist data to disk with `fs::write`.",                            lesson: 48 },
+    Ability { name: "CSV Reader",              description: "Parse a CSV file into structs with `csv` + `serde`.",               lesson: 47 },
+    Ability { name: "CSV Writer",              description: "Write structs to a CSV file with `csv` + `serde`.",                 lesson: 48 },
     Ability { name: "Serde Codec",             description: "Serialize and deserialize structs as JSON.",                         lesson: 49 },
     // Async Phantom (L50-52)
     Ability { name: "Async Ignition",          description: "Write your first `async fn` and `.await` it.",                      lesson: 50 },

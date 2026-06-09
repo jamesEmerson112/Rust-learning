@@ -367,17 +367,17 @@ Work through one lesson at a time. Read the example, then complete the exercise.
 
 ---
 
-### Lesson 47 — File Read
-**Learn:** `fs::read_to_string` — loading data from disk
-**Exercise:** Write `load_price_list(path)` that reads a CSV-style services file.
-**You're done when:** You can read files and parse structured text data.
+### Lesson 47 — CSV Read
+**Learn:** `csv::Reader` + `#[derive(Deserialize)]` — parse CSV rows into structs
+**Exercise:** Write `load_price_list(path)` that reads a `name,price` CSV into a `Vec<Service>`.
+**You're done when:** You can turn a CSV file into typed structs — no `splitn`/`parse` by hand.
 
 ---
 
-### Lesson 48 — File Write
-**Learn:** `fs::write` — persisting data to disk
-**Exercise:** Write `save_daily_log(path, entries)` — output today's services to a file.
-**You're done when:** You can write formatted data to files with error handling.
+### Lesson 48 — CSV Write
+**Learn:** `csv::Writer` + `#[derive(Serialize)]` — write structs as CSV rows
+**Exercise:** Write `save_daily_log(path, entries)` — serialize `Service` rows to a CSV (the header is written automatically).
+**You're done when:** You can persist typed structs as a CSV without building strings by hand.
 
 ---
 

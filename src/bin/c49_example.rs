@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+// c47/c48 used these same serde derives to read/write CSV. serde is
+// format-agnostic — here we keep the struct and just swap the format to JSON.
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 struct ServiceEntry {
     technician: String,

@@ -61,8 +61,8 @@ Run the tracker: `cargo run --bin progress`
 | 44 | `Rc<RefCell<T>>`                      | two stations share one appointment book  |
 | 45 | Custom Iterator                       | `WalkInQueue` yields client names        |
 | 46 | Iterator Adaptors                     | filter + map on `WalkInQueue`            |
-| 47 | File Read                             | `load_price_list()` from services.txt    |
-| 48 | File Write                            | `save_daily_log()` to disk               |
+| 47 | CSV Read                              | `load_price_list()` parses services.csv  |
+| 48 | CSV Write                             | `save_daily_log()` writes a CSV          |
 | 49 | Serde JSON                            | `ServiceEntry` serialize/deserialize     |
 | 50 | `async fn` + tokio                    | `check_availability()` with `.await`     |
 | 51 | `tokio::spawn`                        | concurrent bookings                      |
@@ -116,7 +116,7 @@ See [README.md](README.md) Study Plan for the **Learn / Exercise / Done-when** d
 
 **Custom Iterators (c45-c46)** — `impl Iterator` for `WalkInQueue`, then filter/map adaptors on it.
 
-**File I/O (c47-c49)** — read a price list, write a daily log, serialize/deserialize with serde JSON.
+**File I/O (c47-c49)** — read a CSV price list and write a CSV daily log with the `csv` crate, then serialize/deserialize with serde JSON.
 
 **Async (c50-c52)** — first `async fn` + `.await`, then `tokio::spawn` for concurrent bookings, then `mpsc` channels.
 
@@ -184,7 +184,7 @@ c01 → c02 → c03 → c04 → c05 → c06
                                                                                                                      c45 (custom iter) → c46 (adaptors)
                                                                                                                                               │
                                                                                                                                               ▼
-                                                                                                     c47 (file read) → c48 (file write) → c49 (serde)
+                                                                                                     c47 (csv read) → c48 (csv write) → c49 (serde)
                                                                                                                                               │
                                                                                                                                               ▼
                                                                                                c50 (async fn) → c51 (spawn) → c52 (channels)

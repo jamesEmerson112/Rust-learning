@@ -1,21 +1,32 @@
+use csv::Writer;
+use serde::Serialize;
 use std::fs;
 
-fn save_daily_log(path: &str, entries: &[(String, u32)]) -> Result<(), String> {
-    let mut output = String::new();
-    for (name, price) in entries {
-        output.push_str(&format!("{name},{price}\n"));
+// serialize() writes the header row (from the field names) before the first
+// record, then one CSV row per entry. No format!, no manual string building.
+#[derive(Debug, Serialize)]
+struct Service {
+    technician: String,
+    service: String,
+    price: u32,
+}
+
+fn save_daily_log(path: &str, entries: &[Service]) -> Result<(), String> {
+    let mut wtr = Writer::from_path(path).map_err(|e| format!("cannot write file: {e}"))?;
+    for entry in entries {
+        wtr.serialize(entry).map_err(|e| format!("cannot write row: {e}"))?;
     }
-    fs::write(path, &output).map_err(|e| format!("cannot write file: {e}"))?;
+    wtr.flush().map_err(|e| format!("cannot flush: {e}"))?;
     Ok(())
 }
 
 fn main() {
     let entries = vec![
-        ("Mai - Gel Manicure".to_string(), 4500u32),
-        ("Linh - Pedicure".to_string(), 3500),
+        Service { technician: "Mai".to_string(), service: "Gel Manicure".to_string(), price: 4500 },
+        Service { technician: "Linh".to_string(), service: "Pedicure".to_string(), price: 3500 },
     ];
-    save_daily_log("daily_log_example.txt", &entries).unwrap();
-    let content = fs::read_to_string("daily_log_example.txt").unwrap();
+    save_daily_log("daily_log_example.csv", &entries).unwrap();
+    let content = fs::read_to_string("daily_log_example.csv").unwrap();
     println!("{content}");
-    let _ = fs::remove_file("daily_log_example.txt");
+    let _ = fs::remove_file("daily_log_example.csv");
 }
