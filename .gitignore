@@ -1,2 +1,5 @@
 /target
 .rustacean_save.json
+
+# sled embedded-DB directories created by the c69-c74 examples
+*_sled_db

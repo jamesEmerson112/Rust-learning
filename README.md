@@ -1,6 +1,6 @@
 # Rust Learning
 
-See [ROADMAP.md](ROADMAP.md) for a scannable overview of all 68 lessons.
+See [ROADMAP.md](ROADMAP.md) for a scannable overview of all 74 lessons.
 
 This repo contains small Rust lessons, each with:
 - an `example` binary (complete reference)
@@ -523,14 +523,56 @@ The c30/c31/c42–c44 lessons introduced `Box`, `Rc`, `Cell`, and `RefCell` at t
 ### Lesson 68 — RwLock\<T\>
 **Learn:** `RwLock` — many concurrent readers OR one exclusive writer
 **Exercise:** One writer adds an appointment, then 3 readers read the length concurrently.
-**You're done when:** All 68 lesson tests pass — you've mastered Rust's smart-pointer and concurrency core.
+**You're done when:** You can share data across threads with read/write locks — the smart-pointer & concurrency core is complete.
 
 ---
 
-### Beyond Chapter 68
+### Lesson 69 — Sled Insert
+**Learn:** `sled::open` + `db.insert` — a pure-Rust embedded key-value database, no SQL
+**Exercise:** Write `put(db, key, value)` that stores a key→value pair (as bytes).
+**You're done when:** You can open a sled database and write entries into it.
+
+---
+
+### Lesson 70 — Sled Get
+**Learn:** `db.get` → `Option<IVec>` — reading values back by key
+**Exercise:** Write `get_value(db, key)` returning the stored string, or `None` if absent.
+**You're done when:** You can read values out of the store and handle the missing-key case.
+
+---
+
+### Lesson 71 — Sled + Serde
+**Learn:** store whole structs — `serde_json::to_vec` / `from_slice` (c49), errors unified with `anyhow` (c38)
+**Exercise:** Write `put_service` / `get_service` to round-trip a `Service` struct through sled.
+**You're done when:** You can persist and reload a struct without handling raw bytes yourself.
+
+---
+
+### Lesson 72 — Sled Iterate
+**Learn:** `db.iter()` — scanning every entry in the store
+**Exercise:** Write `all_services(db)` returning every stored `Service` (sorted by name).
+**You're done when:** You can walk the whole database and decode each record.
+
+---
+
+### Lesson 73 — Sled Query
+**Learn:** "querying" without SQL — `filter` + `map` over the records (c21-22 / c45-46)
+**Exercise:** Write `services_over(db, min)` and `names_over(db, min)` to filter records and project names.
+**You're done when:** You can answer questions about the data with iterator combinators.
+
+---
+
+### Lesson 74 — CSV → Sled (capstone)
+**Learn:** integration — read a CSV (c47), store it in sled, then aggregate the data
+**Exercise:** Write `import_and_total(db, csv_path)` — import each row, then return total revenue.
+**You're done when:** All 74 lesson tests pass — you can move data from a file into a database and process it.
+
+---
+
+### Beyond Chapter 74
 The lessons above cover the core language plus practical application. Next topics:
 - Procedural and derive macros
 - Advanced async (`select!`, `RwLock`, cancellation)
 - Web server with `axum` or `actix-web`
-- Database with `sqlx` or `diesel`
+- Relational/SQL databases with `sqlx` or `SeaORM` (you've done embedded key-value with `sled`)
 - Building the salon scheduler as a web API

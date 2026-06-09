@@ -1,6 +1,6 @@
 # Rust Learning — Roadmap
 
-**68 lessons, ~15 minutes each, one new concept per lesson.** (⚡ = light DSA warmup)
+**74 lessons, ~15 minutes each, one new concept per lesson.** (⚡ = light DSA warmup)
 
 Each lesson is a triple:
 - `src/bin/cXX_example.rs` — complete reference (read it)
@@ -83,6 +83,12 @@ Run the tracker: `cargo run --bin progress`
 | 66 | `Arc<T>` Across Threads               | shared immutable state, `thread::spawn`  |
 | 67 | `Arc<Mutex<T>>`                       | shared mutable state across threads      |
 | 68 | `RwLock<T>`                           | many readers / one writer                |
+| 69 | `sled` insert                         | open a DB, insert key/value bytes        |
+| 70 | `sled` get                            | read values back by key                  |
+| 71 | `sled` + serde                        | store & load structs with serde          |
+| 72 | `sled` iterate                        | scan every entry in the store            |
+| 73 | `sled` query                          | filter + map records, no SQL             |
+| 74 | CSV → `sled`                          | import a CSV, then aggregate             |
 
 See [README.md](README.md) Study Plan for the **Learn / Exercise / Done-when** detail on every lesson.
 
@@ -203,18 +209,21 @@ c01 → c02 → c03 → c04 → c05 → c06
                                                   │
                                                   ▼
             ⚡c65 (warmup) → c66 (Arc) → c67 (Arc<Mutex>) → c68 (RwLock)
+                                                  │
+                                                  ▼
+            c69 (insert) → c70 (get) → c71 (serde) → c72 (iterate) → c73 (query) → c74 (CSV→sled)
 ```
 
 ---
 
-## Post-68 Track
+## Post-74 Track
 
-The 68-lesson curriculum covers the core language plus practical application. Once you clear c68, good next topics:
+The 74-lesson curriculum covers the core language plus practical application. Once you clear c74, good next topics:
 
 1. **Procedural and derive macros** — `macro_rules!`, `#[derive(...)]` custom macros.
 2. **Advanced async** — `select!`, `tokio::sync::RwLock`, cancellation, backpressure.
 3. **Web server** — `axum` or `actix-web` with the salon scheduler as an API.
-4. **Database** — `sqlx` or `diesel` for persistent salon data.
+4. **Relational / SQL databases** — `sqlx` or `SeaORM` over SQLite/Postgres (you've done embedded key-value with `sled`; next is querying a SQL engine).
 5. **Testing patterns** — property-based testing, mocking, integration test organization.
 
 ---

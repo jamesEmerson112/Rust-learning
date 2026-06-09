@@ -83,7 +83,7 @@ struct LessonMeta {
 const NUM_LESSONS: u32 = LESSONS.len() as u32;
 const MAX_XP: u32 = NUM_LESSONS * 100;
 
-const LESSONS: [LessonMeta; 68] = [
+const LESSONS: [LessonMeta; 74] = [
     LessonMeta { number: 1,  title: "Hello Variables",                      stat_group: "Core Firmware" },
     LessonMeta { number: 2,  title: "Strings and Formatting",              stat_group: "Core Firmware" },
     LessonMeta { number: 3,  title: "Arrays and Iteration",                stat_group: "Data Cortex" },
@@ -152,9 +152,15 @@ const LESSONS: [LessonMeta; 68] = [
     LessonMeta { number: 66, title: "Arc<T> Across Threads",               stat_group: "Concurrency Lattice" },
     LessonMeta { number: 67, title: "Arc<Mutex<T>>",                       stat_group: "Concurrency Lattice" },
     LessonMeta { number: 68, title: "RwLock<T>",                           stat_group: "Concurrency Lattice" },
+    LessonMeta { number: 69, title: "Sled Insert",                         stat_group: "Embedded Store" },
+    LessonMeta { number: 70, title: "Sled Get",                            stat_group: "Embedded Store" },
+    LessonMeta { number: 71, title: "Sled + Serde",                        stat_group: "Embedded Store" },
+    LessonMeta { number: 72, title: "Sled Iterate",                        stat_group: "Embedded Store" },
+    LessonMeta { number: 73, title: "Sled Query",                          stat_group: "Embedded Store" },
+    LessonMeta { number: 74, title: "CSV to Sled",                         stat_group: "Embedded Store" },
 ];
 
-const STAT_GROUPS: [&str; 28] = [
+const STAT_GROUPS: [&str; 29] = [
     "Core Firmware",
     "Data Cortex",
     "Logic Matrix",
@@ -183,6 +189,7 @@ const STAT_GROUPS: [&str; 28] = [
     "Lifecycle Core",
     "Borrow Runtime",
     "Concurrency Lattice",
+    "Embedded Store",
 ];
 
 // ─── Abilities ─────────────────────────────────────────────────────────────
@@ -193,7 +200,7 @@ struct Ability {
     lesson: u32,
 }
 
-const ABILITIES: [Ability; 68] = [
+const ABILITIES: [Ability; 74] = [
     // Script Kiddie (L1-4)
     Ability { name: "Stack Injection",         description: "Bind data to the stack with `let` and `mut`.",                       lesson: 1  },
     Ability { name: "String Splice",           description: "Manipulate heap strings and format output into the datastream.",     lesson: 2  },
@@ -278,6 +285,13 @@ const ABILITIES: [Ability; 68] = [
     Ability { name: "Atomic Broadcast",        description: "Share immutable data across threads with `Arc<T>`.",                  lesson: 66 },
     Ability { name: "Mutex Lockdown",          description: "Guard shared mutable state across threads with `Arc<Mutex<T>>`.",     lesson: 67 },
     Ability { name: "RwLock Mastery",          description: "Many readers, one writer — concurrent access with `RwLock<T>`.",      lesson: 68 },
+    // Data Daemon (L69-74)
+    Ability { name: "Key Inserter",            description: "Open a sled database and insert key/value bytes.",                    lesson: 69 },
+    Ability { name: "Key Fetcher",             description: "Read values back out of sled by key.",                                lesson: 70 },
+    Ability { name: "Struct Persister",        description: "Store and load structs in sled with serde.",                          lesson: 71 },
+    Ability { name: "Store Scanner",           description: "Iterate every entry in the database.",                                lesson: 72 },
+    Ability { name: "Iterator Query",          description: "Filter and project records with iterators, no SQL.",                  lesson: 73 },
+    Ability { name: "Ingest Pipeline",         description: "Load a CSV into sled and query it back.",                             lesson: 74 },
 ];
 
 // ─── Ranks ─────────────────────────────────────────────────────────────────
@@ -288,7 +302,7 @@ struct Rank {
     quote: &'static str,
 }
 
-const RANKS: [Rank; 17] = [
+const RANKS: [Rank; 18] = [
     Rank { min_level: 0,  name: "Disconnected",        quote: "No signal detected. Jack in to begin." },
     Rank { min_level: 1,  name: "Script Kiddie",        quote: "You've breached the first firewall. The grid recognizes you." },
     Rank { min_level: 5,  name: "Netrunner",            quote: "The heap sprawls before you — an endless neon datascape." },
@@ -305,7 +319,8 @@ const RANKS: [Rank; 17] = [
     Rank { min_level: 55, name: "Heap Warden",          quote: "The allocator answers to you — Box, trait objects, and Drop glue obey." },
     Rank { min_level: 60, name: "Memory Reaper",        quote: "Cycles, weak links, interior cells — nothing leaks past your reach." },
     Rank { min_level: 66, name: "Concurrency Daemon",   quote: "You fork reality across threads. Arc and locks are your instruments." },
-    Rank { min_level: 68, name: "Salon Sovereign",      quote: "You own the system. The salon runs on your code. 🦀" },
+    Rank { min_level: 69, name: "Data Daemon",          quote: "Keys and values bend to your will — no query language required." },
+    Rank { min_level: 74, name: "Salon Sovereign",      quote: "You own the system. The salon runs on your code. 🦀" },
 ];
 
 const CLASSES: [&str; 4] = [

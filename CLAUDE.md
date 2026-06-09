@@ -9,12 +9,12 @@ cargo build                      # Build everything
 cargo run --bin c05_example      # Run a lesson example
 cargo run --bin c05_exercise     # Run a lesson exercise
 cargo test --test c05_tests      # Test a specific lesson
-cargo test --tests               # Run all 68 lesson tests
+cargo test --tests               # Run all 74 lesson tests
 ```
 
 ## Architecture
 
-A 68-lesson Rust curriculum. Each lesson is self-contained with three files:
+A 74-lesson Rust curriculum. Each lesson is self-contained with three files:
 
 - `src/bin/cXX_example.rs` — Complete reference implementation (read-only)
 - `src/bin/cXX_exercise.rs` — Starter stubs with `TODO` comments (learner edits these)
