@@ -1,3 +1,7 @@
+// Arc<T> = Atomically Reference-Counted: share read-only data across THREADS. It's Rc (c28)
+// with thread-safe atomic counts — plain Rc isn't safe to send between threads. (First real
+// std::thread use here.) Coming from C: a refcounted shared buffer whose count is bumped with
+// atomic ops, so several threads can hold it and the last one out frees it.
 use std::sync::Arc;
 use std::thread;
 

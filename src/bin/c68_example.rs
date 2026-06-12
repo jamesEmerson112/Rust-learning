@@ -1,3 +1,6 @@
+// RwLock<T> = a reader/writer lock: many readers OR one writer at a time (a Mutex allows only
+// one accessor, period). Reach for it when reads dominate and you want them to run concurrently.
+// Coming from ThreadX: a readers-writer lock — read() takes shared access, write() exclusive.
 use std::sync::{Arc, RwLock};
 use std::thread;
 

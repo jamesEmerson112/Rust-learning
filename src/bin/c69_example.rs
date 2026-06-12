@@ -1,5 +1,6 @@
-// sled is a pure-Rust embedded key-value database. No SQL, no schema, no server:
-// open a directory, then insert/get byte keys and values. Here we just write.
+// sled is a pure-Rust embedded key-value database — think a HashMap that lives on disk and
+// survives restarts. No SQL, no schema, no server: open a directory, then insert/get byte
+// keys and values. Here we just write.
 fn put(db: &sled::Db, key: &str, value: &str) -> sled::Result<()> {
     db.insert(key, value.as_bytes())?; // keys and values are bytes
     Ok(())

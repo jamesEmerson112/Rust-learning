@@ -1,3 +1,7 @@
+// RefCell also gives interior mutability, but for non-Copy data, by moving the borrow check from
+// compile time to RUNTIME: borrow()/borrow_mut() track active borrows and PANIC on a violation.
+// Coming from C: like a runtime assert that catches aliasing a mutable thing — the safety the
+// compiler usually proves statically, enforced dynamically instead. try_borrow_mut avoids the panic.
 use std::cell::RefCell;
 
 fn main() {

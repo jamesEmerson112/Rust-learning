@@ -1,3 +1,7 @@
+// Implementing Deref lets your own wrapper act like a pointer: *mybox works, and method calls
+// "auto-deref" through it. This is the trait that makes Box/Rc/Arc feel built into the language.
+// Coming from C: it's defining what unary `*` means for your type — a user-overloadable pointer
+// dereference, with the compiler inserting the derefs for you where needed.
 use std::ops::Deref;
 
 struct MyBox<T>(T);

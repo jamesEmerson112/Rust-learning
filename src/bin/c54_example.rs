@@ -1,3 +1,7 @@
+// Capstone — no new concept: a real CLI with subcommands (book / list / revenue) wiring
+// together clap parsing and a HashMap of state into one usable tool.
+// Coming from C: this is your `program <command> --args` dispatcher, but matching on the
+// subcommand enum is exhaustive — the compiler ensures every command is handled.
 use clap::{Parser, Subcommand};
 use std::collections::HashMap;
 

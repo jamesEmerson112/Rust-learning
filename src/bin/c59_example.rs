@@ -1,3 +1,5 @@
+// Warmup (no new Rust concepts): Two Sum in one pass — remember each number's index in a
+// HashMap, then look for its complement. Coming from C: a hash table replacing the O(n^2) double loop.
 use std::collections::HashMap;
 
 fn two_sum(nums: &[i32], target: i32) -> Option<(usize, usize)> {

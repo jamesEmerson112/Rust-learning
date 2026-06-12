@@ -1,3 +1,7 @@
+// Rc counts owners and frees at zero — but two Rcs pointing at each other form a cycle whose
+// count never reaches zero: a leak. Weak<T> is a non-owning reference that doesn't bump the
+// count, breaking the cycle. Coming from C: a manual refcount where a child's back-pointer to
+// its parent is deliberately "weak" so it can't keep the parent alive forever.
 use std::rc::{Rc, Weak};
 
 fn main() {

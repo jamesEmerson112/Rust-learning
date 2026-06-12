@@ -1,3 +1,7 @@
+// Drop runs cleanup automatically when a value leaves scope, in reverse (LIFO) order — Rust's
+// destructor. This is RAII, not garbage collection: it fires at a known, deterministic point.
+// Coming from C: it's the free()/close()/unlock() you write by hand at every return and
+// `goto fail`, except the compiler guarantees it runs exactly once, on every exit path.
 use std::cell::RefCell;
 
 struct Station<'a> {

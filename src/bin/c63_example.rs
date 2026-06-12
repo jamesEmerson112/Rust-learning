@@ -1,3 +1,7 @@
+// Interior mutability: Cell<T> lets you mutate a value through a SHARED &reference (normally
+// forbidden), for Copy types — get/set/replace/take, no borrows tracked, single-threaded only.
+// Coming from C: a small mutable box you can poke even when the struct around it is otherwise
+// "const" — but the type system keeps it single-owner, so there are no aliasing surprises.
 use std::cell::Cell;
 
 struct Counter {
