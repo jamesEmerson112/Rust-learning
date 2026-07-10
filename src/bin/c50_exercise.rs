@@ -1,7 +1,6 @@
 pub async fn check_availability(slot: &str) -> bool {
     // TODO: Return false if slot == "10:00" (taken), true otherwise.
-    let _ = slot;
-    true
+    slot != "10:00"
 }
 
 #[tokio::main]
