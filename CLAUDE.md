@@ -45,79 +45,46 @@ Tests import exercises as modules via `#[path = "../src/bin/cXX_exercise.rs"]` a
 - The learner is a senior dev (C/C++, Python, JS/TS background) learning Rust; use systems-level analogies (e.g., `&str` ≈ `const char*`)
 - Edition is 2024
 
+## Current Status (as of 2026-07-22)
+
+- **Frontier: c55** — The Vault Run, Chapter 1 (LOADOUT). Resume with `cargo run --bin c55_example`, then edit `src/bin/c55_exercise.rs`, test with `cargo test --test c55_tests`.
+- **Passed** (verified by the 2026-07-21 full rescan): all of c01-c54 EXCEPT open homework **c16, c19, c35, c37-c38, c40, c48-c49, c53**. The Vault Run does not depend on these.
+- **Untouched: c55-c80** — all learner stubs / planted bugs.
+- `.rustacean_save.json` mirrors this state. Update this section when progress meaningfully changes.
+
+## Authoring New Lessons
+
+Standing process rules (established 2026-06-08, reused 2026-07-21):
+
+- **One new concept per lesson** — the hard rule. If a lesson smuggles extras, split it. Warmups (⚡) and Bug Hunt (★) lessons introduce ZERO new concepts.
+- **Solved-first verification flow:** author exercises SOLVED with their tests → run the suites green (proves wiring and solvability) → convert to learner form (stubs: `let _ = ...;` placeholders + `#[allow(unused_imports)]`; bug lessons: plant the defect) → confirm every suite FAILS deterministically. Examples ship complete.
+- **Bug-lesson rules:** the code always compiles; tests fail deterministically (wrong value / `Err` / expected panic) — never a hang, no nondeterminism; a `// BUG:` comment states the SYMPTOM, never the fix; the example file is the corrected reference.
+- **When adding lessons**, extend in lockstep: `src/bin/progress.rs` (LESSONS, ABILITIES, STAT_GROUPS, RANKS — the counts in the array types must match), ROADMAP.md (table row + phase blurb + prereq chain), README.md Study Plan entry (`### Lesson N — Title` + **Learn/Exercise/You're done when**).
+
 ## Context History
 
-### 2026-04-13
-- [progress] Advanced from c07 through c12; all tests c01-c12 passing. Currently Level 12/20, "ICE Breaker" rank, 1200/2000 XP (Rustacean handle: Chrome Surgeon).
-- [feat] Completed c07 Ownership/Borrowing (`shout()`), c08 String Slices, c09 Structs, c10 Methods/impl, c11 Enums, c12 Option<T>.
-- [fix] c11_example.rs — removed unused `std::fmt::format` import and added missing "Result: " prefix in format strings; also fixed duplicate function name + string indexing issue.
-- [fix] Renamed `src/bin/c02_example copy.rs` to `c02_example_backup.rs` to resolve cargo crate-name error (spaces invalid in bin target names).
-- [research] Discussed: 4 String constructors (`String::from`, `.to_string`, `.to_owned`, `.into`) and their differing traits; `iter()` vs `iter_mut()` vs `into_iter()`; range `i..n` vs `i..=n`; no function overloading / no classes; strings not indexable (use `.starts_with()`); `.next()` advances iterator cursor; HashMap `entry().or_insert(0)` counting idiom; `usize` ≈ `size_t`.
-- [todo] Working on c13 HashMap Basics exercise — user hit bug using `.keys()` instead of `.entry(c)` for the counting pattern.
-- [feat] Expanded curriculum from 20 to 30 lessons using "split dense lessons + add new topics" approach. Capstone moved to c30; `progress.rs` updated accordingly.
-- [refactor] Bulk-renamed via `git mv`: old c15->c17, c16->c19, c17->c23, c18->c24, c19->c29, c20->c30; also `src/lesson19/`->`src/lesson29/` and `src/lesson20/`->`src/lesson30/`.
-- [refactor] Split dense lessons: old c14 -> new c14/c15/c16; old c16 -> c18/c19; old c18 -> c24/c25.
-- [feat] Authored 6 new lessons: c20 Closures, c21 Iter Combinators I (map/filter), c22 Iter Combinators II (fold/sum), c26 Lifetimes Intro, c27 Box<T>, c28 Rc<T>/Arc<T>.
-- [feat] New curriculum c14-c30: c14 HashMap Entry API, c15 String Normalization, c16 Word Count, c17 Result Basics, c18 `?` Operator, c19 Error Chaining (map_err), c20 Closures, c21 Iter I, c22 Iter II, c23 Traits, c24 Generics, c25 Trait Bounds, c26 Lifetimes, c27 Box<T>, c28 Rc<T>/Arc<T>, c29 Modules, c30 Capstone Gradebook.
-- [feat] progress.rs: LESSONS 20->30, STAT_GROUPS 10->15 (added String Forge, Error Channel, Iterator Matrix, Bound Compiler, Pointer Grid), ABILITIES 20->30, RANKS 7->9 (added Neon Assassin @L21, Silicon Shaman @L25; Zero-Day Sovereign moved to L30), max XP bar 2000->3000.
-- [decision] User wants lean c10-c13 style (one function, 1-3 line main, no explainer comments) for all c1-c30 examples while still learning; richer/denser style reserved for post-c30 material. Slimmed c14, c15, c16, c18, c20, c21, c22, c24, c25, c26, c27, c28 examples accordingly.
-- [verify] `cargo build --all` clean (one pre-existing c10 warning); all 30 test files compile; `cargo run --bin progress` displays 30-lesson curriculum. User advanced Level 12 -> 13 (c13 complete); c14 shown as NEXT.
-- [ref] Plan file: `C:\Users\voan2\.claude\plans\spicy-foraging-frost.md`.
-- [feat] Completed c14 (HashMap Entry API — `count_numbers`) and c15 (String Normalization — `normalize_word`); around Level 14-15/30.
-- [todo] Working on c16 Word Count (HashMap + normalization combo). Two bugs hit: (1) inserted raw `&str` into `HashMap<String, usize>` — fix with `.to_string()`; (2) `normalise()` returning `String` but `.trim_matches()` returns `&str` — fix with `.to_lowercase()` or `.to_string()` to convert.
-- [research] `usize` vs `i32` (usize = 8 bytes on 64-bit, ≈ C `size_t`, used for counts/indices to signal intent and avoid casts).
-- [research] DSA "minimum value" pattern map: linear scan, sliding window, monotonic deque, binary search, heap, DP — not always DP.
-- [research] Estimated current Rust knowledge (c01-c13) covers ~60% of LeetCode "Easy" assuming algorithm knowledge.
-- [research] `.to_lowercase()` vs `.to_ascii_lowercase()` vs `.to_uppercase()` — Unicode-aware vs ASCII-only.
-- [research] `&str` vs `String`: viewing methods return `&str` (no allocation), transforming methods return `String` (new data).
-- [decision] User commits to Rust as sole learning track; explicitly chose Rust over Python/DSA/LeetCode grinding despite immediate-ROI argument. Reason: Python carries negative emotional baggage from two recent interview failures; Rust = fresh canvas + momentum. Sustainable learning > optimal learning. Saved as durable feedback memory `feedback_rust_only_learning_track.md`.
+Older sessions are condensed; full detail is in this file's git history (`git log -p CLAUDE.md`).
 
-### 2026-04-14
-- [fix] Rewrote `src/bin/c17_example.rs` from dense `.map_err()?` chain to explicit `match` on `Result`. Original c17 introduced 3 new concepts at once (`.parse()`, `.map_err()`, `?`), violating one-concept-per-lesson rule — `?` belongs to c18, `map_err` to c19. Updated TODO comment in `src/bin/c17_exercise.rs` to hint at the match approach; test signature preserved.
-- [verify] `cargo run --bin c17_example` prints `Ok(25)` and `Err("invalid age: abc")` as expected.
-- [decision] Durable pedagogical rule: from c17 onward every lesson introduces exactly ONE new concept. Audit confirmed c18-c29 already comply; c30 is the intentional integration capstone.
-- [decision] Do NOT restructure the 30-lesson layout to close the 4 "honest gaps" (custom error enums, explicit slices `&[T]`, struct lifetimes, `RefCell<T>`). Churn on save file + `progress.rs` + ranks outweighs marginal pedagogical gain. Gaps belong to Post-30 Track.
-- [feat] Created `ROADMAP.md` at repo root: 30-row at-a-glance table, 9 phase groupings with one-sentence themes, ASCII prerequisite chain, explicit Post-30 Track naming the 4 gaps plus thiserror/anyhow, custom iterators, async, macros. Added one-line link to `ROADMAP.md` at top of `README.md`.
-- [research] `.parse::<T>()` works on any `T: FromStr` (trait bound on a generic method — Rust's compile-time dispatch analog to C's `atoi`/`atof`/`strtol` family). `FromStr` formally lands in c23 (traits); generics/bounds in c24-c25.
-- [research] Teacher's review of c17-c30: pedagogically sound. One-concept rule enforced, dependency ordering correct throughout. Optional enhancement considered: extend c26 to cover struct lifetimes as a second `'a` example — user deferred.
-- [ref] Plan file `C:\Users\voan2\.claude\plans\spicy-foraging-frost.md` updated with teacher's review + ROADMAP plan.
-- [feat] Completed c18 The `?` Operator — user implemented `parse_pair(a, b) -> Result<(i32, i32), ParseIntError>` using `?` on both `.parse::<i32>()` calls. All 4 tests pass (parse_pair_both_valid, parse_pair_negative_numbers, parse_pair_first_invalid, parse_pair_second_invalid).
-- [feat] Completed c19 Error Chaining with `map_err` — studied the example (no exercise edit needed to confirm understanding).
-- [feat] Completed c20 Closures — user implemented `apply(x, f: impl Fn(i32) -> i32) -> i32` returning `f(x)`. All 3 tests pass (apply_double, apply_add_constant, apply_captures_from_scope). Level 20/30.
-- [research] `?` exits the enclosing *function*, not the program. The caller receives the `Err` and can handle it (match, propagate further, ignore). Only terminates the program if nobody handles it all the way up to `main`.
-- [research] `.map_err()` transforms the error variant while leaving `Ok` untouched. Signature: `Result<T, E1>.map_err(E1 -> E2) -> Result<T, E2>`. Idiomatic pair: `.map_err(...)?` — convert error type, then early-return. Symmetric with `.map(...)` on the Ok side.
-- [research] `.parse()` is generic over any `T: FromStr`, returns `Result<T, T::Err>`. Turbofish `::<T>` picks the target type. Rust's typed equivalent of C's `atoi`/`atof`/`strtol` family, but forces explicit error handling.
-- [decision] Post-c30 track will emphasize practical error-handling projects (CLI tools, HTTP clients, REPL). Candidates surfaced: config-file validator, CSV summarizer, tiny HTTP client with reqwest+serde, simple calculator REPL, re-implementations of wc/head/tail. Noted in ROADMAP.md post-30 direction.
-- [research] Teacher's "how useful are you now?" assessment after c20: reachable ~70-75% of LeetCode Easy; can write small CLI tools with proper error handling; cannot yet write idiomatic iterator chains (c21+), generic helpers (c23+), or borrowing structs (c26). c20 framed as the "quiet turning point" — closures + upcoming iterators (c21-22) shift the code from procedural to idiomatic Rust.
-- [todo] Next: c21 Iterator Combinators I (map/filter/collect). Expected to be the "this language is elegant" moment.
-- [ref] Unrelated cleanup flagged but not done: `src/bin/c17_exercise.rs:1` has `use std::fmt::format;` leftover (unused import warning).
+### 2026-04 (summary)
+- [refactor] Curriculum grew 20→30→33: dense lessons split so each teaches one concept (map/collect, filter, sum, fold became separate lessons; Debug Format added as the iterator→traits bridge). Renames rippled through progress.rs and lesson directories.
+- [decision] One-concept-per-lesson locked in from c17 onward (c17 itself rewritten from a `.map_err()?` chain to an explicit `match` for this reason). No upper bound on lesson count (memory: `feedback_no_lesson_cap`).
+- [decision] Lean example style for c01-c30 (one function, 1-3 line main, no explainer comments); richer style reserved for later material.
+- [decision] User committed to Rust as the sole learning track (memory: `feedback_rust_only_learning_track`).
+- [feat] ROADMAP.md created (at-a-glance table, phase groupings, prereq chain, post-track). progress.rs made dynamic: `NUM_LESSONS`/`MAX_XP` derived from `LESSONS.len()`.
+- [progress] Learner advanced roughly c07 → c20 across April. Research topics that month (String constructors, iterator families, `usize` ≈ `size_t`, `parse`/`FromStr`, `map_err`, `&str` vs `String`) are in git history.
 
-### 2026-04-22
-- [refactor] Expanded curriculum from 30 to 33 lessons to enforce one-concept-per-lesson rule. c21 (map+filter+collect) was overloaded with 3 new concepts; c22 (fold+sum+turbofish) also overloaded; c25 (trait bounds) used `.copied()` and `?` on Option which hadn't been taught.
-- [refactor] Split old c21 → new c21 (Map+Collect) + c22 (Filter). Split old c22 → new c23 (Sum) + c24 (Fold). Added brand new c25 (Debug Format — `{:?}`). Simplified old c25 (trait bounds) → new c28 with `larger<T: Ord>` instead of complex iterator-based `largest`.
-- [refactor] Renamed old c23→c26, c24→c27, c25→c28, c26→c29, c27→c30, c28→c31, c29→c32, c30→c33. Directories: lesson29/→lesson32/, lesson30/→lesson33/.
-- [feat] progress.rs now dynamic: `NUM_LESSONS` and `MAX_XP` derived from `LESSONS.len()`. Stat bars scale to group size. Added "Debug Console" stat group, "Neon Sovereign" rank at L30, final rank at L33. 10 ranks, 16 stat groups, 33 abilities.
-- [decision] No upper bound on lesson count. One concept per lesson is the hard rule; if a lesson smuggles extras, split it. Saved as durable feedback memory.
-- [decision] c25 (Debug Format) placed as bridge between iterators and traits — motivates "what IS a trait?" before c26 formally teaches it.
-
-### 2026-06-08
-- [feat] Expanded curriculum from 54 to 68 lessons: "Smart Pointers Deep Dive + DSA Warmups" (c55-c68). Goes past the surface intros of c30/c31/c42-c44 to the reasons those types exist. All `std`, no new deps; c66-c68 introduce `std::thread` (first use in the curriculum).
-- [feat] 10 deep-dive lessons: c56 Recursive Types with Box (Waitlist cons-list), c57 Trait Objects `Box<dyn>`, c58 Deref/`MyBox<T>`, c60 Drop/RAII (LIFO `closing_order`), c61 `Weak<T>` + cycles, c63 full Cell API (`replace`/`take`), c64 RefCell runtime borrow (`try_borrow_mut`), c66 `Arc<T>` across threads, c67 `Arc<Mutex<T>>`, c68 `RwLock<T>`. c67 is deliberately the threaded mirror of c44 `Rc<RefCell<T>>`.
-- [feat] 4 interleaved light-DSA warmups (one per cluster) for gentle progression into the difficulty spike: c55 Fibonacci (iterative), c59 Two Sum (HashMap), c62 reverse-in-place (two-pointer), c65 contains-duplicate (HashSet). All solvable with c01-c54 tools only — no new syntax. Grouped under a "Drill Matrix" stat group.
-- [decision] User asked for DSA warmups "for small progression" because the smart-pointer block (recursion, trait objects, threads) is a real difficulty jump. Cadence: one warmup per cluster (4 total), strictly easy. Saved rationale in plan `~/.claude/plans/ethereal-floating-yeti.md`.
-- [decision] Kept "Salon Sovereign" as the single end-game rank (no new final-rank name); moved its threshold L54→L68 and added 3 intermediate deep-dive ranks (Heap Warden @L55, Memory Reaper @L60, Concurrency Daemon @L66). Consequence: the L68 capstone now fires the "SYSTEM FULLY COMPROMISED" final screen instead of c54.
-- [feat] progress.rs: LESSONS 54→68, STAT_GROUPS 23→28 (added Drill Matrix, Heap Forge, Lifecycle Core, Borrow Runtime, Concurrency Lattice), ABILITIES 54→68, RANKS 14→17.
-- [process] Verification flow for new lessons: write solved exercises + tests, run all 14 suites green to prove wiring, THEN convert exercises to learner stubs (`let _ = ...;` placeholders + `#[allow(unused_imports)]`, matching c47-c54) and confirm each lesson fails as homework. Examples ship complete; all 14 run with correct output.
-- [verify] `cargo build` clean (only pre-existing c10_example warning). No `.rustacean_save.json` present — user runs `cargo run --bin progress -- --rescan` to pick up the new lessons.
-- [docs] Updated ROADMAP.md (68 rows, ⚡ warmup tag, new phase blocks, prereq chain, Post-68 Track), README.md (Study Plan c55-c68), and this file.
+### 2026-06-08 (summary)
+- [feat] Expanded 54→68: Smart Pointers Deep Dive (Box for recursion/trait objects/Deref, Drop/Weak, full Cell/RefCell API, Arc/Mutex/RwLock — first `std::thread` use) plus 4 light DSA warmups, one per cluster, as an on-ramp to the difficulty jump. All std, no new deps.
+- [feat] progress.rs extended (ranks Heap Warden/Memory Reaper/Concurrency Daemon; endgame moved to L68). Solved-first verification flow established — now codified under "Authoring New Lessons" above.
+- (This block's exercises were superseded by THE VAULT RUN rewrite on 2026-07-21.)
 
 ### 2026-07-21
 - [refactor] Rewrote c55-c74 as "THE VAULT RUN" — a five-chapter cyberpunk heist arc (LOADOUT, GHOST PROTOCOL, INSIDE THE ICE, THE CREW, THE VAULT). User had stopped at c55 (bored/discouraged by flat isolated stubs); test run verified c50-c52+c54 passed from the Jul 9 session and everything c55+ was untouched. Concepts per lesson unchanged; theme, exercise formats, and richness rewritten. Salon crew (Mai/Linh/Trang) carries over as the heist crew; learner plays "Chrome Surgeon" (their save-file class).
 - [decision] User picked (via AskUserQuestion): cyberpunk netrunner theme matching the RPG tracker; a MIX of exercise formats (fix-the-bug + build-on-own-code + richer stubs); scope c55-c74 only. Mid-turn addition: salon-themed EXTRA exercises as debugging problems — "i prefer debugging" (saved as durable memory feedback_prefers_debugging_exercises).
-- [feat] Four ★ BUG HUNT lessons in the arc: c58 (Deref serves factory_default instead of firmware), c61 (strong Rc cycle keeps the trace alive), c64 (RefCell write-during-sweep panic → try_borrow_mut), c67 (deposits increment a copied value, not the shared Mutex — compiler warning is the clue). Bug rule: always compiles, fails deterministically, never hangs; `// BUG:` comment states the symptom, never the fix.
+- [feat] Four ★ BUG HUNT lessons in the arc: c58 (Deref serves factory_default instead of firmware), c61 (strong Rc cycle keeps the trace alive), c64 (RefCell write-during-sweep panic → try_borrow_mut), c67 (deposits increment a copied value, not the shared Mutex — compiler warning is the clue).
 - [feat] c74 finale imports the learner's OWN c71_exercise.rs via `#[path]` (the one deliberate cross-lesson dependency) — capstone assembles their Intel codec; tests hint "finish c71 first" if it's still a stub. Only ONE import on purpose: importing both c71 and c73 would create two distinct Intel types.
 - [feat] c75-c80 "Bug Hunt" block (authored by Opus subagent, verified green-solved/red-bugged both directions): salon debugging side jobs — HashMap insert clobber (c75), swallowed parse error (c76), inverted filter (c77), slice off-by-one (c78), RefCell double borrow (c79), half-drained tokio mpsc (c80).
 - [feat] progress.rs: LESSONS 74→80, STAT_GROUPS 29→30 ("Embedded Store"→"Datavault", added "Bug Hunt"), ABILITIES 74→80, RANKS 18→19 (rank 74 "Salon Sovereign"→"Vault Sovereign"; new final rank "Zero-Day Sovereign" @L80). Endgame banner rethemed.
-- [verify] Full flow: solved-reference pass = 20/20 suites green (55 tests); learner-form pass = 20/20 suites fail deterministically; cargo build clean; all 20 examples run with story output; `progress --rescan` over 80 lessons updated the stale save to ground truth (level reflects real c01-c54 progress; open homework unchanged: c16, c19, c35, c37-c38, c40, c48-c49, c53).
+- [verify] Full flow: solved-reference pass = 20/20 suites green (55 tests); learner-form pass = 20/20 suites fail deterministically; cargo build clean; all 20 examples run with story output; `progress --rescan` over 80 lessons updated the stale save to ground truth.
 - [docs] ROADMAP.md (80 rows, ★ tag, chapter phase blocks, new prereq chain, Post-80 Track), README.md (Study Plan c55-c80 with chapter lead-ins, File layout c01…c80 drift fixed), CLAUDE.md architecture notes.
-- [ref] Solved references for c55-c74 live in the session scratchpad only (not committed) — regenerate from examples if ever needed; examples remain the canonical answers.
+- [ref] Solved references for c55-c74 lived in the session scratchpad only (not committed) — the examples are the canonical answers.
