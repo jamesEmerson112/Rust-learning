@@ -2,21 +2,38 @@
 #[allow(dead_code)]
 mod c56_exercise;
 
-use c56_exercise::{Waitlist, build_waitlist, waitlist_len};
+use c56_exercise::{Route, build_route, hop_count, last_node};
 
 #[test]
-fn empty_is_zero() {
-    assert_eq!(waitlist_len(&Waitlist::Empty), 0);
+fn empty_route_is_zero_hops() {
+    assert_eq!(hop_count(&Route::Exit), 0);
+    assert_eq!(last_node(&Route::Exit), None);
 }
 
 #[test]
-fn counts_clients() {
-    let list = build_waitlist(&["Mai", "Linh", "Trang"]);
-    assert_eq!(waitlist_len(&list), 3);
+fn three_hop_route() {
+    let route = build_route(&["gateway", "relay-7", "aegis-core"]);
+    assert_eq!(hop_count(&route), 3);
 }
 
 #[test]
-fn single_client() {
-    let list = build_waitlist(&["Mai"]);
-    assert_eq!(waitlist_len(&list), 1);
+fn first_node_is_outermost() {
+    let route = build_route(&["gateway", "relay-7"]);
+    match &route {
+        Route::Hop(name, _) => assert_eq!(name, "gateway"),
+        Route::Exit => panic!("route should start at the gateway, not Exit"),
+    }
+}
+
+#[test]
+fn deepest_hop_is_the_vault_doorstep() {
+    let route = build_route(&["gateway", "relay-7", "aegis-core"]);
+    assert_eq!(last_node(&route), Some("aegis-core".to_string()));
+}
+
+#[test]
+fn single_hop_route() {
+    let route = build_route(&["gateway"]);
+    assert_eq!(hop_count(&route), 1);
+    assert_eq!(last_node(&route), Some("gateway".to_string()));
 }

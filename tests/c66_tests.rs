@@ -2,10 +2,10 @@
 #[allow(dead_code)]
 mod c66_exercise;
 
-use c66_exercise::shared_across_threads;
+use c66_exercise::crew_estimates;
 
 #[test]
-fn three_threads_each_sum() {
-    // 3 threads × (4500 + 6000 + 3500 = 14000) = 42000
-    assert_eq!(shared_across_threads(), 42000);
+fn three_crew_members_tally_the_same_map() {
+    // 3 threads × (4000 + 6500 + 3500 = 14000) = 42000
+    assert_eq!(crew_estimates(), 42000);
 }

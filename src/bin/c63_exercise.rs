@@ -1,36 +1,38 @@
+// THE VAULT RUN — Chapter 3: INSIDE THE ICE
+// The jammer's housing is sealed: every crew member holds it by &shared reference.
+// The charge cell inside still has to swap and drain — interior mutability via Cell.
 use std::cell::Cell;
 
-pub struct Counter {
-    value: Cell<u32>,
+pub struct SignalJammer {
+    charge: Cell<u32>,
 }
 
-impl Counter {
-    pub fn new(start: u32) -> Self {
-        Self { value: Cell::new(start) }
+impl SignalJammer {
+    pub fn new(charge: u32) -> Self {
+        Self { charge: Cell::new(charge) }
     }
 
-    pub fn get(&self) -> u32 {
-        self.value.get()
+    pub fn charge_level(&self) -> u32 {
+        self.charge.get()
     }
 
-    pub fn replace_with(&self, n: u32) -> u32 {
-        // TODO: Store `n` and return the OLD value — all through &self.
-        // Hint: Cell::replace does exactly this.
-        let _ = n;
+    pub fn reload(&self, fresh: u32) -> u32 {
+        // TODO: Slot the fresh cell and return the SPENT one (the old value) —
+        // all through &self. Hint: Cell::replace does exactly this.
+        let _ = fresh;
         0
     }
 
-    pub fn take(&self) -> u32 {
-        // TODO: Return the current value and reset the cell to 0 (u32::default()).
-        // Hint: Cell::take.
+    pub fn discharge(&self) -> u32 {
+        // TODO: Dump the ENTIRE charge into the jam: return the current value
+        // and leave the cell at 0 (u32::default()). Hint: Cell::take.
         0
     }
 }
 
 fn main() {
-    let c = Counter::new(10);
-    println!("old  = {}", c.replace_with(99));
-    println!("now  = {}", c.get());
-    println!("took = {}", c.take());
-    println!("now  = {}", c.get());
+    let jammer = SignalJammer::new(10);
+    println!("[jammer] spent cell: {} (want 10)", jammer.reload(99));
+    println!("[jammer] discharge: {} (want 99)", jammer.discharge());
+    println!("[jammer] level: {} (want 0)", jammer.charge_level());
 }

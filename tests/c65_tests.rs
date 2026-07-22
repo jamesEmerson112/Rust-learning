@@ -2,19 +2,19 @@
 #[allow(dead_code)]
 mod c65_exercise;
 
-use c65_exercise::has_duplicate;
+use c65_exercise::signature_reused;
 
 #[test]
-fn detects_duplicate() {
-    assert!(has_duplicate(&[1, 2, 3, 1]));
+fn detects_a_replayed_signature() {
+    assert!(signature_reused(&[7011, 7012, 7013, 7011]));
 }
 
 #[test]
-fn no_duplicate() {
-    assert!(!has_duplicate(&[1, 2, 3, 4]));
+fn clean_batch_passes() {
+    assert!(!signature_reused(&[7011, 7012, 7013, 7014]));
 }
 
 #[test]
-fn empty_has_none() {
-    assert!(!has_duplicate(&[]));
+fn empty_batch_is_clean() {
+    assert!(!signature_reused(&[]));
 }

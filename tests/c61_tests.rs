@@ -2,14 +2,15 @@
 #[allow(dead_code)]
 mod c61_exercise;
 
-use c61_exercise::{dangling_weak_is_none, weak_counts};
+use c61_exercise::{link_counts, trace_lost};
 
 #[test]
-fn one_strong_one_weak() {
-    assert_eq!(weak_counts(), (1, 1));
+fn daemon_has_no_strong_grip() {
+    // one strong owner (you), one weak watcher (the daemon)
+    assert_eq!(link_counts(), (1, 1));
 }
 
 #[test]
-fn weak_cannot_outlive_owner() {
-    assert!(dangling_weak_is_none());
+fn jack_out_loses_the_trace() {
+    assert!(trace_lost(), "after dropping the session, the daemon must not reach it");
 }

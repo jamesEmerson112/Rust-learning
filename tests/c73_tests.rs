@@ -2,41 +2,40 @@
 #[allow(dead_code)]
 mod c73_exercise;
 
-use c73_exercise::{names_over, services_over, Service};
+use c73_exercise::{Intel, shortlist, shortlist_codenames};
 
-fn temp_db() -> sled::Db {
+fn temp_vault() -> sled::Db {
     sled::Config::new().temporary(true).open().unwrap()
 }
 
-fn seed(db: &sled::Db, name: &str, price: u32) {
-    let bytes = serde_json::to_vec(&Service { name: name.to_string(), price }).unwrap();
-    db.insert(name, bytes).unwrap();
+fn seed(db: &sled::Db, codename: &str, value: u32) {
+    let bytes = serde_json::to_vec(&Intel { codename: codename.to_string(), value }).unwrap();
+    db.insert(codename, bytes).unwrap();
 }
 
 #[test]
-fn filters_by_min_price() {
-    let db = temp_db();
-    seed(&db, "Gel Manicure", 4500);
-    seed(&db, "Pedicure", 3500);
-    seed(&db, "Acrylic", 6000);
-    let over = services_over(&db, 4000).unwrap();
+fn shortlist_keeps_only_premium_intel() {
+    let db = temp_vault();
+    seed(&db, "GHOSTKEY", 64000);
+    seed(&db, "BLACKOUT", 42000);
+    seed(&db, "EXEC-DIRT", 18500);
     assert_eq!(
-        over,
+        shortlist(&db, 40000).unwrap(),
         vec![
-            Service { name: "Acrylic".to_string(), price: 6000 },
-            Service { name: "Gel Manicure".to_string(), price: 4500 },
+            Intel { codename: "BLACKOUT".to_string(), value: 42000 },
+            Intel { codename: "GHOSTKEY".to_string(), value: 64000 },
         ]
     );
 }
 
 #[test]
-fn projects_names_only() {
-    let db = temp_db();
-    seed(&db, "Gel Manicure", 4500);
-    seed(&db, "Pedicure", 3500);
-    seed(&db, "Acrylic", 6000);
+fn codenames_project_just_the_names() {
+    let db = temp_vault();
+    seed(&db, "GHOSTKEY", 64000);
+    seed(&db, "BLACKOUT", 42000);
+    seed(&db, "EXEC-DIRT", 18500);
     assert_eq!(
-        names_over(&db, 4000).unwrap(),
-        vec!["Acrylic".to_string(), "Gel Manicure".to_string()]
+        shortlist_codenames(&db, 40000).unwrap(),
+        vec!["BLACKOUT".to_string(), "GHOSTKEY".to_string()]
     );
 }

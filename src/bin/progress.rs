@@ -83,7 +83,7 @@ struct LessonMeta {
 const NUM_LESSONS: u32 = LESSONS.len() as u32;
 const MAX_XP: u32 = NUM_LESSONS * 100;
 
-const LESSONS: [LessonMeta; 74] = [
+const LESSONS: [LessonMeta; 80] = [
     LessonMeta { number: 1,  title: "Hello Variables",                      stat_group: "Core Firmware" },
     LessonMeta { number: 2,  title: "Strings and Formatting",              stat_group: "Core Firmware" },
     LessonMeta { number: 3,  title: "Arrays and Iteration",                stat_group: "Data Cortex" },
@@ -152,15 +152,21 @@ const LESSONS: [LessonMeta; 74] = [
     LessonMeta { number: 66, title: "Arc<T> Across Threads",               stat_group: "Concurrency Lattice" },
     LessonMeta { number: 67, title: "Arc<Mutex<T>>",                       stat_group: "Concurrency Lattice" },
     LessonMeta { number: 68, title: "RwLock<T>",                           stat_group: "Concurrency Lattice" },
-    LessonMeta { number: 69, title: "Sled Insert",                         stat_group: "Embedded Store" },
-    LessonMeta { number: 70, title: "Sled Get",                            stat_group: "Embedded Store" },
-    LessonMeta { number: 71, title: "Sled + Serde",                        stat_group: "Embedded Store" },
-    LessonMeta { number: 72, title: "Sled Iterate",                        stat_group: "Embedded Store" },
-    LessonMeta { number: 73, title: "Sled Query",                          stat_group: "Embedded Store" },
-    LessonMeta { number: 74, title: "CSV to Sled",                         stat_group: "Embedded Store" },
+    LessonMeta { number: 69, title: "Sled Insert",                         stat_group: "Datavault" },
+    LessonMeta { number: 70, title: "Sled Get",                            stat_group: "Datavault" },
+    LessonMeta { number: 71, title: "Sled + Serde",                        stat_group: "Datavault" },
+    LessonMeta { number: 72, title: "Sled Iterate",                        stat_group: "Datavault" },
+    LessonMeta { number: 73, title: "Sled Query",                          stat_group: "Datavault" },
+    LessonMeta { number: 74, title: "CSV to Sled",                         stat_group: "Datavault" },
+    LessonMeta { number: 75, title: "Bug Hunt: The Vanishing Tally",       stat_group: "Bug Hunt" },
+    LessonMeta { number: 76, title: "Bug Hunt: The Silent Zero",           stat_group: "Bug Hunt" },
+    LessonMeta { number: 77, title: "Bug Hunt: The Missing VIP Tips",      stat_group: "Bug Hunt" },
+    LessonMeta { number: 78, title: "Bug Hunt: The Overlooked Rush",       stat_group: "Bug Hunt" },
+    LessonMeta { number: 79, title: "Bug Hunt: The Double-Booked Borrow",  stat_group: "Bug Hunt" },
+    LessonMeta { number: 80, title: "Bug Hunt: The Half-Heard Clock-Out",  stat_group: "Bug Hunt" },
 ];
 
-const STAT_GROUPS: [&str; 29] = [
+const STAT_GROUPS: [&str; 30] = [
     "Core Firmware",
     "Data Cortex",
     "Logic Matrix",
@@ -189,7 +195,8 @@ const STAT_GROUPS: [&str; 29] = [
     "Lifecycle Core",
     "Borrow Runtime",
     "Concurrency Lattice",
-    "Embedded Store",
+    "Datavault",
+    "Bug Hunt",
 ];
 
 // ─── Abilities ─────────────────────────────────────────────────────────────
@@ -200,7 +207,7 @@ struct Ability {
     lesson: u32,
 }
 
-const ABILITIES: [Ability; 74] = [
+const ABILITIES: [Ability; 80] = [
     // Script Kiddie (L1-4)
     Ability { name: "Stack Injection",         description: "Bind data to the stack with `let` and `mut`.",                       lesson: 1  },
     Ability { name: "String Splice",           description: "Manipulate heap strings and format output into the datastream.",     lesson: 2  },
@@ -292,6 +299,13 @@ const ABILITIES: [Ability; 74] = [
     Ability { name: "Store Scanner",           description: "Iterate every entry in the database.",                                lesson: 72 },
     Ability { name: "Iterator Query",          description: "Filter and project records with iterators, no SQL.",                  lesson: 73 },
     Ability { name: "Ingest Pipeline",         description: "Load a CSV into sled and query it back.",                             lesson: 74 },
+    // Bug Hunt (L75-80) — salon side jobs: debug broken code, don't write from scratch
+    Ability { name: "Tally Ward",              description: "Fix the HashMap clobber — `entry().or_insert()` accumulates, `insert` resets.", lesson: 75 },
+    Ability { name: "Fault Surfacing",         description: "Un-swallow parse errors — a corrupt row must `Err`, not zero out.",   lesson: 76 },
+    Ability { name: "Predicate Flip",          description: "Right an inverted `filter` — keep what the predicate says.",          lesson: 77 },
+    Ability { name: "Edge Reclaim",            description: "Reclaim the off-by-one — the last window starts at `n - width`.",     lesson: 78 },
+    Ability { name: "Borrow Unlock",           description: "Release the read guard before writing — RefCell forgives nothing.",   lesson: 79 },
+    Ability { name: "Channel Drain",           description: "Drain an mpsc with `while let` — a single `recv` hears one voice.",   lesson: 80 },
 ];
 
 // ─── Ranks ─────────────────────────────────────────────────────────────────
@@ -302,7 +316,7 @@ struct Rank {
     quote: &'static str,
 }
 
-const RANKS: [Rank; 18] = [
+const RANKS: [Rank; 19] = [
     Rank { min_level: 0,  name: "Disconnected",        quote: "No signal detected. Jack in to begin." },
     Rank { min_level: 1,  name: "Script Kiddie",        quote: "You've breached the first firewall. The grid recognizes you." },
     Rank { min_level: 5,  name: "Netrunner",            quote: "The heap sprawls before you — an endless neon datascape." },
@@ -320,7 +334,8 @@ const RANKS: [Rank; 18] = [
     Rank { min_level: 60, name: "Memory Reaper",        quote: "Cycles, weak links, interior cells — nothing leaks past your reach." },
     Rank { min_level: 66, name: "Concurrency Daemon",   quote: "You fork reality across threads. Arc and locks are your instruments." },
     Rank { min_level: 69, name: "Data Daemon",          quote: "Keys and values bend to your will — no query language required." },
-    Rank { min_level: 74, name: "Salon Sovereign",      quote: "You own the system. The salon runs on your code. 🦀" },
+    Rank { min_level: 74, name: "Vault Sovereign",      quote: "Aegis-9 is yours. The vault runs on your code. 🦀" },
+    Rank { min_level: 80, name: "Zero-Day Sovereign",   quote: "Every bug in the grid dies on your blade. Nothing broken survives you." },
 ];
 
 const CLASSES: [&str; 4] = [
@@ -403,7 +418,7 @@ fn create_character() -> SaveFile {
     println!("{}",   color::bold_cyan("╚══════════════════════════════════════════════╝"));
     println!();
     println!("  Before you lies a grid of {} data nodes.", color::bold(&NUM_LESSONS.to_string()));
-    println!("  Master them all to earn the rank of {}.", color::bold_yellow("Salon Sovereign"));
+    println!("  Master them all to earn the rank of {}.", color::bold_yellow("Zero-Day Sovereign"));
     println!();
 
     // Name
@@ -807,7 +822,7 @@ fn display_character_sheet(save: &SaveFile) {
         println!("  {}",   color::bold_cyan("║        🦀  SYSTEM FULLY COMPROMISED  🦀                ║"));
         println!("  {}", color::bold_cyan("╚══════════════════════════════════════════════════════════╝"));
         println!();
-        println!("  {}",   color::bold_green("  You are the Salon Sovereign. The Rust Underground salutes you."));
+        println!("  {}",   color::bold_green("  You are the Zero-Day Sovereign. The Rust Underground salutes you."));
         println!("  {}",   color::dim(&format!("  Check the README for suggested next topics beyond chapter {}.", NUM_LESSONS)));
     } else {
         let next = LESSONS.iter().find(|l| {

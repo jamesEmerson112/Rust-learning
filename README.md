@@ -8,9 +8,9 @@ This repo contains small Rust lessons, each with:
 - an integration test file for validation
 
 ## File layout
-- `src/bin/c01_example.rs` ... `src/bin/c68_example.rs`
-- `src/bin/c01_exercise.rs` ... `src/bin/c68_exercise.rs`
-- `tests/c01_tests.rs` ... `tests/c68_tests.rs`
+- `src/bin/c01_example.rs` ... `src/bin/c80_example.rs`
+- `src/bin/c01_exercise.rs` ... `src/bin/c80_exercise.rs`
+- `tests/c01_tests.rs` ... `tests/c80_tests.rs`
 
 ## Lesson flow (~15 minutes each)
 1. Read and run the example.
@@ -423,154 +423,212 @@ Work through one lesson at a time. Read the example, then complete the exercise.
 
 ---
 
-## Smart Pointers Deep Dive + Warmups (c55–c68)
+## THE VAULT RUN (c55–c74)
 
-The c30/c31/c42–c44 lessons introduced `Box`, `Rc`, `Cell`, and `RefCell` at the surface. This block goes after the reasons those types exist — plus light DSA warmups (⚡) interleaved as a gentle on-ramp before each cluster.
+One continuous cyberpunk heist in five chapters. You are **Chrome Surgeon**, hired to breach the **Aegis-9 corporate vault** — Mai, Linh, and Trang ride along as your crew. Same Rust concepts as before, one story. ⚡ = warmup (c01–c54 tools only). ★ = BUG HUNT: the exercise ships broken code that compiles — you diagnose and fix it.
 
 ---
 
-### Lesson 55 — ⚡ Warmup: Fibonacci
+**Chapter 1 — LOADOUT (c55–c58):** crack the keygen, plot the route, slot your programs, debug your chrome.
+
+### Lesson 55 — ⚡ Keygen (Warmup: Fibonacci)
 **Learn:** Iterative computation with a rolling pair — no recursion needed
-**Exercise:** Write `fib(n)` returning the n-th Fibonacci number (fib(0)=0, fib(1)=1).
+**Exercise:** `access_code(n)` — the vault's Fibonacci-derived rolling code — plus `keystream(len)`.
 **You're done when:** You can turn a recurrence into a loop with `(a, b) = (b, a + b)`.
 
 ---
 
-### Lesson 56 — Recursive Types with Box
+### Lesson 56 — Intrusion Route (Recursive Types with Box)
 **Learn:** Why a self-referential `enum` needs `Box` (it would have infinite size otherwise)
-**Exercise:** Build a `Waitlist` cons-list; implement `waitlist_len` and `build_waitlist`.
+**Exercise:** Build the `Route` cons-list: `build_route`, `hop_count`, and `last_node` — the vault's doorstep.
 **You're done when:** You understand that `Box` gives a recursive type a fixed, known size.
 
 ---
 
-### Lesson 57 — Trait Objects (Box\<dyn\>)
+### Lesson 57 — Deck Loadout (Box\<dyn\>)
 **Learn:** `Box<dyn Trait>`, dynamic dispatch, heterogeneous collections
-**Exercise:** Implement `Service::price` for `Manicure`/`Pedicure` and sum a `Vec<Box<dyn Service>>`.
+**Exercise:** Implement `Program` for `Icepick`/`Siphon`/`Ghost`, rack all three in one `Vec<Box<dyn Program>>`, total the power draw.
 **You're done when:** You can store different concrete types together and call shared methods at runtime.
 
 ---
 
-### Lesson 58 — Deref — Custom Smart Pointer
+### Lesson 58 — ★ Faulty Implant (Deref)
 **Learn:** `impl Deref`, the `*` operator, and auto-deref coercion
-**Exercise:** Implement `Deref` for `MyBox<T>` and write `deref_double` using `**`.
-**You're done when:** You can explain how `*` and method auto-deref work on any smart pointer.
+**Exercise:** BUG HUNT — every implant reads factory-fresh even though the firmware is installed. Find which slot `Deref` serves.
+**You're done when:** `boost(&implant)` reaches the installed firmware through auto-deref — the deck reads 42.
 
 ---
 
-### Lesson 59 — ⚡ Warmup: Two Sum
+**Chapter 2 — GHOST PROTOCOL (c59–c61):** every connection burns its trace, and nothing follows you home.
+
+### Lesson 59 — ⚡ Master-Key Pair (Warmup: Two Sum)
 **Learn:** One-pass hashing — trade space for time
-**Exercise:** Return indices `(i, j)` whose values sum to `target`, using a HashMap.
+**Exercise:** `master_key_pair(codes, master)` — indices of the two intercepted codes that sum to the master key.
 **You're done when:** You can find a complement in O(n) instead of a nested loop.
 
 ---
 
-### Lesson 60 — Drop (RAII)
+### Lesson 60 — Uplink Burn (Drop / RAII)
 **Learn:** `impl Drop`, deterministic cleanup, reverse (LIFO) drop order
-**Exercise:** Make a `Station` log "closing <name>" on drop; return the closing order.
-**You're done when:** You can run cleanup automatically when a value leaves scope — no GC.
+**Exercise:** Make every `Uplink` push "&lt;handle&gt; trace burned" on drop; burn a compromised one early with `drop()`.
+**You're done when:** Cleanup runs automatically when a value leaves scope — no GC, no forgotten close.
 
 ---
 
-### Lesson 61 — Weak\<T\> and Cycles
+### Lesson 61 — ★ Trace Cycle (Weak\<T\>)
 **Learn:** `Rc::downgrade`, `Weak::upgrade`, why cycles leak and how `Weak` breaks them
-**Exercise:** Return `(strong, weak)` counts and prove a dropped owner makes `upgrade()` return `None`.
-**You're done when:** You can add a back-reference without keeping data alive or leaking.
+**Exercise:** BUG HUNT — the trace daemon's strong `Rc` grip keeps your session alive after jack-out. Sever it.
+**You're done when:** `link_counts()` is `(1, 1)` and jacking out makes the daemon's `upgrade()` return `None`.
 
 ---
 
-### Lesson 62 — ⚡ Warmup: Reverse a Vec
+**Chapter 3 — INSIDE THE ICE (c62–c64):** interior mutability under fire.
+
+### Lesson 62 — ⚡ Packet Flip (Warmup: Reverse in Place)
 **Learn:** In-place mutation with two pointers
-**Exercise:** Reverse a `Vec<i32>` in place by swapping `i` with `n-1-i`.
+**Exercise:** `reverse_packet` — flip the buffer by swapping `i` with `n-1-i`, no allocation.
 **You're done when:** You can mutate a collection in place without allocating a new one.
 
 ---
 
-### Lesson 63 — Cell\<T\> Full API
+### Lesson 63 — Signal Jammer (Cell\<T\> Full API)
 **Learn:** `Cell::replace` and `Cell::take` — mutate `Copy` data through `&self`
-**Exercise:** Add `replace_with` (returns old) and `take` (resets to 0) to a `Counter`.
+**Exercise:** `reload` (swap the charge cell, return the spent one) and `discharge` (take it all, leave 0).
 **You're done when:** You can swap interior state through a shared reference and recover the old value.
 
 ---
 
-### Lesson 64 — RefCell Runtime Borrow
+### Lesson 64 — ★ Log Contention (RefCell Runtime Borrow)
 **Learn:** Runtime borrow checking — `borrow_mut` panics, `try_borrow_mut` returns `Err`
-**Exercise:** Show a second mutable borrow fails while the first is alive, and succeeds after release.
-**You're done when:** You can explain the compile-time vs runtime borrow-check trade-off.
+**Exercise:** BUG HUNT — a write during a sweep panics the whole deck. Refuse the contended write gracefully.
+**You're done when:** Contended writes come back `Err`, clean handoffs succeed, nothing panics.
 
 ---
 
-### Lesson 65 — ⚡ Warmup: Contains Duplicate
+**Chapter 4 — THE CREW (c65–c68):** threads, locks, and a stash that had better add up.
+
+### Lesson 65 — ⚡ Signature Replay (Warmup: Contains Duplicate)
 **Learn:** `HashSet` membership — a HashMap with keys only
-**Exercise:** Return whether any value appears twice, in one pass.
+**Exercise:** `signature_reused` — a replayed access signature trips the alarm; detect it in one pass.
 **You're done when:** You can use `HashSet::insert`'s return value to detect duplicates.
 
 ---
 
-### Lesson 66 — Arc\<T\> Across Threads
+### Lesson 66 — Vault Map (Arc\<T\> Across Threads)
 **Learn:** `Arc`, `thread::spawn`, `join` — sharing immutable data across threads
-**Exercise:** Spawn 3 threads that each sum a shared price list; return the grand total.
+**Exercise:** `crew_estimates` — three crew threads each tally one shared vault map.
 **You're done when:** You understand why threads need `Arc` (it's `Send`) and `Rc` won't compile.
 
 ---
 
-### Lesson 67 — Arc\<Mutex\<T\>\>
+### Lesson 67 — ★ The Missing Take (Arc\<Mutex\<T\>\>)
 **Learn:** `Mutex` for thread-safe mutation — the threaded sibling of `Rc<RefCell<T>>`
-**Exercise:** 10 threads each add 100 to a shared counter; return the total.
-**You're done when:** You can safely mutate shared state from many threads with `lock()`.
+**Exercise:** BUG HUNT — ten runners deposit 100 creds each; the stash reads 0. The compiler is waving a warning at the culprit.
+**You're done when:** `pool_the_take()` reads 1000 every run — deposits go through the lock, not into a copy.
 
 ---
 
-### Lesson 68 — RwLock\<T\>
+### Lesson 68 — Alert Board (RwLock\<T\>)
 **Learn:** `RwLock` — many concurrent readers OR one exclusive writer
-**Exercise:** One writer adds an appointment, then 3 readers read the length concurrently.
-**You're done when:** You can share data across threads with read/write locks — the smart-pointer & concurrency core is complete.
+**Exercise:** `alert_board_count` — one spotter writes, three lookouts read concurrently.
+**You're done when:** You can share data across threads with read/write locks — the crew is in position.
 
 ---
 
-### Lesson 69 — Sled Insert
+**Chapter 5 — THE VAULT (c69–c74):** the datavault — persistent storage for the haul, and the finale that assembles your own code.
+
+### Lesson 69 — Datavault: Stash (Sled Insert)
 **Learn:** `sled::open` + `db.insert` — a pure-Rust embedded key-value database, no SQL
-**Exercise:** Write `put(db, key, value)` that stores a key→value pair (as bytes).
-**You're done when:** You can open a sled database and write entries into it.
+**Exercise:** `stash(db, key, shard)` — every ripped shard goes straight to disk.
+**You're done when:** You can open a sled database and write entries that survive a dropped uplink.
 
 ---
 
-### Lesson 70 — Sled Get
+### Lesson 70 — Datavault: Retrieve (Sled Get)
 **Learn:** `db.get` → `Option<IVec>` — reading values back by key
-**Exercise:** Write `get_value(db, key)` returning the stored string, or `None` if absent.
+**Exercise:** `retrieve(db, key)` — pull a shard back out; burned intel is `None`, not a crash.
 **You're done when:** You can read values out of the store and handle the missing-key case.
 
 ---
 
-### Lesson 71 — Sled + Serde
+### Lesson 71 — Intel Codec (Sled + Serde)
 **Learn:** store whole structs — `serde_json::to_vec` / `from_slice` (c49), errors unified with `anyhow` (c38)
-**Exercise:** Write `put_service` / `get_service` to round-trip a `Service` struct through sled.
-**You're done when:** You can persist and reload a struct without handling raw bytes yourself.
+**Exercise:** `encode_intel` / `decode_intel` — round-trip `Intel { codename, value }` through the vault.
+**You're done when:** Structs persist and reload intact. (The c74 finale imports THIS file — build it well.)
 
 ---
 
-### Lesson 72 — Sled Iterate
+### Lesson 72 — Full Scan (Sled Iterate)
 **Learn:** `db.iter()` — scanning every entry in the store
-**Exercise:** Write `all_services(db)` returning every stored `Service` (sorted by name).
+**Exercise:** `full_scan(db)` — enumerate the entire haul, sorted by codename.
 **You're done when:** You can walk the whole database and decode each record.
 
 ---
 
-### Lesson 73 — Sled Query
+### Lesson 73 — Fence Shortlist (Sled Query)
 **Learn:** "querying" without SQL — `filter` + `map` over the records (c21-22 / c45-46)
-**Exercise:** Write `services_over(db, min)` and `names_over(db, min)` to filter records and project names.
+**Exercise:** `shortlist(db, min_value)` and `shortlist_codenames` — only intel the fence will move.
 **You're done when:** You can answer questions about the data with iterator combinators.
 
 ---
 
-### Lesson 74 — CSV → Sled (capstone)
-**Learn:** integration — read a CSV (c47), store it in sled, then aggregate the data
-**Exercise:** Write `import_and_total(db, csv_path)` — import each row, then return total revenue.
-**You're done when:** All 74 lesson tests pass — you can move data from a file into a database and process it.
+### Lesson 74 — FINALE: CSV → Datavault (capstone)
+**Learn:** integration — read a CSV (c47), store it via YOUR c71 codec (imported with `#[path]`), aggregate the haul
+**Exercise:** `import_dump(db, csv_path)` totals the haul; `crown_jewel(db)` finds the most valuable record.
+**You're done when:** The haul totals 124500, GHOSTKEY surfaces, and the run prints SYSTEM FULLY COMPROMISED.
 
 ---
 
-### Beyond Chapter 74
-The lessons above cover the core language plus practical application. Next topics:
+## Bug Hunt (c75–c80)
+
+Side jobs back at the salon: the shop's back-office code is broken, and you debug it. Every ★ exercise COMPILES but fails its tests — read the `// BUG:` symptom at the top of the file, run the tests, diagnose, fix. No new concepts (everything is c01–c54 material); the example file holds the corrected reference.
+
+---
+
+### Lesson 75 — Bug Hunt: The Vanishing Tally
+**Learn:** Why counting needs `entry(k).or_insert(0)` — `insert` overwrites instead of accumulating
+**Exercise:** Mai's per-technician count is stuck at 1; fix `service_counts` so tallies accumulate.
+**You're done when:** Mai reads 6, Linh 2, Trang 1, and the empty day yields an empty map.
+
+---
+
+### Lesson 76 — Bug Hunt: The Silent Zero
+**Learn:** Don't swallow parse errors — a bad row must propagate as `Err`, not become 0
+**Exercise:** A corrupt price silently undercounts the day; make `daily_total` report it.
+**You're done when:** A clean list sums correctly and a corrupt row returns `Err`.
+
+---
+
+### Lesson 77 — Bug Hunt: The Missing VIP Tips
+**Learn:** `filter` keeps the items whose predicate is true — direction matters
+**Exercise:** The tip jar totals the Regulars instead of the VIPs; fix the filter.
+**You're done when:** `vip_tip_total` sums only VIP tips (3000) and 0 when there are none.
+
+---
+
+### Lesson 78 — Bug Hunt: The Overlooked Rush
+**Learn:** The last window starts at `n - width`, so the loop must be inclusive (`..=`)
+**Exercise:** The busiest-3-hour report always misses the closing rush; fix the bound.
+**You're done when:** The busiest window is found even when it's the last one.
+
+---
+
+### Lesson 79 — Bug Hunt: The Double-Booked Borrow
+**Learn:** A `borrow()` guard blocks `borrow_mut()` until it's dropped — scope it tightly
+**Exercise:** Booking a new walk-in panics with BorrowMutError; release the read borrow first.
+**You're done when:** `add_if_absent` adds new names, rejects duplicates, and never panics.
+
+---
+
+### Lesson 80 — Bug Hunt: The Half-Heard Clock-Out
+**Learn:** `while let Some(msg) = rx.recv().await` drains a channel; one `if let` reads only one
+**Exercise:** Three techs clock out but only Mai is logged; drain the whole channel.
+**You're done when:** `collect_done` returns all three "done" messages in order.
+
+---
+
+### Beyond Chapter 80
+The lessons above cover the core language, practical application, and debugging reps. Next topics:
 - Procedural and derive macros
 - Advanced async (`select!`, `RwLock`, cancellation)
 - Web server with `axum` or `actix-web`

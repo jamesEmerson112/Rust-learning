@@ -2,25 +2,25 @@
 #[allow(dead_code)]
 mod c62_exercise;
 
-use c62_exercise::reverse_in_place;
+use c62_exercise::reverse_packet;
 
 #[test]
-fn reverses_even_length() {
-    let mut v = vec![1, 2, 3, 4];
-    reverse_in_place(&mut v);
-    assert_eq!(v, vec![4, 3, 2, 1]);
+fn reverses_even_length_packet() {
+    let mut buf = vec![1, 2, 3, 4];
+    reverse_packet(&mut buf);
+    assert_eq!(buf, vec![4, 3, 2, 1]);
 }
 
 #[test]
-fn reverses_odd_length() {
-    let mut v = vec![1, 2, 3, 4, 5];
-    reverse_in_place(&mut v);
-    assert_eq!(v, vec![5, 4, 3, 2, 1]);
+fn reverses_odd_length_packet() {
+    let mut buf = vec![1, 2, 3, 4, 5];
+    reverse_packet(&mut buf);
+    assert_eq!(buf, vec![5, 4, 3, 2, 1]);
 }
 
 #[test]
-fn empty_stays_empty() {
-    let mut v: Vec<i32> = vec![];
-    reverse_in_place(&mut v);
-    assert_eq!(v, Vec::<i32>::new());
+fn empty_packet_stays_empty() {
+    let mut buf: Vec<i32> = vec![];
+    reverse_packet(&mut buf);
+    assert_eq!(buf, Vec::<i32>::new());
 }

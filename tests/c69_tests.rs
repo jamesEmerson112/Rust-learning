@@ -2,24 +2,24 @@
 #[allow(dead_code)]
 mod c69_exercise;
 
-use c69_exercise::put;
+use c69_exercise::stash;
 
-fn temp_db() -> sled::Db {
+fn temp_vault() -> sled::Db {
     sled::Config::new().temporary(true).open().unwrap()
 }
 
 #[test]
-fn insert_stores_entries() {
-    let db = temp_db();
-    put(&db, "svc:gel", "4500").unwrap();
-    put(&db, "svc:pedicure", "3500").unwrap();
+fn two_shards_land_in_the_vault() {
+    let db = temp_vault();
+    stash(&db, "vault:blueprints", "aegis-9 tower schematics").unwrap();
+    stash(&db, "vault:payroll", "executive shell accounts").unwrap();
     assert_eq!(db.len(), 2);
-    assert!(db.contains_key("svc:gel").unwrap());
 }
 
 #[test]
-fn missing_key_absent() {
-    let db = temp_db();
-    put(&db, "svc:gel", "4500").unwrap();
-    assert!(!db.contains_key("svc:nope").unwrap());
+fn stashed_shard_is_findable() {
+    let db = temp_vault();
+    stash(&db, "vault:blueprints", "aegis-9 tower schematics").unwrap();
+    assert!(db.contains_key("vault:blueprints").unwrap());
+    assert!(!db.contains_key("vault:decoy").unwrap());
 }

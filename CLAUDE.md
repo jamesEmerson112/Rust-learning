@@ -9,24 +9,26 @@ cargo build                      # Build everything
 cargo run --bin c05_example      # Run a lesson example
 cargo run --bin c05_exercise     # Run a lesson exercise
 cargo test --test c05_tests      # Test a specific lesson
-cargo test --tests               # Run all 74 lesson tests
+cargo test --tests               # Run all 80 lesson tests
 ```
 
 ## Architecture
 
-A 74-lesson Rust curriculum. Each lesson is self-contained with three files:
+An 80-lesson Rust curriculum. Each lesson is self-contained with three files:
 
 - `src/bin/cXX_example.rs` — Complete reference implementation (read-only)
 - `src/bin/cXX_exercise.rs` — Starter stubs with `TODO` comments (learner edits these)
 - `tests/cXX_tests.rs` — Integration tests that validate the exercise
 
-Tests import exercises as modules via `#[path = "../src/bin/cXX_exercise.rs"]` and test their `pub` functions. There is no `lib.rs`; lessons have no cross-dependencies.
+Tests import exercises as modules via `#[path = "../src/bin/cXX_exercise.rs"]` and test their `pub` functions. There is no `lib.rs`; lessons have no cross-dependencies — with ONE deliberate exception: `c74_exercise.rs` imports the learner's own `c71_exercise.rs` via `#[path]` (the capstone assembles their codec).
 
 **Lessons 32-33** introduce file-based modules in `src/lesson32/` and `src/lesson33/` (e.g., `exercise_client_counter.rs`, `exercise_service_log.rs`). Their bin files and tests use `#[path]` attributes to import these modules.
 
 **Lessons 34-54** are nail salon themed (the user runs a salon and is building a scheduler). Vietnamese technician names throughout (Mai, Linh, Trang). Topics: error handling II (c34-c38), slices/lifetimes II (c39-c41), interior mutability (c42-c44), custom iterators (c45-c46), file I/O (c47-c49), async/tokio (c50-c52), CLI with clap (c53-c54).
 
-**Lessons 55-68** are the Smart Pointers Deep Dive — going past the surface intros of c30/c31/c42-c44. Four light DSA warmups (c55 Fibonacci, c59 Two Sum, c62 reverse-in-place, c65 contains-duplicate) are interleaved as a gentle on-ramp, each solvable with c01-c54 tools only. Topics: Box properly (recursive types c56, trait objects c57, Deref c58), lifecycle (Drop c60, Weak c61), interior-mutability depth (full Cell API c63, RefCell runtime borrow c64), concurrency siblings (Arc c66, Arc<Mutex> c67, RwLock c68). All `std`, no new deps; c66-c68 use `std::thread`.
+**Lessons 55-74** are THE VAULT RUN — a five-chapter cyberpunk heist arc (rewritten 2026-07 because the learner found the original flat and stopped at c55). Same concepts as before, one story: the learner is netrunner "Chrome Surgeon" breaching the Aegis-9 vault; Mai/Linh/Trang carry over as the crew. Chapters: LOADOUT (c55-c58, Box/trait objects/Deref), GHOST PROTOCOL (c59-c61, Drop/Weak), INSIDE THE ICE (c62-c64, Cell/RefCell), THE CREW (c65-c68, Arc/Mutex/RwLock over `std::thread`), THE VAULT (c69-c74, sled + serde, capstone imports the learner's own c71). Three exercise formats: plain stubs, ⚡ warmups (c55/c59/c62/c65, c01-c54 tools only), and ★ BUG HUNT lessons (c58/c61/c64/c67) that ship compiling-but-wrong code with a `// BUG:` symptom comment — tests fail deterministically, never hang. Examples keep the "Coming from C / ThreadX" header-note style.
+
+**Lessons 75-80** are the Bug Hunt block — salon-themed debugging side jobs (the learner prefers debugging to writing from scratch). Every exercise compiles but fails its tests via one classic bug archetype per lesson: HashMap insert-clobber (c75), swallowed parse error (c76), inverted filter (c77), slice off-by-one (c78), RefCell double borrow (c79), half-drained tokio mpsc (c80). No new concepts — all c01-c54 material; the example file is the corrected reference.
 
 ## Progress Tracker
 
@@ -108,3 +110,14 @@ Tests import exercises as modules via `#[path = "../src/bin/cXX_exercise.rs"]` a
 - [process] Verification flow for new lessons: write solved exercises + tests, run all 14 suites green to prove wiring, THEN convert exercises to learner stubs (`let _ = ...;` placeholders + `#[allow(unused_imports)]`, matching c47-c54) and confirm each lesson fails as homework. Examples ship complete; all 14 run with correct output.
 - [verify] `cargo build` clean (only pre-existing c10_example warning). No `.rustacean_save.json` present — user runs `cargo run --bin progress -- --rescan` to pick up the new lessons.
 - [docs] Updated ROADMAP.md (68 rows, ⚡ warmup tag, new phase blocks, prereq chain, Post-68 Track), README.md (Study Plan c55-c68), and this file.
+
+### 2026-07-21
+- [refactor] Rewrote c55-c74 as "THE VAULT RUN" — a five-chapter cyberpunk heist arc (LOADOUT, GHOST PROTOCOL, INSIDE THE ICE, THE CREW, THE VAULT). User had stopped at c55 (bored/discouraged by flat isolated stubs); test run verified c50-c52+c54 passed from the Jul 9 session and everything c55+ was untouched. Concepts per lesson unchanged; theme, exercise formats, and richness rewritten. Salon crew (Mai/Linh/Trang) carries over as the heist crew; learner plays "Chrome Surgeon" (their save-file class).
+- [decision] User picked (via AskUserQuestion): cyberpunk netrunner theme matching the RPG tracker; a MIX of exercise formats (fix-the-bug + build-on-own-code + richer stubs); scope c55-c74 only. Mid-turn addition: salon-themed EXTRA exercises as debugging problems — "i prefer debugging" (saved as durable memory feedback_prefers_debugging_exercises).
+- [feat] Four ★ BUG HUNT lessons in the arc: c58 (Deref serves factory_default instead of firmware), c61 (strong Rc cycle keeps the trace alive), c64 (RefCell write-during-sweep panic → try_borrow_mut), c67 (deposits increment a copied value, not the shared Mutex — compiler warning is the clue). Bug rule: always compiles, fails deterministically, never hangs; `// BUG:` comment states the symptom, never the fix.
+- [feat] c74 finale imports the learner's OWN c71_exercise.rs via `#[path]` (the one deliberate cross-lesson dependency) — capstone assembles their Intel codec; tests hint "finish c71 first" if it's still a stub. Only ONE import on purpose: importing both c71 and c73 would create two distinct Intel types.
+- [feat] c75-c80 "Bug Hunt" block (authored by Opus subagent, verified green-solved/red-bugged both directions): salon debugging side jobs — HashMap insert clobber (c75), swallowed parse error (c76), inverted filter (c77), slice off-by-one (c78), RefCell double borrow (c79), half-drained tokio mpsc (c80).
+- [feat] progress.rs: LESSONS 74→80, STAT_GROUPS 29→30 ("Embedded Store"→"Datavault", added "Bug Hunt"), ABILITIES 74→80, RANKS 18→19 (rank 74 "Salon Sovereign"→"Vault Sovereign"; new final rank "Zero-Day Sovereign" @L80). Endgame banner rethemed.
+- [verify] Full flow: solved-reference pass = 20/20 suites green (55 tests); learner-form pass = 20/20 suites fail deterministically; cargo build clean; all 20 examples run with story output; `progress --rescan` over 80 lessons updated the stale save to ground truth (level reflects real c01-c54 progress; open homework unchanged: c16, c19, c35, c37-c38, c40, c48-c49, c53).
+- [docs] ROADMAP.md (80 rows, ★ tag, chapter phase blocks, new prereq chain, Post-80 Track), README.md (Study Plan c55-c80 with chapter lead-ins, File layout c01…c80 drift fixed), CLAUDE.md architecture notes.
+- [ref] Solved references for c55-c74 live in the session scratchpad only (not committed) — regenerate from examples if ever needed; examples remain the canonical answers.

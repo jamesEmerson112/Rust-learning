@@ -1,6 +1,8 @@
 # Rust Learning — Roadmap
 
-**74 lessons, ~15 minutes each, one new concept per lesson.** (⚡ = light DSA warmup)
+**80 lessons, ~15 minutes each, one new concept per lesson.** (⚡ = light DSA warmup, ★ = fix-the-bug: broken code you debug instead of stubs you fill in)
+
+Lessons c55–c74 form **THE VAULT RUN** — a five-chapter cyberpunk heist arc. Same Rust concepts, one story. c75–c80 are **Bug Hunt** side jobs back at the salon: pure debugging practice on c01–c54 material.
 
 Each lesson is a triple:
 - `src/bin/cXX_example.rs` — complete reference (read it)
@@ -69,26 +71,32 @@ Run the tracker: `cargo run --bin progress`
 | 52 | Async Channels                        | technician sends "done" on `mpsc`        |
 | 53 | `clap` Arg Parsing                    | `--technician --service --price`         |
 | 54 | Capstone: Salon CLI                   | full scheduler — book, list, revenue     |
-| ⚡ 55 | Warmup: Fibonacci                  | iterative loop, tuple swap               |
-| 56 | Recursive Types with Box              | `enum` + `Box` for self-referential data |
-| 57 | Trait Objects `Box<dyn>`              | dynamic dispatch over mixed types        |
-| 58 | Deref — Custom Smart Pointer          | `impl Deref`, auto-deref coercion        |
-| ⚡ 59 | Warmup: Two Sum                    | one-pass HashMap complement lookup       |
-| 60 | `Drop` (RAII)                         | deterministic cleanup, LIFO drop order   |
-| 61 | `Weak<T>` and Cycles                  | `downgrade`/`upgrade`, leak-proof refs   |
-| ⚡ 62 | Warmup: Reverse a Vec             | two-pointer in-place swap                |
-| 63 | `Cell<T>` Full API                    | `replace` / `take` through `&self`       |
-| 64 | RefCell Runtime Borrow                | `try_borrow_mut`, runtime borrow check   |
-| ⚡ 65 | Warmup: Contains Duplicate        | HashSet membership in one pass           |
-| 66 | `Arc<T>` Across Threads               | shared immutable state, `thread::spawn`  |
-| 67 | `Arc<Mutex<T>>`                       | shared mutable state across threads      |
-| 68 | `RwLock<T>`                           | many readers / one writer                |
-| 69 | `sled` insert                         | open a DB, insert key/value bytes        |
-| 70 | `sled` get                            | read values back by key                  |
-| 71 | `sled` + serde                        | store & load structs with serde          |
-| 72 | `sled` iterate                        | scan every entry in the store            |
-| 73 | `sled` query                          | filter + map records, no SQL             |
-| 74 | CSV → `sled`                          | import a CSV, then aggregate             |
+| ⚡ 55 | Keygen (Warmup: Fibonacci)         | iterative loop, tuple swap               |
+| 56 | Intrusion Route (recursive Box)       | `enum` + `Box` for self-referential data |
+| 57 | Deck Loadout (`Box<dyn>`)             | dynamic dispatch over mixed types        |
+| ★ 58 | Faulty Implant (Deref)              | `impl Deref`, auto-deref coercion        |
+| ⚡ 59 | Master-Key Pair (Warmup: Two Sum)  | one-pass HashMap complement lookup       |
+| 60 | Uplink Burn (`Drop`/RAII)             | deterministic cleanup, LIFO drop order   |
+| ★ 61 | Trace Cycle (`Weak<T>`)             | `downgrade`/`upgrade`, leak-proof refs   |
+| ⚡ 62 | Packet Flip (Warmup: Reverse)      | two-pointer in-place swap                |
+| 63 | Signal Jammer (`Cell<T>` full API)    | `replace` / `take` through `&self`       |
+| ★ 64 | Log Contention (RefCell borrow)     | `try_borrow_mut`, runtime borrow check   |
+| ⚡ 65 | Signature Replay (Warmup: Dupes)   | HashSet membership in one pass           |
+| 66 | Vault Map (`Arc<T>` across threads)   | shared immutable state, `thread::spawn`  |
+| ★ 67 | The Missing Take (`Arc<Mutex<T>>`)  | shared mutable state across threads      |
+| 68 | Alert Board (`RwLock<T>`)             | many readers / one writer                |
+| 69 | Datavault: stash (`sled` insert)      | open a DB, insert key/value bytes        |
+| 70 | Datavault: retrieve (`sled` get)      | read values back by key                  |
+| 71 | Intel Codec (`sled` + serde)          | store & load structs with serde          |
+| 72 | Full Scan (`sled` iterate)            | scan every entry in the store            |
+| 73 | Fence Shortlist (`sled` query)        | filter + map records, no SQL             |
+| 74 | FINALE: CSV → Datavault               | capstone assembles YOUR c71 codec        |
+| ★ 75 | Bug Hunt: The Vanishing Tally       | HashMap `insert` clobber vs `entry()`    |
+| ★ 76 | Bug Hunt: The Silent Zero           | `unwrap_or(0)` swallows errors vs `?`    |
+| ★ 77 | Bug Hunt: The Missing VIP Tips      | inverted `filter` predicate + `fold`     |
+| ★ 78 | Bug Hunt: The Overlooked Rush       | slice-window off-by-one: `..` vs `..=`   |
+| ★ 79 | Bug Hunt: The Double-Booked Borrow  | RefCell `borrow` held across `borrow_mut`|
+| ★ 80 | Bug Hunt: The Half-Heard Clock-Out  | drain mpsc with `while let`, not `recv`  |
 
 See [README.md](README.md) Study Plan for the **Learn / Exercise / Done-when** detail on every lesson.
 
@@ -128,15 +136,23 @@ See [README.md](README.md) Study Plan for the **Learn / Exercise / Done-when** d
 
 **CLI Project (c53-c54)** — `clap` arg parsing, then the capstone: a full salon scheduler CLI.
 
-**DSA Warmups (c55, c59, c62, c65)** — light, recognizable interview problems (Fibonacci, Two Sum, reverse-in-place, contains-duplicate) interleaved as a gentle on-ramp before each smart-pointer cluster. Solvable with everything from c01-c54 — pure confidence reps, no new syntax.
+### THE VAULT RUN (c55–c74)
 
-**Box, Properly (c56-c58)** — the two real reasons `Box` exists: recursive types and trait objects (`Box<dyn Trait>`), then `Deref` to demystify how every smart pointer works.
+You are **Chrome Surgeon**, hired for one job: breach the **Aegis-9 corporate vault**, exfiltrate the intel, fence it, vanish. Mai, Linh, and Trang ride along as your crew. Every lesson is a story beat; each ⚡ warmup limbers you up with c01–c54 tools only; each ★ hands you broken code to debug.
 
-**Lifecycle & Cycles (c60-c61)** — `Drop` for RAII cleanup, then `Weak<T>` to break the reference cycles that would otherwise leak.
+**Chapter 1 — LOADOUT (c55–c58)** — crack the keygen (⚡ Fibonacci), plot the intrusion route (recursive `Box`), slot your ICE-breakers (`Box<dyn Trait>` vtables), then debug the implant whose `Deref` serves the factory image instead of the installed firmware.
 
-**Interior Mutability, Deeper (c63-c64)** — the full `Cell` API, then deliberately tripping `RefCell`'s runtime borrow check to feel the compile-time-vs-runtime trade.
+**Chapter 2 — GHOST PROTOCOL (c59–c61)** — find the master-key pair (⚡ Two Sum), make every uplink burn its trace automatically (`Drop`/RAII, LIFO), then break the Rc cycle that lets the trace daemon follow you home (`Weak<T>`).
 
-**Concurrency Siblings (c66-c68)** — `Arc` to share across threads, `Arc<Mutex<T>>` (the threaded mirror of c44's `Rc<RefCell<T>>`), and `RwLock` for many-readers/one-writer.
+**Chapter 3 — INSIDE THE ICE (c62–c64)** — flip packet buffers in place (⚡ two-pointer), run the sealed signal jammer (`Cell` `replace`/`take` through `&self`), then stop the intrusion log from panicking under contention (`try_borrow_mut`).
+
+**Chapter 4 — THE CREW (c65–c68)** — catch replayed signatures (⚡ HashSet), share one vault map across threads (`Arc`), find where ten runners' deposits vanish (`Arc<Mutex<T>>` — the threaded mirror of c44's `Rc<RefCell<T>>`), and run the alert board (`RwLock`).
+
+**Chapter 5 — THE VAULT (c69–c74)** — your persistent datavault on `sled`: stash shards, retrieve them, encode structured `Intel` with serde, scan the haul, shortlist for the fence — and the FINALE imports **your own c71 codec** to ingest the exfiltrated CSV dump. `SYSTEM FULLY COMPROMISED`.
+
+### Bug Hunt (c75–c80)
+
+Side jobs back at the salon — the shop's back-office code is broken and you debug it. No new concepts, pure diagnosis reps on c01–c54 material: a HashMap clobber, a swallowed parse error, an inverted filter, a slice off-by-one, a RefCell double borrow, a half-drained channel. Each ships compiling-but-wrong with a `// BUG:` symptom note; the example file holds the corrected reference.
 
 ---
 
@@ -199,26 +215,32 @@ c01 → c02 → c03 → c04 → c05 → c06
                                                                                                               c53 (clap) → c54 (salon CLI capstone)
                                                                                                                                         │
                                                                                                                                         ▼
-            ⚡c55 (warmup) → c56 (recursive Box) → c57 (Box<dyn>) → c58 (Deref)
-                                                                       │
-                                                                       ▼
-            ⚡c59 (warmup) → c60 (Drop) → c61 (Weak)
-                                             │
-                                             ▼
-            ⚡c62 (warmup) → c63 (Cell API) → c64 (RefCell borrow)
-                                                  │
-                                                  ▼
-            ⚡c65 (warmup) → c66 (Arc) → c67 (Arc<Mutex>) → c68 (RwLock)
-                                                  │
-                                                  ▼
-            c69 (insert) → c70 (get) → c71 (serde) → c72 (iterate) → c73 (query) → c74 (CSV→sled)
+   [Ch.1 LOADOUT]        ⚡c55 (keygen) → c56 (route) → c57 (loadout) → ★c58 (implant)
+                                                                           │
+                                                                           ▼
+   [Ch.2 GHOST PROTOCOL] ⚡c59 (key pair) → c60 (uplink burn) → ★c61 (trace cycle)
+                                                                    │
+                                                                    ▼
+   [Ch.3 INSIDE THE ICE] ⚡c62 (packet flip) → c63 (jammer) → ★c64 (log contention)
+                                                                  │
+                                                                  ▼
+   [Ch.4 THE CREW]       ⚡c65 (replay) → c66 (vault map) → ★c67 (the take) → c68 (alert board)
+                                                                                  │
+                                                                                  ▼
+   [Ch.5 THE VAULT]      c69 (stash) → c70 (retrieve) → c71 (codec) → c72 (scan) → c73 (shortlist)
+                                                                                        │
+                                                                                        ▼
+                                                        c74 (FINALE — imports YOUR c71 codec)
+                                                                                        │
+                                                                                        ▼
+   [Bug Hunt]            ★c75 → ★c76 → ★c77 → ★c78 → ★c79 → ★c80  (salon side jobs, any order)
 ```
 
 ---
 
-## Post-74 Track
+## Post-80 Track
 
-The 74-lesson curriculum covers the core language plus practical application. Once you clear c74, good next topics:
+The 80-lesson curriculum covers the core language, practical application, and debugging reps. Once you clear c80, good next topics:
 
 1. **Procedural and derive macros** — `macro_rules!`, `#[derive(...)]` custom macros.
 2. **Advanced async** — `select!`, `tokio::sync::RwLock`, cancellation, backpressure.

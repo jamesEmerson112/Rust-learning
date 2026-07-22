@@ -2,22 +2,41 @@
 #[allow(dead_code)]
 mod c57_exercise;
 
-use c57_exercise::{Manicure, Pedicure, Service, total_price};
+use c57_exercise::{Ghost, Icepick, Program, Siphon, full_loadout, over_budget, total_draw};
 
 #[test]
-fn individual_prices() {
-    assert_eq!(Manicure.price(), 4500);
-    assert_eq!(Pedicure.price(), 6000);
+fn individual_programs() {
+    assert_eq!(Icepick.name(), "Icepick");
+    assert_eq!(Icepick.power_draw(), 40);
+    assert_eq!(Siphon.name(), "Siphon");
+    assert_eq!(Siphon.power_draw(), 25);
+    assert_eq!(Ghost.name(), "Ghost");
+    assert_eq!(Ghost.power_draw(), 15);
 }
 
 #[test]
-fn mixed_services_sum() {
-    let booked: Vec<Box<dyn Service>> = vec![Box::new(Manicure), Box::new(Pedicure)];
-    assert_eq!(total_price(&booked), 10500);
+fn full_loadout_is_three_programs() {
+    let deck = full_loadout();
+    assert_eq!(deck.len(), 3);
+    let names: Vec<String> = deck.iter().map(|p| p.name()).collect();
+    assert_eq!(names, vec!["Icepick", "Siphon", "Ghost"]);
 }
 
 #[test]
-fn empty_is_zero() {
-    let booked: Vec<Box<dyn Service>> = vec![];
-    assert_eq!(total_price(&booked), 0);
+fn mixed_rack_total_draw() {
+    assert_eq!(total_draw(&full_loadout()), 80);
+}
+
+#[test]
+fn empty_rack_draws_nothing() {
+    let empty: Vec<Box<dyn Program>> = vec![];
+    assert_eq!(total_draw(&empty), 0);
+}
+
+#[test]
+fn budget_check() {
+    let deck = full_loadout();
+    assert!(over_budget(&deck, 60));
+    assert!(!over_budget(&deck, 100));
+    assert!(!over_budget(&deck, 80)); // exactly at budget is NOT over
 }

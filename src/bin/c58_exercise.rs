@@ -1,31 +1,49 @@
+// THE VAULT RUN — Chapter 1: LOADOUT — ★ BUG HUNT ★
+//
+// BUG: Every implant behaves factory-fresh. The 21-point reflex firmware IS installed —
+// is_stock() proves it's in the chrome — but the deck keeps reading zeroes, blank
+// strings, stock everything. Something in the deref path serves the wrong slot.
+//
+// Find it, fix it: cargo test --test c58_tests
 use std::ops::Deref;
 
-pub struct MyBox<T>(T);
+pub struct Implant<T: Default> {
+    pub model: String,
+    firmware: T,        // what's actually installed
+    factory_default: T, // the stock image, kept for hard resets
+}
 
-impl<T> MyBox<T> {
-    pub fn new(x: T) -> MyBox<T> {
-        MyBox(x)
+impl<T: Default> Implant<T> {
+    pub fn new(model: &str, firmware: T) -> Implant<T> {
+        Implant {
+            model: model.to_string(),
+            firmware,
+            factory_default: T::default(),
+        }
+    }
+
+    pub fn is_stock(&self) -> bool
+    where
+        T: PartialEq,
+    {
+        self.firmware == self.factory_default
     }
 }
 
-impl<T> Deref for MyBox<T> {
+impl<T: Default> Deref for Implant<T> {
     type Target = T;
-
     fn deref(&self) -> &T {
-        // TODO: Return a reference to the inner value (self.0).
-        // This is what makes `*my_box` work and enables auto-deref coercion.
-        todo!()
+        &self.factory_default
     }
 }
 
-pub fn deref_double(b: &MyBox<i32>) -> i32 {
-    // TODO: Dereference twice (&MyBox<i32> -> MyBox<i32> -> i32) and double it.
-    // Hint: **b * 2
-    let _ = b;
-    0
+pub fn boost(skill: &i32) -> i32 {
+    *skill * 2
 }
 
 fn main() {
-    let b = MyBox::new(21);
-    println!("deref_double = {}", deref_double(&b));
+    let reflex = Implant::new("neural-lace mk2", 21);
+    println!("[diagnostic] stock chrome? {} (so firmware IS installed)", reflex.is_stock());
+    println!("[diagnostic] deck reads {} — boosted: {} (want 21 and 42)", *reflex, boost(&reflex));
+    println!("══ when the deck reads 42, CHAPTER 1: LOADOUT is complete ══");
 }

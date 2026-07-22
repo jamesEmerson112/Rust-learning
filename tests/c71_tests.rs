@@ -2,22 +2,22 @@
 #[allow(dead_code)]
 mod c71_exercise;
 
-use c71_exercise::{get_service, put_service, Service};
+use c71_exercise::{Intel, decode_intel, encode_intel};
 
-fn temp_db() -> sled::Db {
+fn temp_vault() -> sled::Db {
     sled::Config::new().temporary(true).open().unwrap()
 }
 
 #[test]
-fn round_trips_a_struct() {
-    let db = temp_db();
-    let svc = Service { name: "Gel Manicure".to_string(), price: 4500 };
-    put_service(&db, "svc:1", &svc).unwrap();
-    assert_eq!(get_service(&db, "svc:1").unwrap(), Some(svc));
+fn intel_round_trips() {
+    let db = temp_vault();
+    let jewel = Intel { codename: "GHOSTKEY".to_string(), value: 64000 };
+    encode_intel(&db, &jewel).unwrap();
+    assert_eq!(decode_intel(&db, "GHOSTKEY").unwrap(), Some(jewel));
 }
 
 #[test]
-fn missing_struct_is_none() {
-    let db = temp_db();
-    assert_eq!(get_service(&db, "svc:nope").unwrap(), None);
+fn burned_intel_is_none() {
+    let db = temp_vault();
+    assert_eq!(decode_intel(&db, "BURNED").unwrap(), None);
 }

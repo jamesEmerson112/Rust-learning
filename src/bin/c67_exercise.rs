@@ -1,15 +1,33 @@
-#[allow(unused_imports)]
+// THE VAULT RUN — Chapter 4: THE CREW — ★ BUG HUNT ★
+//
+// BUG: Ten runners, 100 creds each — every one of them swears they deposited.
+// The stash reads 0. The chips vanish somewhere between the lock and the ledger.
+// (The compiler is even waving a clue at you: `cargo build` warns about this file.)
+//
+// Find it, fix it: cargo test --test c67_tests
 use std::sync::{Arc, Mutex};
-#[allow(unused_imports)]
 use std::thread;
 
-pub fn concurrent_revenue() -> u32 {
-    // TODO: Share a counter across 10 threads, each adding 100, safely.
-    // Arc shares ownership; Mutex makes the mutation thread-safe (lock first).
-    // This is the threaded sibling of c44's Rc<RefCell<T>>.
-    0
+pub fn pool_the_take() -> u32 {
+    let take = Arc::new(Mutex::new(0u32));
+
+    let mut crew = Vec::new();
+    for _ in 0..10 {
+        let take = Arc::clone(&take);
+        crew.push(thread::spawn(move || {
+            let mut chip_stack = *take.lock().unwrap();
+            chip_stack += 100;
+        }));
+    }
+
+    for runner in crew {
+        runner.join().unwrap();
+    }
+
+    let total = *take.lock().unwrap();
+    total
 }
 
 fn main() {
-    println!("Revenue: {}", concurrent_revenue());
+    println!("[stash] the take: {} creds (want 1000)", pool_the_take());
 }

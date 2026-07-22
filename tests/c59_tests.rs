@@ -2,19 +2,19 @@
 #[allow(dead_code)]
 mod c59_exercise;
 
-use c59_exercise::two_sum;
+use c59_exercise::master_key_pair;
 
 #[test]
-fn finds_pair() {
-    assert_eq!(two_sum(&[2, 7, 11, 15], 9), Some((0, 1)));
+fn finds_the_key_pair() {
+    assert_eq!(master_key_pair(&[2, 7, 11, 15], 9), Some((0, 1)));
 }
 
 #[test]
-fn finds_later_pair() {
-    assert_eq!(two_sum(&[3, 2, 4], 6), Some((1, 2)));
+fn finds_a_later_pair() {
+    assert_eq!(master_key_pair(&[3, 2, 4], 6), Some((1, 2)));
 }
 
 #[test]
-fn no_pair() {
-    assert_eq!(two_sum(&[1, 2, 3], 100), None);
+fn garbage_burst_has_no_pair() {
+    assert_eq!(master_key_pair(&[1, 2, 3], 100), None);
 }

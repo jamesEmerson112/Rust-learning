@@ -2,9 +2,10 @@
 #[allow(dead_code)]
 mod c67_exercise;
 
-use c67_exercise::concurrent_revenue;
+use c67_exercise::pool_the_take;
 
 #[test]
-fn ten_threads_add_100_each() {
-    assert_eq!(concurrent_revenue(), 1000);
+fn every_deposit_lands_in_the_shared_take() {
+    // 10 runners × 100 creds — the ledger must read 1000, every run, no races
+    assert_eq!(pool_the_take(), 1000);
 }

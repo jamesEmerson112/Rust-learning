@@ -2,9 +2,9 @@
 #[allow(dead_code)]
 mod c68_exercise;
 
-use c68_exercise::read_write_schedule;
+use c68_exercise::alert_board_count;
 
 #[test]
-fn readers_see_written_appointment() {
-    assert_eq!(read_write_schedule(), 2);
+fn lookouts_see_the_spotters_update() {
+    assert_eq!(alert_board_count(), 2);
 }

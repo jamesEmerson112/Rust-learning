@@ -2,14 +2,20 @@
 #[allow(dead_code)]
 mod c64_exercise;
 
-use c64_exercise::{borrow_after_drop_ok, double_borrow_fails};
+use c64_exercise::IntrusionLog;
 
 #[test]
-fn second_mut_borrow_is_rejected() {
-    assert!(double_borrow_fails());
+fn contended_write_is_refused_not_a_crash() {
+    let log = IntrusionLog::new();
+    log.record("breach at relay-7");
+    let result = log.record_during_sweep();
+    assert!(result.is_err(), "a write during a sweep must be refused (Err), not panic");
+    assert_eq!(log.entry_count(), 1, "nothing may be written while the sweep is active");
 }
 
 #[test]
-fn borrow_succeeds_after_release() {
-    assert!(borrow_after_drop_ok());
+fn writes_flow_after_the_sweep_releases() {
+    let log = IntrusionLog::new();
+    log.record("breach at relay-7");
+    assert_eq!(log.record_after_sweep(), 2);
 }
