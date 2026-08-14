@@ -1,6 +1,6 @@
 # Rust Learning
 
-See [ROADMAP.md](ROADMAP.md) for a scannable overview of all 74 lessons.
+See [ROADMAP.md](ROADMAP.md) for a scannable overview of all 80 lessons.
 
 This repo contains small Rust lessons, each with:
 - an `example` binary (complete reference)
@@ -38,6 +38,24 @@ Run all lesson tests:
 ```bash
 cargo test --tests
 ```
+
+## Track your progress
+
+Two views over the same save file (`.rustacean_save.json`, gitignored).
+
+Terminal character sheet — scans your test results, levels you up, unlocks abilities:
+```bash
+cargo run --bin progress            # incremental scan
+cargo run --bin progress -- --rescan  # re-test all 80
+```
+
+Gamified HTML dashboard — XP ring, chapter radar, activity heatmap, chapter map, boss HP bars, trophy case, and pace stats:
+```bash
+cargo run --bin dashboard           # writes dashboard.html and opens it
+cargo run --bin dashboard -- --no-open
+```
+
+`progress` owns all writes; `dashboard` only reads. Run `progress` first, then `dashboard`.
 
 ## Study Plan
 

@@ -30,12 +30,22 @@ Tests import exercises as modules via `#[path = "../src/bin/cXX_exercise.rs"]` a
 
 **Lessons 75-80** are the Bug Hunt block — salon-themed debugging side jobs (the learner prefers debugging to writing from scratch). Every exercise compiles but fails its tests via one classic bug archetype per lesson: HashMap insert-clobber (c75), swallowed parse error (c76), inverted filter (c77), slice off-by-one (c78), RefCell double borrow (c79), half-drained tokio mpsc (c80). No new concepts — all c01-c54 material; the example file is the corrected reference.
 
-## Progress Tracker
+## Progress Tracker & Dashboard
 
-`cargo run --bin progress` — RPG-style character progression that scans test results.
-- Save file: `.rustacean_save.json` (gitignored)
-- Flags: `--rescan` (re-test all), `--reset` (delete save), `--help`
-- Dependencies: `serde`, `serde_json`
+Two binaries over one save file, sharing `src/tracker.rs` (lesson metadata, save model, chapters, bosses, calendar helpers) via `#[path = "../tracker.rs"] mod tracker;` — same no-`lib.rs` convention as the lessons.
+
+`cargo run --bin progress` — terminal RPG character sheet; scans test results and **owns every write** to the save.
+- Flags: `--rescan` (re-test all 80), `--reset` (delete save), `--help`
+
+`cargo run --bin dashboard` — generates a self-contained `dashboard.html` (gitignored) and opens it: XP ring, chapter radar, activity heatmap, chapter map, boss HP bars, trophy case, pace stats, and a Knowledge Tree. **Read-only** on the save; no crates beyond `serde`/`serde_json`, no network, inline SVG only, zero JavaScript.
+- Flags: `--no-open`, `--help`
+- **Knowledge Tree panel**: a 223-node curated map of the full Rust ecosystem (language core, memory/lifetimes, stdlib, concurrency/async, macros/unsafe/FFI, tooling, web/data, systems/embedded/WASM/gamedev), data in `src/knowledge_tree.rs` (dashboard-only — `tracker.rs`/`progress.rs` don't import it). Rendered as a zero-JS `<details>`/`<summary>` collapsible outline. Every node with a curriculum tie (59 of 223) is tagged with lesson number(s) and colored by 3-state status vs. the save: learned (green, passed) / queued (yellow, taught but not yet passed) / uncharted (dim, real Rust beyond the 80-lesson curriculum). Content was authored 2026-08 by 8 parallel research agents (one per branch) + a synthesis pass that cross-checked all lessons 1–80 are placed somewhere.
+
+Save file `.rustacean_save.json` (gitignored), **v2**:
+- `lessons[cXX]`: `passed`, `completed_at`, `first_passed_at` (survives `--rescan`), `attempts` (incremented on incremental-mode failures only), `backfilled`
+- `history`: append-only `Event { at, kind: pass|fail|regression|scan|rank_up, lesson?, detail? }` — **never** cleared, including by `--rescan`
+- v1 saves migrate automatically. Migrated entries are flagged `backfilled: true` because v1's `--rescan` collapsed every timestamp onto one minute; they count toward level/XP/stats but are excluded from streaks, heatmap, and pace math.
+- Heatmap days are **UTC** (no date crate) — a late-night session can land on the next day's cell.
 
 ## Conventions
 
