@@ -10,9 +10,17 @@ trait Program {
     fn power_draw(&self) -> u32;
 }
 
+
+struct Circle {
+    center: [i32; 2],
+    radius: f32,
+}
+
 struct Icepick;
 struct Siphon;
-struct Ghost;
+struct Ghost {
+    fields: i32,
+}
 
 impl Program for Icepick {
     fn name(&self) -> String {
@@ -50,10 +58,16 @@ fn over_budget(loadout: &[Box<dyn Program>], budget: u32) -> bool {
 }
 
 fn main() {
-    let deck: Vec<Box<dyn Program>> = vec![Box::new(Icepick), Box::new(Siphon), Box::new(Ghost)];
+    let deck: Vec<Box<Program>> = vec![Box::new(Icepick), Box::new(Siphon), Box::new(Ghost)];
     for p in &deck {
         println!("[deck] slotted {} ({} MW)", p.name(), p.power_draw());
     }
     println!("[deck] total draw: {} MW", total_draw(&deck));
     println!("[deck] over a 60 MW budget? {}", over_budget(&deck, 60));
 }
+
+
+
+fn print_everything_in_iterable(iterator: dyn Iterator)
+
+let programs: [Box<Program>; 4];
