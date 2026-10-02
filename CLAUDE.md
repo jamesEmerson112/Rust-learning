@@ -2,99 +2,72 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Build & Test Commands
+## What this is
+
+An 80-lesson Rust curriculum for one learner, a senior developer coming from C/C++, Python, and TypeScript. Explanations should lean on systems-level analogies (`&str` is roughly `const char*`, `Box<T>` is roughly `unique_ptr<T>`). The crate is edition 2024 and has no `lib.rs` on purpose.
+
+README.md holds the per-lesson study plan (**Learn** / **Exercise** / **You're done when**). ROADMAP.md holds the at-a-glance table, the phase and chapter blurbs, and the prerequisite chain. Read those for what a lesson teaches and how its story is themed. This file covers the mechanics.
+
+## Commands
 
 ```bash
-cargo build                      # Build everything
-cargo run --bin c05_example      # Run a lesson example
-cargo run --bin c05_exercise     # Run a lesson exercise
-cargo test --test c05_tests      # Test a specific lesson
-cargo test --tests               # Run all 80 lesson tests
+cargo run --bin c57_example            # run a lesson's reference implementation
+cargo run --bin c57_exercise           # run the learner's version
+cargo check --bin c57_exercise         # fastest compile check of one file
+cargo test --test c57_tests            # validate one lesson
+cargo test --test c57_tests total      # run only tests whose name contains "total"
+cargo test --tests                     # all 80 suites; unfinished lessons fail by design
+cargo check --bins                     # confirm every example and exercise compiles
+
+cargo run --bin progress               # incremental scan, updates the save, prints the character sheet
+cargo run --bin progress -- --rescan   # re-test all 80 lessons (`-- --reset` deletes the save)
+cargo run --bin dashboard              # write dashboard.html and open it (`-- --no-open` to skip opening)
 ```
 
-## Architecture
+Flags for `progress` and `dashboard` need the `--` separator, as shown.
 
-An 80-lesson Rust curriculum. Each lesson is self-contained with three files:
+## One broken file blocks every lesson's tests
 
-- `src/bin/cXX_example.rs` — Complete reference implementation (read-only)
-- `src/bin/cXX_exercise.rs` — Starter stubs with `TODO` comments (learner edits these)
-- `tests/cXX_tests.rs` — Integration tests that validate the exercise
+Cargo builds every binary target in the package before it runs any integration test, and this package has 163 of them (80 examples, 80 exercises, `progress`, `dashboard`, and `src/main.rs`). If any single example or exercise fails to compile, `cargo test --test cXX_tests` fails for every lesson, including lessons unrelated to the broken file.
 
-Tests import exercises as modules via `#[path = "../src/bin/cXX_exercise.rs"]` and test their `pub` functions. There is no `lib.rs`; lessons have no cross-dependencies — with ONE deliberate exception: `c74_exercise.rs` imports the learner's own `c71_exercise.rs` via `#[path]` (the capstone assembles their codec).
+`progress` runs exactly that command once per lesson with output silenced. A scan in that state therefore marks every lesson as failed and appends `regression` events to the save's history, which is never cleared. Run `cargo check --bins` and get it clean before running `progress`.
 
-**Lessons 32-33** introduce file-based modules in `src/lesson32/` and `src/lesson33/` (e.g., `exercise_client_counter.rs`, `exercise_service_log.rs`). Their bin files and tests use `#[path]` attributes to import these modules.
+This is also why learner-form exercises must always compile. Stubs use `let _ = (...);` placeholders with a dummy return value, and imports the solution will need are marked `#[allow(unused_imports)]`.
 
-**Lessons 34-54** are nail salon themed (the user runs a salon and is building a scheduler). Vietnamese technician names throughout (Mai, Linh, Trang). Topics: error handling II (c34-c38), slices/lifetimes II (c39-c41), interior mutability (c42-c44), custom iterators (c45-c46), file I/O (c47-c49), async/tokio (c50-c52), CLI with clap (c53-c54).
+## Layout and wiring
 
-**Lessons 55-74** are THE VAULT RUN — a five-chapter cyberpunk heist arc (rewritten 2026-07 because the learner found the original flat and stopped at c55). Same concepts as before, one story: the learner is netrunner "Chrome Surgeon" breaching the Aegis-9 vault; Mai/Linh/Trang carry over as the crew. Chapters: LOADOUT (c55-c58, Box/trait objects/Deref), GHOST PROTOCOL (c59-c61, Drop/Weak), INSIDE THE ICE (c62-c64, Cell/RefCell), THE CREW (c65-c68, Arc/Mutex/RwLock over `std::thread`), THE VAULT (c69-c74, sled + serde, capstone imports the learner's own c71). Three exercise formats: plain stubs, ⚡ warmups (c55/c59/c62/c65, c01-c54 tools only), and ★ BUG HUNT lessons (c58/c61/c64/c67) that ship compiling-but-wrong code with a `// BUG:` symptom comment — tests fail deterministically, never hang. Examples keep the "Coming from C / ThreadX" header-note style.
+Each lesson is a triple. `src/bin/cXX_example.rs` is the complete reference and the canonical answer. `src/bin/cXX_exercise.rs` is the learner's file, holding `TODO` stubs or a planted bug. `tests/cXX_tests.rs` pulls the exercise in as a module with `#[path = "../src/bin/cXX_exercise.rs"] mod cXX_exercise;` and tests its `pub` items, so exercise functions and types must be `pub`. Every exercise also keeps a `main()` so `cargo run` works on it.
 
-**Lessons 75-80** are the Bug Hunt block — salon-themed debugging side jobs (the learner prefers debugging to writing from scratch). Every exercise compiles but fails its tests via one classic bug archetype per lesson: HashMap insert-clobber (c75), swallowed parse error (c76), inverted filter (c77), slice off-by-one (c78), RefCell double borrow (c79), half-drained tokio mpsc (c80). No new concepts — all c01-c54 material; the example file is the corrected reference.
+All code sharing goes through `#[path]`, never a library crate:
 
-## Progress Tracker & Dashboard
+- c32 and c33 load their modules from `src/lesson32/` and `src/lesson33/`.
+- `c74_exercise.rs` imports the learner's own `c71_exercise.rs`. This is the only cross-lesson dependency, and c74's tests tell the learner to finish c71 first. Only c71 is imported, because importing c73 as well would create two distinct `Stock` types.
+- `progress` and `dashboard` both include `src/tracker.rs`. Only `dashboard` includes `src/knowledge_tree.rs`.
 
-Two binaries over one save file, sharing `src/tracker.rs` (lesson metadata, save model, chapters, bosses, calendar helpers) via `#[path = "../tracker.rs"] mod tracker;` — same no-`lib.rs` convention as the lessons.
+The async lessons (c50–c52, c80) use `#[tokio::test]`. The sled lessons (c69–c74) test against `sled::Config::new().temporary(true)`, while their examples write `*_sled_db` directories into the working directory, which are gitignored.
 
-`cargo run --bin progress` — terminal RPG character sheet; scans test results and **owns every write** to the save.
-- Flags: `--rescan` (re-test all 80), `--reset` (delete save), `--help`
+`benchmarks/`, `python_exercises/`, `c02_example_backup.rs`, and `src/main.rs` are side experiments outside the lesson pipeline. Nothing reads them.
 
-`cargo run --bin dashboard` — generates a self-contained `dashboard.html` (gitignored) and opens it: XP ring, chapter radar, activity heatmap, chapter map, boss HP bars, trophy case, pace stats, and a Knowledge Tree. **Read-only** on the save; no crates beyond `serde`/`serde_json`, no network, inline SVG only, zero JavaScript.
-- Flags: `--no-open`, `--help`
-- **Knowledge Tree panel**: a 223-node curated map of the full Rust ecosystem (language core, memory/lifetimes, stdlib, concurrency/async, macros/unsafe/FFI, tooling, web/data, systems/embedded/WASM/gamedev), data in `src/knowledge_tree.rs` (dashboard-only — `tracker.rs`/`progress.rs` don't import it). Rendered as a zero-JS `<details>`/`<summary>` collapsible outline. Every node with a curriculum tie (59 of 223) is tagged with lesson number(s) and colored by 3-state status vs. the save: learned (green, passed) / queued (yellow, taught but not yet passed) / uncharted (dim, real Rust beyond the 80-lesson curriculum). Content was authored 2026-08 by 8 parallel research agents (one per branch) + a synthesis pass that cross-checked all lessons 1–80 are placed somewhere.
+## Tracker and dashboard
 
-Save file `.rustacean_save.json` (gitignored), **v2**:
-- `lessons[cXX]`: `passed`, `completed_at`, `first_passed_at` (survives `--rescan`), `attempts` (incremented on incremental-mode failures only), `backfilled`
-- `history`: append-only `Event { at, kind: pass|fail|regression|scan|rank_up, lesson?, detail? }` — **never** cleared, including by `--rescan`
-- v1 saves migrate automatically. Migrated entries are flagged `backfilled: true` because v1's `--rescan` collapsed every timestamp onto one minute; they count toward level/XP/stats but are excluded from streaks, heatmap, and pace math.
-- Heatmap days are **UTC** (no date crate) — a late-night session can land on the next day's cell.
+`src/tracker.rs` holds all lesson metadata as fixed-size const arrays: `LESSONS`, `ABILITIES`, `STAT_GROUPS`, `RANKS`, `CHAPTERS`, `BOSSES`, `CLASSES`, `BUG_LESSONS`, and `HOMEWORK_GAPS`. The lengths are part of each array's type, so adding a lesson means updating the counts together. `NUM_LESSONS` and `MAX_XP` derive from `LESSONS.len()`. `BUG_LESSONS` is the authoritative list of bug-hunt lessons. `HOMEWORK_GAPS` lists lessons the learner deliberately left open, and the dashboard skips them when it picks the next lesson.
 
-## Conventions
+`progress` owns every write to `.rustacean_save.json` (gitignored, schema v3). `dashboard` only reads it, and writes a self-contained `dashboard.html` with inline SVG, no JavaScript, and no network access. An incremental scan starts one lesson before the first unpassed lesson, so it re-verifies the last pass. `--rescan` re-tests everything but carries `first_passed_at`, `attempts`, and `backfilled` forward. The `history` event log is append-only. Heatmap days are UTC. Older saves upgrade through `migrate()` in `src/tracker.rs`, one version step at a time. Entries migrated from a v1 save are flagged `backfilled` and are excluded from streak and pace math. The v2 to v3 step renames the four cyberpunk character classes to their hospital equivalents.
 
-- Exercise functions must be `pub` so tests can import them
-- Each exercise file includes a `main()` for `cargo run` and `pub fn`s for `cargo test`
-- Examples are complete — exercises mirror the same API but with stubs
-- The learner is a senior dev (C/C++, Python, JS/TS background) learning Rust; use systems-level analogies (e.g., `&str` ≈ `const char*`)
-- Edition is 2024
+`src/knowledge_tree.rs` is a 223-node map of the Rust ecosystem shown only by the dashboard. Each node's `lessons: &[u32]` ties it to curriculum lessons, and most nodes are deliberately empty to show Rust the curriculum doesn't cover. Node text contains HTML-special characters such as `<` and `>`, so the dashboard must pass it through `esc()`.
 
-## Current Status (as of 2026-07-22)
+Story-specific strings live in the `tracker.rs` arrays and in the trophy list in `dashboard.rs`. A re-theme has to touch both, in addition to the lesson files, README.md, and ROADMAP.md.
 
-- **Frontier: c55** — The Vault Run, Chapter 1 (LOADOUT). Resume with `cargo run --bin c55_example`, then edit `src/bin/c55_exercise.rs`, test with `cargo test --test c55_tests`.
-- **Passed** (verified by the 2026-07-21 full rescan): all of c01-c54 EXCEPT open homework **c16, c19, c35, c37-c38, c40, c48-c49, c53**. The Vault Run does not depend on these.
-- **Untouched: c55-c80** — all learner stubs / planted bugs.
-- `.rustacean_save.json` mirrors this state. Update this section when progress meaningfully changes.
+## Lesson formats and authoring rules
 
-## Authoring New Lessons
+There are three exercise formats. Plain lessons ship `TODO` stubs. ⚡ warmups (c55, c59, c62, c65) are small DSA problems solvable with c01–c54 tools only. ★ bug hunts (the lessons in `BUG_LESSONS`) ship code that compiles but fails its tests.
 
-Standing process rules (established 2026-06-08, reused 2026-07-21):
+These rules hold for any new or rewritten lesson:
 
-- **One new concept per lesson** — the hard rule. If a lesson smuggles extras, split it. Warmups (⚡) and Bug Hunt (★) lessons introduce ZERO new concepts.
-- **Solved-first verification flow:** author exercises SOLVED with their tests → run the suites green (proves wiring and solvability) → convert to learner form (stubs: `let _ = ...;` placeholders + `#[allow(unused_imports)]`; bug lessons: plant the defect) → confirm every suite FAILS deterministically. Examples ship complete.
-- **Bug-lesson rules:** the code always compiles; tests fail deterministically (wrong value / `Err` / expected panic) — never a hang, no nondeterminism; a `// BUG:` comment states the SYMPTOM, never the fix; the example file is the corrected reference.
-- **When adding lessons**, extend in lockstep: `src/bin/progress.rs` (LESSONS, ABILITIES, STAT_GROUPS, RANKS — the counts in the array types must match), ROADMAP.md (table row + phase blurb + prereq chain), README.md Study Plan entry (`### Lesson N — Title` + **Learn/Exercise/You're done when**).
+- Each lesson introduces exactly one new concept. Warmups and bug hunts introduce none. There is no cap on lesson count, so a lesson that needs two concepts gets split.
+- Author solved first. Write the exercise solved, run its suite green, convert it to learner form by stubbing it or planting the bug, then confirm the suite fails deterministically.
+- A bug lesson always compiles. It fails by a wrong value, an `Err`, or an expected panic, and never by a hang or anything nondeterministic. A `// BUG:` comment at the top states the symptom and never the fix. The example file is the corrected reference.
+- Example style differs by era. c01–c30 are lean, with one function, a short `main`, and no explainer comments. Later examples open with a header comment that explains the concept and includes a "Coming from C" analogy. Match the neighboring lessons.
+- When adding or renumbering a lesson, update all of these together: the arrays in `src/tracker.rs`, any affected `lessons:` tags in `src/knowledge_tree.rs`, the ROADMAP.md table row, phase blurb, and prerequisite chain, and the README.md Study Plan entry (`### Lesson N — Title` with **Learn** / **Exercise** / **You're done when**).
 
-## Context History
-
-Older sessions are condensed; full detail is in this file's git history (`git log -p CLAUDE.md`).
-
-### 2026-04 (summary)
-- [refactor] Curriculum grew 20→30→33: dense lessons split so each teaches one concept (map/collect, filter, sum, fold became separate lessons; Debug Format added as the iterator→traits bridge). Renames rippled through progress.rs and lesson directories.
-- [decision] One-concept-per-lesson locked in from c17 onward (c17 itself rewritten from a `.map_err()?` chain to an explicit `match` for this reason). No upper bound on lesson count (memory: `feedback_no_lesson_cap`).
-- [decision] Lean example style for c01-c30 (one function, 1-3 line main, no explainer comments); richer style reserved for later material.
-- [decision] User committed to Rust as the sole learning track (memory: `feedback_rust_only_learning_track`).
-- [feat] ROADMAP.md created (at-a-glance table, phase groupings, prereq chain, post-track). progress.rs made dynamic: `NUM_LESSONS`/`MAX_XP` derived from `LESSONS.len()`.
-- [progress] Learner advanced roughly c07 → c20 across April. Research topics that month (String constructors, iterator families, `usize` ≈ `size_t`, `parse`/`FromStr`, `map_err`, `&str` vs `String`) are in git history.
-
-### 2026-06-08 (summary)
-- [feat] Expanded 54→68: Smart Pointers Deep Dive (Box for recursion/trait objects/Deref, Drop/Weak, full Cell/RefCell API, Arc/Mutex/RwLock — first `std::thread` use) plus 4 light DSA warmups, one per cluster, as an on-ramp to the difficulty jump. All std, no new deps.
-- [feat] progress.rs extended (ranks Heap Warden/Memory Reaper/Concurrency Daemon; endgame moved to L68). Solved-first verification flow established — now codified under "Authoring New Lessons" above.
-- (This block's exercises were superseded by THE VAULT RUN rewrite on 2026-07-21.)
-
-### 2026-07-21
-- [refactor] Rewrote c55-c74 as "THE VAULT RUN" — a five-chapter cyberpunk heist arc (LOADOUT, GHOST PROTOCOL, INSIDE THE ICE, THE CREW, THE VAULT). User had stopped at c55 (bored/discouraged by flat isolated stubs); test run verified c50-c52+c54 passed from the Jul 9 session and everything c55+ was untouched. Concepts per lesson unchanged; theme, exercise formats, and richness rewritten. Salon crew (Mai/Linh/Trang) carries over as the heist crew; learner plays "Chrome Surgeon" (their save-file class).
-- [decision] User picked (via AskUserQuestion): cyberpunk netrunner theme matching the RPG tracker; a MIX of exercise formats (fix-the-bug + build-on-own-code + richer stubs); scope c55-c74 only. Mid-turn addition: salon-themed EXTRA exercises as debugging problems — "i prefer debugging" (saved as durable memory feedback_prefers_debugging_exercises).
-- [feat] Four ★ BUG HUNT lessons in the arc: c58 (Deref serves factory_default instead of firmware), c61 (strong Rc cycle keeps the trace alive), c64 (RefCell write-during-sweep panic → try_borrow_mut), c67 (deposits increment a copied value, not the shared Mutex — compiler warning is the clue).
-- [feat] c74 finale imports the learner's OWN c71_exercise.rs via `#[path]` (the one deliberate cross-lesson dependency) — capstone assembles their Intel codec; tests hint "finish c71 first" if it's still a stub. Only ONE import on purpose: importing both c71 and c73 would create two distinct Intel types.
-- [feat] c75-c80 "Bug Hunt" block (authored by Opus subagent, verified green-solved/red-bugged both directions): salon debugging side jobs — HashMap insert clobber (c75), swallowed parse error (c76), inverted filter (c77), slice off-by-one (c78), RefCell double borrow (c79), half-drained tokio mpsc (c80).
-- [feat] progress.rs: LESSONS 74→80, STAT_GROUPS 29→30 ("Embedded Store"→"Datavault", added "Bug Hunt"), ABILITIES 74→80, RANKS 18→19 (rank 74 "Salon Sovereign"→"Vault Sovereign"; new final rank "Zero-Day Sovereign" @L80). Endgame banner rethemed.
-- [verify] Full flow: solved-reference pass = 20/20 suites green (55 tests); learner-form pass = 20/20 suites fail deterministically; cargo build clean; all 20 examples run with story output; `progress --rescan` over 80 lessons updated the stale save to ground truth.
-- [docs] ROADMAP.md (80 rows, ★ tag, chapter phase blocks, new prereq chain, Post-80 Track), README.md (Study Plan c55-c80 with chapter lead-ins, File layout c01…c80 drift fixed), CLAUDE.md architecture notes.
-- [ref] Solved references for c55-c74 lived in the session scratchpad only (not committed) — the examples are the canonical answers.
+The learner's real progress is in `.rustacean_save.json`. Read it, or run `progress`, rather than trusting a status written in any doc. Earlier versions of this file kept a session-by-session history, which is preserved in `git log -p -- CLAUDE.md`.

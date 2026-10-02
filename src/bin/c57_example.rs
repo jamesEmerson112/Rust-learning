@@ -3,71 +3,58 @@
 // Coming from C: it's the struct-of-function-pointers vtable you'd hand-roll to put unlike
 // objects in one array and call them uniformly — here the compiler builds the vtable for you.
 //
-// THE VAULT RUN: your deck runs a mixed loadout of ICE-breaker programs. Different types,
-// one slot rack — every program answers name() and power_draw() through the vtable.
-trait Program {
+// RUST GENERAL HOSPITAL: a bedside monitor runs a mix of sensors. Different types, one
+// rack — every sensor answers name() and power_draw() through the vtable.
+trait Sensor {
     fn name(&self) -> String;
     fn power_draw(&self) -> u32;
 }
 
+struct HeartRate;
+struct BloodOxygen;
+struct BloodPressure;
 
-struct Circle {
-    center: [i32; 2],
-    radius: f32,
-}
-
-struct Icepick;
-struct Siphon;
-struct Ghost {
-    fields: i32,
-}
-
-impl Program for Icepick {
+impl Sensor for HeartRate {
     fn name(&self) -> String {
-        "Icepick".to_string()
+        "Heart Rate".to_string()
     }
     fn power_draw(&self) -> u32 {
         40
     }
 }
 
-impl Program for Siphon {
+impl Sensor for BloodOxygen {
     fn name(&self) -> String {
-        "Siphon".to_string()
+        "Blood Oxygen".to_string()
     }
     fn power_draw(&self) -> u32 {
         25
     }
 }
 
-impl Program for Ghost {
+impl Sensor for BloodPressure {
     fn name(&self) -> String {
-        "Ghost".to_string()
+        "Blood Pressure".to_string()
     }
     fn power_draw(&self) -> u32 {
         15
     }
 }
 
-fn total_draw(loadout: &[Box<dyn Program>]) -> u32 {
-    loadout.iter().map(|p| p.power_draw()).sum()
+fn total_draw(monitor: &[Box<dyn Sensor>]) -> u32 {
+    monitor.iter().map(|s| s.power_draw()).sum()
 }
 
-fn over_budget(loadout: &[Box<dyn Program>], budget: u32) -> bool {
-    total_draw(loadout) > budget
+fn over_budget(monitor: &[Box<dyn Sensor>], budget: u32) -> bool {
+    total_draw(monitor) > budget
 }
 
 fn main() {
-    let deck: Vec<Box<Program>> = vec![Box::new(Icepick), Box::new(Siphon), Box::new(Ghost)];
-    for p in &deck {
-        println!("[deck] slotted {} ({} MW)", p.name(), p.power_draw());
+    let monitor: Vec<Box<dyn Sensor>> =
+        vec![Box::new(HeartRate), Box::new(BloodOxygen), Box::new(BloodPressure)];
+    for s in &monitor {
+        println!("[monitor] {} sensor ({} mW)", s.name(), s.power_draw());
     }
-    println!("[deck] total draw: {} MW", total_draw(&deck));
-    println!("[deck] over a 60 MW budget? {}", over_budget(&deck, 60));
+    println!("[monitor] total draw: {} mW", total_draw(&monitor));
+    println!("[monitor] over a 60 mW battery budget? {}", over_budget(&monitor, 60));
 }
-
-
-
-fn print_everything_in_iterable(iterator: dyn Iterator)
-
-let programs: [Box<Program>; 4];

@@ -3,36 +3,36 @@
 // Coming from C: it's the free()/close()/unlock() you write by hand at every return and
 // `goto fail`, except the compiler guarantees it runs exactly once, on every exit path.
 //
-// THE VAULT RUN: every uplink you open into Aegis-9 MUST burn its trace on disconnect.
-// Forget one and the trace daemon follows it home. Drop means you CAN'T forget.
+// RUST GENERAL HOSPITAL: when an IV pump session ends, the pump MUST stop — on the normal
+// path, on an early return, even on a panic. Drop means nobody can forget.
 use std::cell::RefCell;
 
-struct Uplink<'a> {
-    handle: String,
+struct PumpSession<'a> {
+    bed: String,
     log: &'a RefCell<Vec<String>>,
 }
 
-impl<'a> Drop for Uplink<'a> {
+impl<'a> Drop for PumpSession<'a> {
     fn drop(&mut self) {
-        self.log.borrow_mut().push(format!("{} trace burned", self.handle));
+        self.log.borrow_mut().push(format!("{} pump stopped", self.bed));
     }
 }
 
 fn main() {
     let log = RefCell::new(Vec::new());
     {
-        let _alpha = Uplink { handle: "alpha".to_string(), log: &log };
-        let _bravo = Uplink { handle: "bravo".to_string(), log: &log };
-        println!("[uplink] both channels hot.");
-    } // _bravo burns first, then _alpha — reverse of open order
-    println!("[uplink] burn log: {:?}", log.borrow());
+        let _bed1 = PumpSession { bed: "bed-1".to_string(), log: &log };
+        let _bed2 = PumpSession { bed: "bed-2".to_string(), log: &log };
+        println!("[pumps] both running.");
+    } // _bed2 stops first, then _bed1 — reverse of start order
+    println!("[pumps] stop log: {:?}", log.borrow());
 
     let log2 = RefCell::new(Vec::new());
     {
-        let alpha = Uplink { handle: "alpha".to_string(), log: &log2 };
-        let _bravo = Uplink { handle: "bravo".to_string(), log: &log2 };
-        drop(alpha); // burn alpha early, on YOUR schedule — still exactly once
-        println!("[uplink] alpha burned early, bravo still hot.");
+        let bed1 = PumpSession { bed: "bed-1".to_string(), log: &log2 };
+        let _bed2 = PumpSession { bed: "bed-2".to_string(), log: &log2 };
+        drop(bed1); // stop bed-1 early, on YOUR schedule — still exactly once
+        println!("[pumps] bed-1 stopped early, bed-2 still running.");
     }
-    println!("[uplink] burn log: {:?}", log2.borrow());
+    println!("[pumps] stop log: {:?}", log2.borrow());
 }

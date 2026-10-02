@@ -5,27 +5,27 @@
 // is `count = map_get_or_zero(k); map[k] = count + 1;` done atomically in one lookup.
 use std::collections::HashMap;
 
-pub fn service_counts(entries: &[(&str, &str)]) -> HashMap<String, usize> {
+pub fn visit_counts(entries: &[(&str, &str)]) -> HashMap<String, usize> {
     let mut counts: HashMap<String, usize> = HashMap::new();
-    for &(tech, _service) in entries {
-        *counts.entry(tech.to_string()).or_insert(0) += 1;
+    for &(nurse, _patient) in entries {
+        *counts.entry(nurse.to_string()).or_insert(0) += 1;
     }
     counts
 }
 
 fn main() {
-    let day = [
-        ("Mai", "Gel Manicure"),
-        ("Mai", "Pedicure"),
-        ("Mai", "Acrylic Full Set"),
-        ("Mai", "Gel Manicure"),
-        ("Mai", "Pedicure"),
-        ("Mai", "Gel Manicure"),
-        ("Linh", "Pedicure"),
-        ("Linh", "Gel Manicure"),
-        ("Trang", "Acrylic Full Set"),
+    let shift = [
+        ("Mai", "Mr. Hung"),
+        ("Mai", "Mrs. Lan"),
+        ("Mai", "Mr. Bao"),
+        ("Mai", "Mr. Hung"),
+        ("Mai", "Mrs. Lan"),
+        ("Mai", "Mr. Hung"),
+        ("Linh", "Mrs. Lan"),
+        ("Linh", "Mr. Hung"),
+        ("Trang", "Mr. Bao"),
     ];
-    let counts = service_counts(&day);
+    let counts = visit_counts(&shift);
     println!("Mai:   {:?}", counts.get("Mai"));
     println!("Linh:  {:?}", counts.get("Linh"));
     println!("Trang: {:?}", counts.get("Trang"));

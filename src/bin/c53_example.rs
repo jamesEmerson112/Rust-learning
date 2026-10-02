@@ -2,25 +2,28 @@
 // checking, --help, and error messages generated for free.
 // Coming from C: instead of walking argv[] by hand (or getopt), you describe the arguments
 // once as a typed struct and clap does the parsing and validation.
+//
+// RUST GENERAL HOSPITAL: a doctor writes a medication order from the ward terminal.
+// Run: cargo run --bin c53_example -- --patient "Mr. Hung" --medication Paracetamol --dose-mg 500
 use clap::Parser;
 
 #[derive(Parser, Debug)]
-#[command(about = "Book a salon appointment")]
+#[command(about = "Write a medication order")]
 struct Args {
     #[arg(long)]
-    technician: String,
+    patient: String,
 
     #[arg(long)]
-    service: String,
+    medication: String,
 
     #[arg(long)]
-    price: u32,
+    dose_mg: u32,
 }
 
 fn main() {
     let args = Args::parse();
     println!(
-        "Booked: {} with {} for {} cents",
-        args.service, args.technician, args.price
+        "Order: {} {} mg for {}",
+        args.medication, args.dose_mg, args.patient
     );
 }

@@ -2,40 +2,43 @@
 #[allow(dead_code)]
 mod c73_exercise;
 
-use c73_exercise::{Intel, shortlist, shortlist_codenames};
+use c73_exercise::{Stock, low_stock, low_stock_names};
 
-fn temp_vault() -> sled::Db {
+fn temp_db() -> sled::Db {
     sled::Config::new().temporary(true).open().unwrap()
 }
 
-fn seed(db: &sled::Db, codename: &str, value: u32) {
-    let bytes = serde_json::to_vec(&Intel { codename: codename.to_string(), value }).unwrap();
-    db.insert(codename, bytes).unwrap();
+fn seed(db: &sled::Db, drug: &str, units: u32) {
+    let bytes = serde_json::to_vec(&Stock { drug: drug.to_string(), units }).unwrap();
+    db.insert(drug, bytes).unwrap();
+}
+
+fn stocked_pharmacy() -> sled::Db {
+    let db = temp_db();
+    seed(&db, "Paracetamol", 6400);
+    seed(&db, "Amoxicillin", 4200);
+    seed(&db, "Insulin", 1850);
+    seed(&db, "Saline", 5000); // exactly at the threshold — NOT low
+    db
 }
 
 #[test]
-fn shortlist_keeps_only_premium_intel() {
-    let db = temp_vault();
-    seed(&db, "GHOSTKEY", 64000);
-    seed(&db, "BLACKOUT", 42000);
-    seed(&db, "EXEC-DIRT", 18500);
+fn reorder_list_keeps_only_low_stock() {
+    let db = stocked_pharmacy();
     assert_eq!(
-        shortlist(&db, 40000).unwrap(),
+        low_stock(&db, 5000).unwrap(),
         vec![
-            Intel { codename: "BLACKOUT".to_string(), value: 42000 },
-            Intel { codename: "GHOSTKEY".to_string(), value: 64000 },
+            Stock { drug: "Amoxicillin".to_string(), units: 4200 },
+            Stock { drug: "Insulin".to_string(), units: 1850 },
         ]
     );
 }
 
 #[test]
-fn codenames_project_just_the_names() {
-    let db = temp_vault();
-    seed(&db, "GHOSTKEY", 64000);
-    seed(&db, "BLACKOUT", 42000);
-    seed(&db, "EXEC-DIRT", 18500);
+fn names_project_just_the_drugs() {
+    let db = stocked_pharmacy();
     assert_eq!(
-        shortlist_codenames(&db, 40000).unwrap(),
-        vec!["BLACKOUT".to_string(), "GHOSTKEY".to_string()]
+        low_stock_names(&db, 5000).unwrap(),
+        vec!["Amoxicillin".to_string(), "Insulin".to_string()]
     );
 }

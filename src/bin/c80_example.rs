@@ -10,8 +10,8 @@ pub async fn collect_done() -> Vec<String> {
 
     // One task sends all three sequentially, so the order is deterministic: Mai, Linh, Trang.
     tokio::spawn(async move {
-        for tech in ["Mai", "Linh", "Trang"] {
-            tx.send(format!("{tech} done")).await.unwrap();
+        for nurse in ["Mai", "Linh", "Trang"] {
+            tx.send(format!("{nurse} done")).await.unwrap();
         }
     });
 
@@ -25,7 +25,7 @@ pub async fn collect_done() -> Vec<String> {
 #[tokio::main]
 async fn main() {
     let done = collect_done().await;
-    println!("front desk logged {} clock-outs:", done.len());
+    println!("nurses' station logged {} clock-outs:", done.len());
     for msg in &done {
         println!("  {msg}");
     }

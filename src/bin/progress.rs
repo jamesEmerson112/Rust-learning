@@ -68,17 +68,17 @@ fn prompt_line(prompt: &str) -> String {
 fn create_character() -> SaveFile {
     println!();
     println!("{}",   color::bold_cyan("╔══════════════════════════════════════════════╗"));
-    println!("{}",   color::bold_cyan("║       >> NEURAL LINK ESTABLISHED <<          ║"));
-    println!("{}",   color::bold_cyan("║       Welcome to the Rust Underground        ║"));
+    println!("{}",   color::bold_cyan("║             >> SHIFT STARTED <<              ║"));
+    println!("{}",   color::bold_cyan("║       Welcome to Rust General Hospital       ║"));
     println!("{}",   color::bold_cyan("╚══════════════════════════════════════════════╝"));
     println!();
-    println!("  Before you lies a grid of {} data nodes.", color::bold(&NUM_LESSONS.to_string()));
-    println!("  Master them all to earn the rank of {}.", color::bold_yellow("Zero-Day Sovereign"));
+    println!("  {} cases are waiting on the ward.", color::bold(&NUM_LESSONS.to_string()));
+    println!("  Close them all to earn the rank of {}.", color::bold_yellow(RANKS[RANKS.len() - 1].name));
     println!();
 
     // Name
     let name = {
-        let input = prompt_line(&format!("  {} ", color::cyan("Enter your handle [Rustacean]:")));
+        let input = prompt_line(&format!("  {} ", color::cyan("Enter your name [Rustacean]:")));
         if input.is_empty() { "Rustacean".to_string() } else { input }
     };
 
@@ -151,7 +151,7 @@ fn scan_lessons(save: &mut SaveFile, rescan: bool) -> ScanResult {
     let mut regressions = Vec::new();
 
     println!();
-    println!("  {}", color::bold("Scanning data nodes..."));
+    println!("  {}", color::bold("Reviewing case files..."));
     println!();
 
     save.history.push(Event::new(EventKind::Scan, None));
@@ -243,7 +243,7 @@ fn scan_lessons(save: &mut SaveFile, rescan: bool) -> ScanResult {
             if was_passed {
                 regressions.push(lesson.number);
             }
-            // A full rescan sweeps all 80 nodes, so it must not count an attempt for
+            // A full rescan sweeps all 80 lessons, so it must not count an attempt for
             // lessons the learner has never opened.
             if was_passed || !rescan {
                 let status = save.lessons.entry(key).or_default();
@@ -505,10 +505,16 @@ fn display_character_sheet(save: &SaveFile) {
     println!();
     if level == NUM_LESSONS {
         println!("  {}", color::bold_cyan("╔══════════════════════════════════════════════════════════╗"));
-        println!("  {}",   color::bold_cyan("║        🦀  SYSTEM FULLY COMPROMISED  🦀                ║"));
+        println!("  {}",   color::bold_cyan("║        🦀  ALL CASES CLOSED  🦀                        ║"));
         println!("  {}", color::bold_cyan("╚══════════════════════════════════════════════════════════╝"));
         println!();
-        println!("  {}",   color::bold_green("  You are the Zero-Day Sovereign. The Rust Underground salutes you."));
+        println!(
+            "  {}",
+            color::bold_green(&format!(
+                "  You are {}. The whole hospital salutes you.",
+                RANKS[RANKS.len() - 1].name
+            ))
+        );
         println!("  {}",   color::dim(&format!("  Check the README for suggested next topics beyond chapter {}.", NUM_LESSONS)));
     } else {
         let next = next_lesson(save);
@@ -545,11 +551,11 @@ fn display_character_sheet(save: &SaveFile) {
 
 fn print_help() {
     println!();
-    println!("  {}", color::bold("Rust Underground — Cyberpunk Progress Tracker"));
+    println!("  {}", color::bold("Rust General Hospital — Progress Tracker"));
     println!();
     println!("  {}", color::bold("USAGE:"));
     println!("    cargo run --bin progress              Normal run (incremental scan + display)");
-    println!("    cargo run --bin progress -- --rescan  Re-test all {} data nodes from scratch", NUM_LESSONS);
+    println!("    cargo run --bin progress -- --rescan  Re-test all {} lessons from scratch", NUM_LESSONS);
     println!("    cargo run --bin progress -- --reset   Delete save file and start fresh");
     println!("    cargo run --bin progress -- --help    Show this help message");
     println!("    cargo run --bin dashboard             Render the HTML dashboard from your save");

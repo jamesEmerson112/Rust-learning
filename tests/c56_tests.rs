@@ -2,38 +2,38 @@
 #[allow(dead_code)]
 mod c56_exercise;
 
-use c56_exercise::{Route, build_route, hop_count, last_node};
+use c56_exercise::{Route, build_route, last_stop, stop_count};
 
 #[test]
-fn empty_route_is_zero_hops() {
-    assert_eq!(hop_count(&Route::Exit), 0);
-    assert_eq!(last_node(&Route::Exit), None);
+fn empty_route_has_no_stops() {
+    assert_eq!(stop_count(&Route::Dock), 0);
+    assert_eq!(last_stop(&Route::Dock), None);
 }
 
 #[test]
-fn three_hop_route() {
-    let route = build_route(&["gateway", "relay-7", "aegis-core"]);
-    assert_eq!(hop_count(&route), 3);
+fn three_stop_route() {
+    let route = build_route(&["pharmacy", "ward-3", "icu"]);
+    assert_eq!(stop_count(&route), 3);
 }
 
 #[test]
-fn first_node_is_outermost() {
-    let route = build_route(&["gateway", "relay-7"]);
+fn first_stop_is_outermost() {
+    let route = build_route(&["pharmacy", "ward-3"]);
     match &route {
-        Route::Hop(name, _) => assert_eq!(name, "gateway"),
-        Route::Exit => panic!("route should start at the gateway, not Exit"),
+        Route::Stop(name, _) => assert_eq!(name, "pharmacy"),
+        Route::Dock => panic!("route should start at the pharmacy, not the dock"),
     }
 }
 
 #[test]
-fn deepest_hop_is_the_vault_doorstep() {
-    let route = build_route(&["gateway", "relay-7", "aegis-core"]);
-    assert_eq!(last_node(&route), Some("aegis-core".to_string()));
+fn last_stop_is_the_icu() {
+    let route = build_route(&["pharmacy", "ward-3", "icu"]);
+    assert_eq!(last_stop(&route), Some("icu".to_string()));
 }
 
 #[test]
-fn single_hop_route() {
-    let route = build_route(&["gateway"]);
-    assert_eq!(hop_count(&route), 1);
-    assert_eq!(last_node(&route), Some("gateway".to_string()));
+fn single_stop_route() {
+    let route = build_route(&["pharmacy"]);
+    assert_eq!(stop_count(&route), 1);
+    assert_eq!(last_stop(&route), Some("pharmacy".to_string()));
 }

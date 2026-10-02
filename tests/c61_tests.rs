@@ -2,15 +2,18 @@
 #[allow(dead_code)]
 mod c61_exercise;
 
-use c61_exercise::{link_counts, trace_lost};
+use c61_exercise::{alarm_silent_after_discharge, link_counts};
 
 #[test]
-fn daemon_has_no_strong_grip() {
-    // one strong owner (you), one weak watcher (the daemon)
+fn alarm_has_no_strong_grip() {
+    // one strong owner (the ward), one weak watcher (the alarm)
     assert_eq!(link_counts(), (1, 1));
 }
 
 #[test]
-fn jack_out_loses_the_trace() {
-    assert!(trace_lost(), "after dropping the session, the daemon must not reach it");
+fn discharge_silences_the_alarm() {
+    assert!(
+        alarm_silent_after_discharge(),
+        "after discharge, the alarm must not reach the patient"
+    );
 }

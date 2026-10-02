@@ -1,69 +1,67 @@
-// THE VAULT RUN — Chapter 1: LOADOUT
-// Slot your ICE-breakers. Three different concrete types, one rack: Vec<Box<dyn Program>>.
+// RUST GENERAL HOSPITAL — Ward Equipment
+// Wire up the bedside monitor. Three different sensor types, one rack: Vec<Box<dyn Sensor>>.
 // Each call to name()/power_draw() dispatches through the vtable at runtime.
-pub trait Program {
+pub trait Sensor {
     fn name(&self) -> String;
     fn power_draw(&self) -> u32;
 }
 
-pub struct Icepick;
-pub struct Siphon;
-pub struct Ghost;
+pub struct HeartRate;
+pub struct BloodOxygen;
+pub struct BloodPressure;
 
-impl Program for Icepick {
+impl Sensor for HeartRate {
     fn name(&self) -> String {
-        // TODO: "Icepick"
-        String::new()
+        // TODO: "Heart Rate"
+        "Heart Rate".to_string()
     }
     fn power_draw(&self) -> u32 {
-        // TODO: The Icepick pulls 40 MW.
-        0
+        // TODO: The heart-rate sensor draws 40 mW.
+        40
     }
 }
 
-impl Program for Siphon {
+impl Sensor for BloodOxygen {
     fn name(&self) -> String {
-        // TODO: "Siphon"
-        String::new()
+        // TODO: "Blood Oxygen"
+        "Blood Oxygen".to_string()
     }
     fn power_draw(&self) -> u32 {
-        // TODO: The Siphon pulls 25 MW.
-        0
+        // TODO: The blood-oxygen sensor draws 25 mW.
+        25
     }
 }
 
-impl Program for Ghost {
+impl Sensor for BloodPressure {
     fn name(&self) -> String {
-        // TODO: "Ghost"
-        String::new()
+        // TODO: "Blood Pressure"
+        "Blood Pressure".to_string()
     }
     fn power_draw(&self) -> u32 {
-        // TODO: The Ghost sips 15 MW.
-        0
+        // TODO: The blood-pressure cuff draws 15 mW.
+        15
     }
 }
 
-pub fn full_loadout() -> Vec<Box<dyn Program>> {
-    // TODO: Return all three programs boxed, in order: Icepick, Siphon, Ghost.
+pub fn full_monitor() -> Vec<Box<dyn Sensor>> {
+    // TODO: Return all three sensors boxed, in order: HeartRate, BloodOxygen, BloodPressure.
     // This is the move that makes trait objects click: three types, one Vec.
-    Vec::new()
+    vec![Box::new(HeartRate), Box::new(BloodOxygen), Box::new(BloodPressure)]
 }
 
-pub fn total_draw(loadout: &[Box<dyn Program>]) -> u32 {
-    // TODO: Sum power_draw() across the rack — each element is a different
-    // concrete type behind `dyn Program`; the call dispatches at runtime.
-    let _ = loadout;
-    0
+pub fn total_draw(monitor: &[Box<dyn Sensor>]) -> u32 {
+    // TODO: Sum power_draw() across the monitor — each element is a different
+    // concrete type behind `dyn Sensor`; the call dispatches at runtime.
+    monitor.iter().map(|p| p.power_draw()).sum()
 }
 
-pub fn over_budget(loadout: &[Box<dyn Program>], budget: u32) -> bool {
-    // TODO: true when the rack pulls MORE than the deck's power budget.
-    let _ = (loadout, budget);
-    false
+pub fn over_budget(monitor: &[Box<dyn Sensor>], budget: u32) -> bool {
+    // TODO: true when the sensors draw MORE than the monitor's battery budget.
+    total_draw(monitor) > budget
 }
 
 fn main() {
-    let deck = full_loadout();
-    println!("[deck] total draw: {} MW (want 80)", total_draw(&deck));
-    println!("[deck] over a 60 MW budget? {} (want true)", over_budget(&deck, 60));
+    let monitor = full_monitor();
+    println!("[monitor] total draw: {} mW (want 80)", total_draw(&monitor));
+    println!("[monitor] over a 60 mW budget? {} (want true)", over_budget(&monitor, 60));
 }

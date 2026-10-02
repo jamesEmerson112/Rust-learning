@@ -6,19 +6,19 @@ use c78_exercise::*;
 
 #[test]
 fn busiest_window_can_be_the_last_one() {
-    // The closing rush (last 3 hours) is the busiest: 6000 + 12000 + 9000 = 27000.
-    let hourly = [4500, 3500, 6000, 12000, 9000];
-    assert_eq!(busiest_window(&hourly, 3), 27000);
+    // The late rush (last 3 hours) is the busiest: 6 + 12 + 9 = 27 arrivals.
+    let hourly = [4, 3, 6, 12, 9];
+    assert_eq!(busiest_window(&hourly, 3), 27);
 }
 
 #[test]
 fn busiest_window_in_the_middle() {
-    let hourly = [1000, 8000, 9000, 1000, 500];
-    assert_eq!(busiest_window(&hourly, 2), 17000);
+    let hourly = [1, 8, 9, 1, 0];
+    assert_eq!(busiest_window(&hourly, 2), 17);
 }
 
 #[test]
 fn width_equal_to_len_sums_everything() {
-    let hourly = [100, 200, 300];
-    assert_eq!(busiest_window(&hourly, 3), 600);
+    let hourly = [1, 2, 3];
+    assert_eq!(busiest_window(&hourly, 3), 6);
 }

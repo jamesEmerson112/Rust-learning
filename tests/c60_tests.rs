@@ -2,20 +2,20 @@
 #[allow(dead_code)]
 mod c60_exercise;
 
-use c60_exercise::{burn_order, early_burn};
+use c60_exercise::{early_stop, stop_order};
 
 #[test]
-fn traces_burn_in_reverse_order() {
+fn pumps_stop_in_reverse_order() {
     assert_eq!(
-        burn_order(),
-        vec!["bravo trace burned".to_string(), "alpha trace burned".to_string()]
+        stop_order(),
+        vec!["bed-2 pump stopped".to_string(), "bed-1 pump stopped".to_string()]
     );
 }
 
 #[test]
-fn compromised_uplink_burns_first() {
+fn blocked_line_stops_first() {
     assert_eq!(
-        early_burn(),
-        vec!["alpha trace burned".to_string(), "bravo trace burned".to_string()]
+        early_stop(),
+        vec!["bed-1 pump stopped".to_string(), "bed-2 pump stopped".to_string()]
     );
 }

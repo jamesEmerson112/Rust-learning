@@ -3,25 +3,26 @@
 // so you can't forget. Coming from ThreadX: tx_mutex_get/tx_mutex_put around a shared variable,
 // but here the lock is welded to the data. This is the threaded mirror of c44's Rc<RefCell>.
 //
-// THE VAULT RUN: ten runners feed cred-chips into ONE shared take. Lock, deposit through
-// the guard, release. The ledger can't lie if every write goes through the lock.
+// RUST GENERAL HOSPITAL: ten nurses chart fluids given into ONE shared fluid-balance total.
+// Lock, add through the guard, release. The total can't be wrong if every write goes
+// through the lock.
 use std::sync::{Arc, Mutex};
 use std::thread;
 
 fn main() {
-    let take = Arc::new(Mutex::new(0u32));
+    let fluid_ml = Arc::new(Mutex::new(0u32));
 
-    let mut crew = Vec::new();
+    let mut nurses = Vec::new();
     for _ in 0..10 {
-        let take = Arc::clone(&take);
-        crew.push(thread::spawn(move || {
-            *take.lock().unwrap() += 100; // deposit THROUGH the guard
+        let fluid_ml = Arc::clone(&fluid_ml);
+        nurses.push(thread::spawn(move || {
+            *fluid_ml.lock().unwrap() += 100; // chart THROUGH the guard
         }));
     }
 
-    for runner in crew {
-        runner.join().unwrap();
+    for nurse in nurses {
+        nurse.join().unwrap();
     }
 
-    println!("[stash] the take: {} creds", *take.lock().unwrap());
+    println!("[chart] fluid given today: {} ml", *fluid_ml.lock().unwrap());
 }

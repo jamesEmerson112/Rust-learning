@@ -1,51 +1,52 @@
-// THE VAULT RUN — Chapter 3: INSIDE THE ICE — ★ BUG HUNT ★
+// RUST GENERAL HOSPITAL — Shared Care — ★ BUG HUNT ★
 //
-// BUG: The deck PANICS mid-run — "already mutably borrowed" / BorrowMutError.
-// The scan daemon writes to the intrusion log while a sweep still holds it open.
+// BUG: The charting system CRASHES on the ward — "already borrowed" / BorrowMutError.
+// A nurse adds a note while a doctor still holds the chart open for review.
 // The compiler can't save you here: RefCell checks borrows at RUNTIME.
-// Aegis-9's ICE loves a crashed deck. Refuse the contended write gracefully instead.
+// A crashed chart in the middle of a shift is worse than a delayed note.
+// Refuse the contended write gracefully instead.
 //
 // Find it, fix it: cargo test --test c64_tests
 use std::cell::RefCell;
 
-pub struct IntrusionLog {
-    pub entries: RefCell<Vec<String>>,
+pub struct Chart {
+    pub notes: RefCell<Vec<String>>,
 }
 
-impl IntrusionLog {
+impl Chart {
     pub fn new() -> Self {
-        Self { entries: RefCell::new(Vec::new()) }
+        Self { notes: RefCell::new(Vec::new()) }
     }
 
-    pub fn record(&self, entry: &str) {
-        self.entries.borrow_mut().push(entry.to_string());
+    pub fn add_note(&self, note: &str) {
+        self.notes.borrow_mut().push(note.to_string());
     }
 
-    pub fn entry_count(&self) -> usize {
-        self.entries.borrow().len()
+    pub fn note_count(&self) -> usize {
+        self.notes.borrow().len()
     }
 
-    // A write that arrives DURING a sweep must come back Err — never a panic.
-    pub fn record_during_sweep(&self) -> Result<usize, String> {
-        let sweep = self.entries.borrow(); // the sweep holds the log open
-        self.entries.borrow_mut().push("ping during sweep".to_string());
-        Ok(sweep.len())
+    // A note that arrives DURING a review must come back Err — never a panic.
+    pub fn note_during_review(&self) -> Result<usize, String> {
+        let review = self.notes.borrow(); // the doctor holds the chart open
+        self.notes.borrow_mut().push("pulse 72 at 08:15".to_string());
+        Ok(review.len())
     }
 
-    // After the sweep releases the log, writes flow again.
-    pub fn record_after_sweep(&self) -> usize {
+    // After the review releases the chart, notes flow again.
+    pub fn note_after_review(&self) -> usize {
         {
-            let _sweep = self.entries.borrow();
-        } // sweep released here
-        self.record("post-sweep ping");
-        self.entry_count()
+            let _review = self.notes.borrow();
+        } // review released here
+        self.add_note("pulse 74 at 08:30");
+        self.note_count()
     }
 }
 
 fn main() {
-    let log = IntrusionLog::new();
-    log.record("breach at relay-7");
-    println!("[log] write during sweep: {:?} (want Err(..), not a panic)", log.record_during_sweep());
-    println!("[log] write after sweep: {} entries (want 2)", log.record_after_sweep());
-    println!("══ when the deck survives the sweep, CHAPTER 3: INSIDE THE ICE is complete ══");
+    let chart = Chart::new();
+    chart.add_note("BP 120/80 at 08:00");
+    println!("[chart] note during review: {:?} (want Err(..), not a panic)", chart.note_during_review());
+    println!("[chart] note after review: {} notes (want 2)", chart.note_after_review());
+    println!("══ when the chart survives the review, Shared Care is complete ══");
 }

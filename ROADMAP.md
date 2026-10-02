@@ -2,7 +2,7 @@
 
 **80 lessons, ~15 minutes each, one new concept per lesson.** (⚡ = light DSA warmup, ★ = fix-the-bug: broken code you debug instead of stubs you fill in)
 
-Lessons c55–c74 form **THE VAULT RUN** — a five-chapter cyberpunk heist arc. Same Rust concepts, one story. c75–c80 are **Bug Hunt** side jobs back at the salon: pure debugging practice on c01–c54 material.
+From c50 onward every lesson is set at **Rust General Hospital** — one small, real job that hospital software does per lesson, no story arc. c55–c74 are grouped into five chapters; c75–c80 are **Bug Hunt** side jobs around the hospital: pure debugging practice on c01–c54 material.
 
 Each lesson is a triple:
 - `src/bin/cXX_example.rs` — complete reference (read it)
@@ -67,33 +67,33 @@ Run the tracker: `cargo run --bin progress`
 | 48 | CSV Write                             | `save_daily_log()` writes a CSV          |
 | 49 | Serde JSON                            | `ServiceEntry` serialize/deserialize     |
 | 50 | `async fn` + tokio                    | `check_availability()` with `.await`     |
-| 51 | `tokio::spawn`                        | concurrent bookings                      |
-| 52 | Async Channels                        | technician sends "done" on `mpsc`        |
-| 53 | `clap` Arg Parsing                    | `--technician --service --price`         |
-| 54 | Capstone: Salon CLI                   | full scheduler — book, list, revenue     |
-| ⚡ 55 | Keygen (Warmup: Fibonacci)         | iterative loop, tuple swap               |
-| 56 | Intrusion Route (recursive Box)       | `enum` + `Box` for self-referential data |
-| 57 | Deck Loadout (`Box<dyn>`)             | dynamic dispatch over mixed types        |
-| ★ 58 | Faulty Implant (Deref)              | `impl Deref`, auto-deref coercion        |
-| ⚡ 59 | Master-Key Pair (Warmup: Two Sum)  | one-pass HashMap complement lookup       |
-| 60 | Uplink Burn (`Drop`/RAII)             | deterministic cleanup, LIFO drop order   |
-| ★ 61 | Trace Cycle (`Weak<T>`)             | `downgrade`/`upgrade`, leak-proof refs   |
-| ⚡ 62 | Packet Flip (Warmup: Reverse)      | two-pointer in-place swap                |
-| 63 | Signal Jammer (`Cell<T>` full API)    | `replace` / `take` through `&self`       |
-| ★ 64 | Log Contention (RefCell borrow)     | `try_borrow_mut`, runtime borrow check   |
-| ⚡ 65 | Signature Replay (Warmup: Dupes)   | HashSet membership in one pass           |
-| 66 | Vault Map (`Arc<T>` across threads)   | shared immutable state, `thread::spawn`  |
-| ★ 67 | The Missing Take (`Arc<Mutex<T>>`)  | shared mutable state across threads      |
-| 68 | Alert Board (`RwLock<T>`)             | many readers / one writer                |
-| 69 | Datavault: stash (`sled` insert)      | open a DB, insert key/value bytes        |
-| 70 | Datavault: retrieve (`sled` get)      | read values back by key                  |
-| 71 | Intel Codec (`sled` + serde)          | store & load structs with serde          |
-| 72 | Full Scan (`sled` iterate)            | scan every entry in the store            |
-| 73 | Fence Shortlist (`sled` query)        | filter + map records, no SQL             |
-| 74 | FINALE: CSV → Datavault               | capstone assembles YOUR c71 codec        |
+| 51 | `tokio::spawn`                        | two patients booked concurrently         |
+| 52 | Async Channels                        | nurses send "done" on `mpsc`             |
+| 53 | `clap` Arg Parsing                    | `--patient --medication --dose-mg`       |
+| 54 | Capstone: Ward CLI                    | care log — log visits, list, minutes     |
+| ⚡ 55 | Climbing Stairs (Warmup: Fibonacci) | iterative loop, tuple swap              |
+| 56 | Delivery Route (recursive Box)        | `enum` + `Box` for self-referential data |
+| 57 | Bedside Monitor (`Box<dyn>`)          | dynamic dispatch over mixed types        |
+| ★ 58 | Infusion Pump (Deref)               | `impl Deref`, auto-deref coercion        |
+| ⚡ 59 | Last Trip (Warmup: Two Sum)        | one-pass HashMap complement lookup       |
+| 60 | Pump Stop (`Drop`/RAII)               | deterministic cleanup, LIFO drop order   |
+| ★ 61 | Bed Alarm (`Weak<T>`)               | `downgrade`/`upgrade`, leak-proof refs   |
+| ⚡ 62 | Retrace (Warmup: Reverse)          | two-pointer in-place swap                |
+| 63 | Crash Cart (`Cell<T>` full API)       | `replace` / `take` through `&self`       |
+| ★ 64 | Chart Under Review (RefCell borrow) | `try_borrow_mut`, runtime borrow check   |
+| ⚡ 65 | Double Dose (Warmup: Dupes)        | HashSet membership in one pass           |
+| 66 | Supply Check (`Arc<T>` across threads)| shared immutable state, `thread::spawn`  |
+| ★ 67 | The Missing Fluids (`Arc<Mutex<T>>`)| shared mutable state across threads      |
+| 68 | Bed Board (`RwLock<T>`)               | many readers / one writer                |
+| 69 | Stock Records (`sled` insert)         | open a DB, insert key/value bytes        |
+| 70 | Stock Lookup (`sled` get)             | read values back by key                  |
+| 71 | Stock Codec (`sled` + serde)          | store & load structs with serde          |
+| 72 | Stock Take (`sled` iterate)           | scan every entry in the store            |
+| 73 | Reorder List (`sled` query)           | filter + map records, no SQL             |
+| 74 | CAPSTONE: Delivery CSV → Pharmacy     | capstone assembles YOUR c71 codec        |
 | ★ 75 | Bug Hunt: The Vanishing Tally       | HashMap `insert` clobber vs `entry()`    |
 | ★ 76 | Bug Hunt: The Silent Zero           | `unwrap_or(0)` swallows errors vs `?`    |
-| ★ 77 | Bug Hunt: The Missing VIP Tips      | inverted `filter` predicate + `fold`     |
+| ★ 77 | Bug Hunt: The Missing Critical Beds | inverted `filter` predicate + `fold`     |
 | ★ 78 | Bug Hunt: The Overlooked Rush       | slice-window off-by-one: `..` vs `..=`   |
 | ★ 79 | Bug Hunt: The Double-Booked Borrow  | RefCell `borrow` held across `borrow_mut`|
 | ★ 80 | Bug Hunt: The Half-Heard Clock-Out  | drain mpsc with `while let`, not `recv`  |
@@ -132,27 +132,27 @@ See [README.md](README.md) Study Plan for the **Learn / Exercise / Done-when** d
 
 **File I/O (c47-c49)** — read a CSV price list and write a CSV daily log with the `csv` crate, then serialize/deserialize with serde JSON.
 
-**Async (c50-c52)** — first `async fn` + `.await`, then `tokio::spawn` for concurrent bookings, then `mpsc` channels.
+**Async (c50-c52)** — first `async fn` + `.await` against the clinic scheduler, then `tokio::spawn` to book two patients at once, then `mpsc` channels from nurses to the nurses' station.
 
-**CLI Project (c53-c54)** — `clap` arg parsing, then the capstone: a full salon scheduler CLI.
+**CLI Project (c53-c54)** — `clap` arg parsing for a medication order, then the capstone: a ward care-log CLI.
 
-### THE VAULT RUN (c55–c74)
+### RUST GENERAL HOSPITAL (c55–c74)
 
-You are **Chrome Surgeon**, hired for one job: breach the **Aegis-9 corporate vault**, exfiltrate the intel, fence it, vanish. Mai, Linh, and Trang ride along as your crew. Every lesson is a story beat; each ⚡ warmup limbers you up with c01–c54 tools only; each ★ hands you broken code to debug.
+Each lesson is one small, real job that hospital software does — no story arc. Mai, Linh, and Trang are the nurses, and the ⚡ warmups use the hospital's medicine-delivery robot. Each ⚡ warmup uses c01–c54 tools only; each ★ hands you broken code to debug.
 
-**Chapter 1 — LOADOUT (c55–c58)** — crack the keygen (⚡ Fibonacci), plot the intrusion route (recursive `Box`), slot your ICE-breakers (`Box<dyn Trait>` vtables), then debug the implant whose `Deref` serves the factory image instead of the installed firmware.
+**Ward Equipment (c55–c58)** — count the robot's ways up a staircase (⚡ Fibonacci), plan its delivery route (recursive `Box`), rack the bedside monitor's sensors (`Box<dyn Trait>` vtables), then debug the infusion pump whose `Deref` serves the factory default instead of the programmed rate.
 
-**Chapter 2 — GHOST PROTOCOL (c59–c61)** — find the master-key pair (⚡ Two Sum), make every uplink burn its trace automatically (`Drop`/RAII, LIFO), then break the Rc cycle that lets the trace daemon follow you home (`Weak<T>`).
+**Safe Shutdown (c59–c61)** — pair two hallway legs for the robot's last trip (⚡ Two Sum), make every IV pump stop when its session ends (`Drop`/RAII, LIFO), then break the Rc cycle that keeps a bed alarm ringing for a discharged patient (`Weak<T>`).
 
-**Chapter 3 — INSIDE THE ICE (c62–c64)** — flip packet buffers in place (⚡ two-pointer), run the sealed signal jammer (`Cell` `replace`/`take` through `&self`), then stop the intrusion log from panicking under contention (`try_borrow_mut`).
+**Shared Care (c62–c64)** — retrace the robot's path in place (⚡ two-pointer), run the shared crash-cart defibrillator (`Cell` `replace`/`take` through `&self`), then stop the patient chart from crashing when a note arrives mid-review (`try_borrow_mut`).
 
-**Chapter 4 — THE CREW (c65–c68)** — catch replayed signatures (⚡ HashSet), share one vault map across threads (`Arc`), find where ten runners' deposits vanish (`Arc<Mutex<T>>` — the threaded mirror of c44's `Rc<RefCell<T>>`), and run the alert board (`RwLock`).
+**Night Shift (c65–c68)** — catch a medication delivered twice (⚡ HashSet), let three nurses double-check one supply list across threads (`Arc`), find where ten nurses' fluid entries vanish (`Arc<Mutex<T>>` — the threaded mirror of c44's `Rc<RefCell<T>>`), and run the bed board (`RwLock`).
 
-**Chapter 5 — THE VAULT (c69–c74)** — your persistent datavault on `sled`: stash shards, retrieve them, encode structured `Intel` with serde, scan the haul, shortlist for the fence — and the FINALE imports **your own c71 codec** to ingest the exfiltrated CSV dump. `SYSTEM FULLY COMPROMISED`.
+**Pharmacy (c69–c74)** — persistent stock records on `sled`: store them, look them up, encode a `Stock` struct with serde, take stock, build the reorder list — and the CAPSTONE imports **your own c71 codec** to load the supplier's delivery CSV. `PHARMACY ONLINE`.
 
 ### Bug Hunt (c75–c80)
 
-Side jobs back at the salon — the shop's back-office code is broken and you debug it. No new concepts, pure diagnosis reps on c01–c54 material: a HashMap clobber, a swallowed parse error, an inverted filter, a slice off-by-one, a RefCell double borrow, a half-drained channel. Each ships compiling-but-wrong with a `// BUG:` symptom note; the example file holds the corrected reference.
+Side jobs around the hospital — the back-office code is broken and you debug it. No new concepts, pure diagnosis reps on c01–c54 material: a HashMap clobber, a swallowed parse error, an inverted filter, a slice off-by-one, a RefCell double borrow, a half-drained channel. Each ships compiling-but-wrong with a `// BUG:` symptom note; the example file holds the corrected reference.
 
 ---
 
@@ -212,28 +212,28 @@ c01 → c02 → c03 → c04 → c05 → c06
                                                                                                c50 (async fn) → c51 (spawn) → c52 (channels)
                                                                                                                                    │
                                                                                                                                    ▼
-                                                                                                              c53 (clap) → c54 (salon CLI capstone)
+                                                                                                              c53 (clap) → c54 (ward CLI capstone)
                                                                                                                                         │
                                                                                                                                         ▼
-   [Ch.1 LOADOUT]        ⚡c55 (keygen) → c56 (route) → c57 (loadout) → ★c58 (implant)
+   [Ward Equipment]      ⚡c55 (stairs) → c56 (route) → c57 (monitor) → ★c58 (pump)
                                                                            │
                                                                            ▼
-   [Ch.2 GHOST PROTOCOL] ⚡c59 (key pair) → c60 (uplink burn) → ★c61 (trace cycle)
+   [Safe Shutdown]       ⚡c59 (last trip) → c60 (pump stop) → ★c61 (bed alarm)
                                                                     │
                                                                     ▼
-   [Ch.3 INSIDE THE ICE] ⚡c62 (packet flip) → c63 (jammer) → ★c64 (log contention)
+   [Shared Care]         ⚡c62 (retrace) → c63 (crash cart) → ★c64 (chart review)
                                                                   │
                                                                   ▼
-   [Ch.4 THE CREW]       ⚡c65 (replay) → c66 (vault map) → ★c67 (the take) → c68 (alert board)
+   [Night Shift]         ⚡c65 (double dose) → c66 (supply check) → ★c67 (fluids) → c68 (bed board)
                                                                                   │
                                                                                   ▼
-   [Ch.5 THE VAULT]      c69 (stash) → c70 (retrieve) → c71 (codec) → c72 (scan) → c73 (shortlist)
+   [Pharmacy]            c69 (store) → c70 (lookup) → c71 (codec) → c72 (stock take) → c73 (reorder)
                                                                                         │
                                                                                         ▼
-                                                        c74 (FINALE — imports YOUR c71 codec)
+                                                        c74 (CAPSTONE — imports YOUR c71 codec)
                                                                                         │
                                                                                         ▼
-   [Bug Hunt]            ★c75 → ★c76 → ★c77 → ★c78 → ★c79 → ★c80  (salon side jobs, any order)
+   [Bug Hunt]            ★c75 → ★c76 → ★c77 → ★c78 → ★c79 → ★c80  (hospital side jobs, any order)
 ```
 
 ---
@@ -244,7 +244,7 @@ The 80-lesson curriculum covers the core language, practical application, and de
 
 1. **Procedural and derive macros** — `macro_rules!`, `#[derive(...)]` custom macros.
 2. **Advanced async** — `select!`, `tokio::sync::RwLock`, cancellation, backpressure.
-3. **Web server** — `axum` or `actix-web` with the salon scheduler as an API.
+3. **Web server** — `axum` or `actix-web` with the ward care log as an API.
 4. **Relational / SQL databases** — `sqlx` or `SeaORM` over SQLite/Postgres (you've done embedded key-value with `sled`; next is querying a SQL engine).
 5. **Testing patterns** — property-based testing, mocking, integration test organization.
 

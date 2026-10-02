@@ -2,24 +2,24 @@
 #[allow(dead_code)]
 mod c69_exercise;
 
-use c69_exercise::stash;
+use c69_exercise::store;
 
-fn temp_vault() -> sled::Db {
+fn temp_db() -> sled::Db {
     sled::Config::new().temporary(true).open().unwrap()
 }
 
 #[test]
-fn two_shards_land_in_the_vault() {
-    let db = temp_vault();
-    stash(&db, "vault:blueprints", "aegis-9 tower schematics").unwrap();
-    stash(&db, "vault:payroll", "executive shell accounts").unwrap();
+fn two_records_land_in_the_store() {
+    let db = temp_db();
+    store(&db, "stock:paracetamol", "500 mg tablets, shelf A3").unwrap();
+    store(&db, "stock:insulin", "10 ml vials, fridge 2").unwrap();
     assert_eq!(db.len(), 2);
 }
 
 #[test]
-fn stashed_shard_is_findable() {
-    let db = temp_vault();
-    stash(&db, "vault:blueprints", "aegis-9 tower schematics").unwrap();
-    assert!(db.contains_key("vault:blueprints").unwrap());
-    assert!(!db.contains_key("vault:decoy").unwrap());
+fn stored_record_is_findable() {
+    let db = temp_db();
+    store(&db, "stock:paracetamol", "500 mg tablets, shelf A3").unwrap();
+    assert!(db.contains_key("stock:paracetamol").unwrap());
+    assert!(!db.contains_key("stock:unknown").unwrap());
 }

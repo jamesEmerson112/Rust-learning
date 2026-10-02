@@ -1,48 +1,48 @@
-// THE VAULT RUN — FINALE — ★ ASSEMBLY ★
-// The exfiltrated dump is a CSV: codename,value. Import it through YOUR OWN c71
+// RUST GENERAL HOSPITAL — Pharmacy — ★ CAPSTONE ★
+// The supplier's delivery note is a CSV: drug,units. Import it through YOUR OWN c71
 // codec — the module below is literally your c71_exercise.rs, imported. The
 // capstone runs on the code you built. (If c71 is still unsolved, finish it first.)
 #[allow(dead_code)]
 #[path = "c71_exercise.rs"]
-pub mod intel;
+pub mod stock;
 
 #[allow(unused_imports)]
-use intel::{Intel, encode_intel};
+use stock::{Stock, encode_stock};
 
-pub fn import_dump(db: &sled::Db, csv_path: &str) -> anyhow::Result<u32> {
+pub fn import_delivery(db: &sled::Db, csv_path: &str) -> anyhow::Result<u32> {
     // TODO: Read the CSV at csv_path with csv::Reader::from_path; each row
-    // deserializes straight into your c71 Intel (serde does the work). Stash
-    // every record with YOUR encode_intel, then iterate the store (db.iter())
-    // and return the summed value of everything in the vault.
+    // deserializes straight into your c71 Stock (serde does the work). Store
+    // every record with YOUR encode_stock, then iterate the store (db.iter())
+    // and return the total units of everything in the pharmacy.
     let _ = (db, csv_path);
     Ok(0)
 }
 
-pub fn crown_jewel(db: &sled::Db) -> anyhow::Result<Option<Intel>> {
-    // TODO: Scan the vault and return the single most valuable Intel —
-    // track the max by .value as you decode. None if the vault is empty.
+pub fn most_stocked(db: &sled::Db) -> anyhow::Result<Option<Stock>> {
+    // TODO: Scan the pharmacy and return the drug with the most units on hand —
+    // track the max by .units as you decode. None if the pharmacy is empty.
     let _ = db;
     Ok(None)
 }
 
 fn main() -> anyhow::Result<()> {
     std::fs::write(
-        "c74_exercise_dump.csv",
-        "codename,value\nBLACKOUT,42000\nEXEC-DIRT,18500\nGHOSTKEY,64000\n",
+        "c74_exercise_delivery.csv",
+        "drug,units\nAmoxicillin,4200\nInsulin,1850\nParacetamol,6400\n",
     )?;
-    let db = sled::open("c74_exercise_vault")?;
-    let haul = import_dump(&db, "c74_exercise_dump.csv")?;
-    println!("[finale] haul: {haul} creds (want 124500)");
-    println!("[finale] crown jewel: {:?} (want GHOSTKEY)", crown_jewel(&db)?);
-    if haul == 124_500 {
+    let db = sled::open("c74_exercise_sled_db")?;
+    let total = import_delivery(&db, "c74_exercise_delivery.csv")?;
+    println!("[pharmacy] units on hand: {total} (want 12450)");
+    println!("[pharmacy] best stocked: {:?} (want Paracetamol)", most_stocked(&db)?);
+    if total == 12_450 {
         println!("╔══════════════════════════════════════════╗");
-        println!("║  SYSTEM FULLY COMPROMISED                ║");
-        println!("║  THE VAULT RUN IS COMPLETE.              ║");
-        println!("║  Walk away clean, Chrome Surgeon. 🦀     ║");
+        println!("║  PHARMACY ONLINE                         ║");
+        println!("║  Every delivery counted, every dose      ║");
+        println!("║  accounted for. 🦀                       ║");
         println!("╚══════════════════════════════════════════╝");
     }
     drop(db);
-    std::fs::remove_dir_all("c74_exercise_vault").ok();
-    std::fs::remove_file("c74_exercise_dump.csv").ok();
+    std::fs::remove_dir_all("c74_exercise_sled_db").ok();
+    std::fs::remove_file("c74_exercise_delivery.csv").ok();
     Ok(())
 }

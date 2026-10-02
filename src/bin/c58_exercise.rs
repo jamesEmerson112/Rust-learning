@@ -1,49 +1,50 @@
-// THE VAULT RUN — Chapter 1: LOADOUT — ★ BUG HUNT ★
+// RUST GENERAL HOSPITAL — Ward Equipment — ★ BUG HUNT ★
 //
-// BUG: Every implant behaves factory-fresh. The 21-point reflex firmware IS installed —
-// is_stock() proves it's in the chrome — but the deck keeps reading zeroes, blank
-// strings, stock everything. Something in the deref path serves the wrong slot.
+// BUG: Every pump behaves as if nobody programmed it. Nurse Mai set IV pump 3 to
+// 21 ml/h, and is_default() confirms the setting is stored — but anything that reads
+// the pump gets zeroes, blank drug names, factory values. Something in the deref path
+// serves the wrong field.
 //
 // Find it, fix it: cargo test --test c58_tests
 use std::ops::Deref;
 
-pub struct Implant<T: Default> {
-    pub model: String,
-    firmware: T,        // what's actually installed
-    factory_default: T, // the stock image, kept for hard resets
+pub struct Pump<T: Default> {
+    pub device: String,
+    programmed: T,      // what the nurse entered
+    factory_default: T, // what the pump ships with, kept for a reset
 }
 
-impl<T: Default> Implant<T> {
-    pub fn new(model: &str, firmware: T) -> Implant<T> {
-        Implant {
-            model: model.to_string(),
-            firmware,
+impl<T: Default> Pump<T> {
+    pub fn new(device: &str, programmed: T) -> Pump<T> {
+        Pump {
+            device: device.to_string(),
+            programmed,
             factory_default: T::default(),
         }
     }
 
-    pub fn is_stock(&self) -> bool
+    pub fn is_default(&self) -> bool
     where
         T: PartialEq,
     {
-        self.firmware == self.factory_default
+        self.programmed == self.factory_default
     }
 }
 
-impl<T: Default> Deref for Implant<T> {
+impl<T: Default> Deref for Pump<T> {
     type Target = T;
     fn deref(&self) -> &T {
         &self.factory_default
     }
 }
 
-pub fn boost(skill: &i32) -> i32 {
-    *skill * 2
+pub fn two_hour_volume(rate_ml_per_hour: &i32) -> i32 {
+    *rate_ml_per_hour * 2
 }
 
 fn main() {
-    let reflex = Implant::new("neural-lace mk2", 21);
-    println!("[diagnostic] stock chrome? {} (so firmware IS installed)", reflex.is_stock());
-    println!("[diagnostic] deck reads {} — boosted: {} (want 21 and 42)", *reflex, boost(&reflex));
-    println!("══ when the deck reads 42, CHAPTER 1: LOADOUT is complete ══");
+    let iv = Pump::new("IV pump 3", 21);
+    println!("[check] still on factory default? {} (so the setting IS stored)", iv.is_default());
+    println!("[check] pump reads {} ml/h — {} ml over two hours (want 21 and 42)", *iv, two_hour_volume(&iv));
+    println!("══ when the pump reads 21 ml/h, the ward equipment checks out ══");
 }

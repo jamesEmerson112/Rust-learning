@@ -1,4 +1,4 @@
-// Rust Underground — HTML Mission Dashboard
+// Rust General Hospital — HTML Dashboard
 //
 // Renders the learner's save file as a single self-contained `dashboard.html` and
 // opens it in the default browser. Companion to the terminal `progress` tracker:
@@ -106,8 +106,8 @@ fn passed_at(save: &SaveFile, n: u32) -> Option<u64> {
 ///
 /// `tracker::next_lesson` returns the first unpassed lesson, which on the current save
 /// is c16: one of the nine lessons in `HOMEWORK_GAPS` that were deliberately left open
-/// while the learner moved on (CLAUDE.md pins the frontier at c55, and the Vault Run
-/// does not depend on those nine). A dashboard whose headline call-to-action sends you
+/// while the learner moved on (nothing from c55 onward depends on those nine). A
+/// dashboard whose headline call-to-action sends you
 /// 39 lessons backwards is worse than useless, so known-open homework is skipped here
 /// and surfaced separately as its own callout, quest-log tag, and trophy.
 fn frontier(save: &SaveFile) -> Option<&'static LessonMeta> {
@@ -296,7 +296,7 @@ fn build_trophies(save: &SaveFile, hist: &History, current_streak: u32, longest_
     // ── Milestones ─────────────────────────────────────────────────────────
     out.push(trophy(
         "◆",
-        "First Blood",
+        "First Patient",
         "Pass c01 — Hello Variables.",
         is_lesson_passed(save, 1),
         passed_at(save, 1),
@@ -310,14 +310,14 @@ fn build_trophies(save: &SaveFile, hist: &History, current_streak: u32, longest_
     ));
     out.push(trophy(
         "▲",
-        "Vault Breached",
-        "Pass c74 — CSV to Sled, the AEGIS-9 capstone.",
+        "Pharmacy Online",
+        "Pass c74 — CSV to Sled, the pharmacy capstone.",
         is_lesson_passed(save, 74),
         passed_at(save, 74),
     ));
     out.push(trophy(
         "★",
-        "Zero-Day Sovereign",
+        RANKS[RANKS.len() - 1].name,
         &format!("Pass all {NUM_LESSONS} lessons."),
         level == NUM_LESSONS,
         None,
@@ -350,9 +350,9 @@ fn build_trophies(save: &SaveFile, hist: &History, current_streak: u32, longest_
 
     let ext_done = (75..=80).filter(|n| is_lesson_passed(save, *n)).count() as u32;
     let mut ext = trophy(
-        "☠",
-        "Exterminator",
-        "Fix all six salon side jobs, c75–c80.",
+        "✚",
+        "Clean Bill of Health",
+        "Fix all six hospital side jobs, c75–c80.",
         ext_done == 6,
         (75..=80).filter_map(|n| passed_at(save, n)).max(),
     );
@@ -992,7 +992,7 @@ fn panel_hero(save: &SaveFile) -> String {
     w!(s, r#"<header class="card hero">"#);
 
     w!(s, r#"<div class="hero-id">"#);
-    w!(s, r#"<div class="eyebrow">Rust Underground // operator dossier</div>"#);
+    w!(s, r#"<div class="eyebrow">Rust General Hospital // staff record</div>"#);
     w!(
         s,
         r#"<h1 class="handle">{}<span class="cls">the {}</span></h1>"#,
@@ -1022,7 +1022,7 @@ fn panel_hero(save: &SaveFile) -> String {
     );
     w!(
         s,
-        r#"<div class="kv" style="margin-top:10px"><span>Grid mapped</span><b>{pct}%</b></div>"#
+        r#"<div class="kv" style="margin-top:10px"><span>Cases closed</span><b>{pct}%</b></div>"#
     );
     match next_rank {
         Some(nr) => {
@@ -1063,10 +1063,11 @@ fn panel_next(save: &SaveFile) -> String {
     match frontier(save) {
         None => {
             w!(s, r#"<div class="endgame">"#);
-            w!(s, r#"<div class="big">SYSTEM FULLY COMPROMISED</div>"#);
+            w!(s, r#"<div class="big">ALL CASES CLOSED</div>"#);
             w!(
                 s,
-                r#"<p class="next-sub" style="margin-top:12px">All {NUM_LESSONS} nodes are yours. You are the <b style="color:var(--mg)">Zero-Day Sovereign</b> &mdash; the Rust Underground salutes you.</p>"#
+                r#"<p class="next-sub" style="margin-top:12px">All {NUM_LESSONS} lessons passed. You are <b style="color:var(--mg)">{}</b> &mdash; the whole hospital salutes you.</p>"#,
+                esc(RANKS[RANKS.len() - 1].name)
             );
             w!(
                 s,
@@ -1469,7 +1470,7 @@ fn panel_pace(save: &SaveFile, pace: &Pace, hist: &History) -> String {
     w!(s, r#"<div class="tile"><span>ETA to level {NUM_LESSONS}</span>"#);
     match pace.eta_day {
         Some(d) => w!(s, "<b>{}</b><em>{remaining} lessons left</em>", esc(&format_day(d))),
-        None if remaining == 0 => w!(s, r#"<b class="na">DONE</b><em>all nodes cleared</em>"#),
+        None if remaining == 0 => w!(s, r#"<b class="na">DONE</b><em>all cases closed</em>"#),
         None => w!(s, "{na}<em>{remaining} lessons left &middot; need more history</em>"),
     }
     w!(s, "</div>");
@@ -1646,7 +1647,7 @@ fn panel_quests(save: &SaveFile) -> String {
     w!(s, r#"<section class="card c12">"#);
     w!(
         s,
-        r#"<h2>Quest Log<span class="sub">all {NUM_LESSONS} nodes</span></h2>"#
+        r#"<h2>Case Log<span class="sub">all {NUM_LESSONS} lessons</span></h2>"#
     );
 
     for chap in &CHAPTERS {
@@ -1906,7 +1907,7 @@ fn render_page(save: &SaveFile, migrated: bool) -> String {
     );
     w!(
         s,
-        "<title>{} — Rust Underground Dashboard</title>",
+        "<title>{} — Rust General Hospital Dashboard</title>",
         esc(&save.character.name)
     );
     w!(s, "<style>{CSS}</style>");
@@ -1917,7 +1918,7 @@ fn render_page(save: &SaveFile, migrated: bool) -> String {
     if migrated {
         w!(
             s,
-            r#"<div class="card c12" style="margin-bottom:16px;border-color:rgba(255,212,71,.4)"><p style="margin:0;font-size:12px;color:var(--ye)">▲ This save is still <b>v1</b>. The dashboard upgraded it in memory to render correctly, but it never writes the file &mdash; run <code style="color:var(--cy)">cargo run --bin progress</code> to persist the upgrade and start recording real event history.</p></div>"#
+            r#"<div class="card c12" style="margin-bottom:16px;border-color:rgba(255,212,71,.4)"><p style="margin:0;font-size:12px;color:var(--ye)">▲ This save was written by an older version of the tracker. The dashboard upgraded it in memory to render correctly, but it never writes the file &mdash; run <code style="color:var(--cy)">cargo run --bin progress</code> to persist the upgrade.</p></div>"#
         );
     }
 
@@ -1938,7 +1939,7 @@ fn render_page(save: &SaveFile, migrated: bool) -> String {
     w!(s, "<footer>");
     w!(
         s,
-        "<span>Rust Underground &middot; {} / {NUM_LESSONS} nodes breached</span>",
+        "<span>Rust General Hospital &middot; {} / {NUM_LESSONS} cases closed</span>",
         level
     );
     w!(
@@ -1984,7 +1985,7 @@ fn open_in_browser(path: &std::path::Path) -> std::io::Result<()> {
 
 fn print_help() {
     println!();
-    println!("  {}", color::bold("Rust Underground — HTML Mission Dashboard"));
+    println!("  {}", color::bold("Rust General Hospital — HTML Dashboard"));
     println!();
     println!("  {}", color::bold("USAGE:"));
     println!("    cargo run --bin dashboard                Write {OUT_FILE} and open it");
@@ -2084,12 +2085,12 @@ fn main() {
 
     println!();
     println!("  {}", color::bold_cyan("╔══════════════════════════════════════════════════════════╗"));
-    println!("  {}  {}", color::bold_cyan("║"), color::bold("MISSION DASHBOARD RENDERED"));
+    println!("  {}  {}", color::bold_cyan("║"), color::bold("DASHBOARD RENDERED"));
     println!("  {}", color::bold_cyan("╚══════════════════════════════════════════════════════════╝"));
     println!();
     println!(
         "    {} {} the {}",
-        color::dim("Operator:"),
+        color::dim("Staff:   "),
         color::bold(&save.character.name),
         save.character.class
     );
@@ -2111,14 +2112,13 @@ fn main() {
     if migrated {
         println!();
         println!(
-            "    {} save file is v1. Rendered from an in-memory upgrade;",
+            "    {} save file is from an older tracker version. Rendered from an",
             color::yellow("NOTE:")
         );
         println!(
-            "          run {} to persist it and start",
+            "          in-memory upgrade; run {} to persist it.",
             color::cyan("cargo run --bin progress")
         );
-        println!("          recording real event history.");
     }
 
     if no_open {

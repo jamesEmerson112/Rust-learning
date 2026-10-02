@@ -408,239 +408,239 @@ Work through one lesson at a time. Read the example, then complete the exercise.
 
 ### Lesson 50 — `async fn` + tokio
 **Learn:** `async fn`, `.await`, `#[tokio::main]`
-**Exercise:** Write `check_availability(slot)` — your first async function.
+**Exercise:** Write `check_availability(slot)` — ask the clinic scheduler whether a slot is free. Your first async function.
 **You're done when:** You can write and await async functions.
 
 ---
 
 ### Lesson 51 — `tokio::spawn`
 **Learn:** Spawning concurrent tasks
-**Exercise:** Two clients booking concurrently — spawn tasks, collect results.
+**Exercise:** Two patients booked at once — spawn tasks, collect results.
 **You're done when:** You can run independent work concurrently with `tokio::spawn`.
 
 ---
 
 ### Lesson 52 — Async Channels
 **Learn:** `tokio::sync::mpsc` — message passing between tasks
-**Exercise:** Technician sends "done" on a channel, front desk receives.
+**Exercise:** Nurses report "done" on a channel as their rounds finish; the nurses' station receives.
 **You're done when:** You can communicate between async tasks.
 
 ---
 
 ### Lesson 53 — `clap` Arg Parsing
 **Learn:** `#[derive(Parser)]` — structured CLI argument parsing
-**Exercise:** Parse `--technician "Mai" --service "Gel Manicure" --price 45`.
+**Exercise:** Parse a medication order: `--patient "Mr. Hung" --medication Paracetamol --dose-mg 500`.
 **You're done when:** You can build type-safe CLI interfaces.
 
 ---
 
-### Lesson 54 — Capstone: Salon CLI
+### Lesson 54 — Capstone: Ward CLI
 **Learn:** Everything combined — structs, HashMap, methods, CLI
-**Exercise:** Full salon scheduler: book, list, revenue by technician.
-**You're done when:** The salon scheduler runs end to end — book, list, and report revenue.
+**Exercise:** A ward care log: log visits, list them, total care minutes by nurse.
+**You're done when:** The care log runs end to end — log, list, and report minutes per nurse.
 
 ---
 
-## THE VAULT RUN (c55–c74)
+## RUST GENERAL HOSPITAL (c55–c74)
 
-One continuous cyberpunk heist in five chapters. You are **Chrome Surgeon**, hired to breach the **Aegis-9 corporate vault** — Mai, Linh, and Trang ride along as your crew. Same Rust concepts as before, one story. ⚡ = warmup (c01–c54 tools only). ★ = BUG HUNT: the exercise ships broken code that compiles — you diagnose and fix it.
+From c50 onward, every lesson is set at Rust General Hospital: one small, real job that hospital software does — no story arc, just a reason for the concept to exist. Mai, Linh, and Trang are the nurses; the ⚡ warmups use the hospital's medicine-delivery robot. ⚡ = warmup (c01–c54 tools only). ★ = BUG HUNT: the exercise ships broken code that compiles — you diagnose and fix it.
 
 ---
 
-**Chapter 1 — LOADOUT (c55–c58):** crack the keygen, plot the route, slot your programs, debug your chrome.
+**Ward Equipment (c55–c58):** the delivery robot, the bedside monitor, and an infusion pump — `Box`, trait objects, and `Deref`.
 
-### Lesson 55 — ⚡ Keygen (Warmup: Fibonacci)
+### Lesson 55 — ⚡ Climbing Stairs (Warmup: Fibonacci)
 **Learn:** Iterative computation with a rolling pair — no recursion needed
-**Exercise:** `access_code(n)` — the vault's Fibonacci-derived rolling code — plus `keystream(len)`.
+**Exercise:** `climb_ways(steps)` — how many ways the delivery robot can climb a staircase taking 1 or 2 steps at a time — plus `ways_table(len)`.
 **You're done when:** You can turn a recurrence into a loop with `(a, b) = (b, a + b)`.
 
 ---
 
-### Lesson 56 — Intrusion Route (Recursive Types with Box)
+### Lesson 56 — Delivery Route (Recursive Types with Box)
 **Learn:** Why a self-referential `enum` needs `Box` (it would have infinite size otherwise)
-**Exercise:** Build the `Route` cons-list: `build_route`, `hop_count`, and `last_node` — the vault's doorstep.
+**Exercise:** Build the robot's `Route` cons-list: `build_route`, `stop_count`, and `last_stop` — the last stop before the dock.
 **You're done when:** You understand that `Box` gives a recursive type a fixed, known size.
 
 ---
 
-### Lesson 57 — Deck Loadout (Box\<dyn\>)
+### Lesson 57 — Bedside Monitor (Box\<dyn\>)
 **Learn:** `Box<dyn Trait>`, dynamic dispatch, heterogeneous collections
-**Exercise:** Implement `Program` for `Icepick`/`Siphon`/`Ghost`, rack all three in one `Vec<Box<dyn Program>>`, total the power draw.
+**Exercise:** Implement `Sensor` for `HeartRate`/`BloodOxygen`/`BloodPressure`, rack all three in one `Vec<Box<dyn Sensor>>`, total the power draw.
 **You're done when:** You can store different concrete types together and call shared methods at runtime.
 
 ---
 
-### Lesson 58 — ★ Faulty Implant (Deref)
+### Lesson 58 — ★ Infusion Pump (Deref)
 **Learn:** `impl Deref`, the `*` operator, and auto-deref coercion
-**Exercise:** BUG HUNT — every implant reads factory-fresh even though the firmware is installed. Find which slot `Deref` serves.
-**You're done when:** `boost(&implant)` reaches the installed firmware through auto-deref — the deck reads 42.
+**Exercise:** BUG HUNT — every pump reads its factory default even though a nurse programmed it. Find which field `Deref` serves.
+**You're done when:** `two_hour_volume(&pump)` reaches the programmed rate through auto-deref — the pump reads 42 ml over two hours.
 
 ---
 
-**Chapter 2 — GHOST PROTOCOL (c59–c61):** every connection burns its trace, and nothing follows you home.
+**Safe Shutdown (c59–c61):** cleanup that always runs, and links that let go.
 
-### Lesson 59 — ⚡ Master-Key Pair (Warmup: Two Sum)
+### Lesson 59 — ⚡ Last Trip (Warmup: Two Sum)
 **Learn:** One-pass hashing — trade space for time
-**Exercise:** `master_key_pair(codes, master)` — indices of the two intercepted codes that sum to the master key.
+**Exercise:** `trip_pair(legs, charge)` — indices of the two hallway legs that use exactly the robot's remaining charge.
 **You're done when:** You can find a complement in O(n) instead of a nested loop.
 
 ---
 
-### Lesson 60 — Uplink Burn (Drop / RAII)
+### Lesson 60 — Pump Stop (Drop / RAII)
 **Learn:** `impl Drop`, deterministic cleanup, reverse (LIFO) drop order
-**Exercise:** Make every `Uplink` push "&lt;handle&gt; trace burned" on drop; burn a compromised one early with `drop()`.
+**Exercise:** Make every `PumpSession` push "&lt;bed&gt; pump stopped" on drop; stop a blocked line early with `drop()`.
 **You're done when:** Cleanup runs automatically when a value leaves scope — no GC, no forgotten close.
 
 ---
 
-### Lesson 61 — ★ Trace Cycle (Weak\<T\>)
+### Lesson 61 — ★ Bed Alarm (Weak\<T\>)
 **Learn:** `Rc::downgrade`, `Weak::upgrade`, why cycles leak and how `Weak` breaks them
-**Exercise:** BUG HUNT — the trace daemon's strong `Rc` grip keeps your session alive after jack-out. Sever it.
-**You're done when:** `link_counts()` is `(1, 1)` and jacking out makes the daemon's `upgrade()` return `None`.
+**Exercise:** BUG HUNT — the bed alarm's strong `Rc` grip keeps a discharged patient's record alive, and the alarm keeps ringing. Break the cycle.
+**You're done when:** `link_counts()` is `(1, 1)` and after discharge the alarm's `upgrade()` returns `None`.
 
 ---
 
-**Chapter 3 — INSIDE THE ICE (c62–c64):** interior mutability under fire.
+**Shared Care (c62–c64):** interior mutability on shared equipment and shared charts.
 
-### Lesson 62 — ⚡ Packet Flip (Warmup: Reverse in Place)
+### Lesson 62 — ⚡ Retrace (Warmup: Reverse in Place)
 **Learn:** In-place mutation with two pointers
-**Exercise:** `reverse_packet` — flip the buffer by swapping `i` with `n-1-i`, no allocation.
+**Exercise:** `retrace` — reverse the robot's path back to the pharmacy by swapping `i` with `n-1-i`, no allocation.
 **You're done when:** You can mutate a collection in place without allocating a new one.
 
 ---
 
-### Lesson 63 — Signal Jammer (Cell\<T\> Full API)
+### Lesson 63 — Crash Cart (Cell\<T\> Full API)
 **Learn:** `Cell::replace` and `Cell::take` — mutate `Copy` data through `&self`
-**Exercise:** `reload` (swap the charge cell, return the spent one) and `discharge` (take it all, leave 0).
+**Exercise:** The shared defibrillator: `recharge` (set a new charge, return the previous one) and `shock` (deliver it all, leave 0).
 **You're done when:** You can swap interior state through a shared reference and recover the old value.
 
 ---
 
-### Lesson 64 — ★ Log Contention (RefCell Runtime Borrow)
+### Lesson 64 — ★ Chart Under Review (RefCell Runtime Borrow)
 **Learn:** Runtime borrow checking — `borrow_mut` panics, `try_borrow_mut` returns `Err`
-**Exercise:** BUG HUNT — a write during a sweep panics the whole deck. Refuse the contended write gracefully.
-**You're done when:** Contended writes come back `Err`, clean handoffs succeed, nothing panics.
+**Exercise:** BUG HUNT — adding a note while a doctor reviews the chart crashes the charting system. Refuse the contended write gracefully.
+**You're done when:** Contended writes come back `Err`, writes after the review succeed, nothing panics.
 
 ---
 
-**Chapter 4 — THE CREW (c65–c68):** threads, locks, and a stash that had better add up.
+**Night Shift (c65–c68):** many nurses, many threads, one set of records.
 
-### Lesson 65 — ⚡ Signature Replay (Warmup: Contains Duplicate)
+### Lesson 65 — ⚡ Double Dose (Warmup: Contains Duplicate)
 **Learn:** `HashSet` membership — a HashMap with keys only
-**Exercise:** `signature_reused` — a replayed access signature trips the alarm; detect it in one pass.
+**Exercise:** `double_delivery` — the robot catches a medication order delivered twice, in one pass.
 **You're done when:** You can use `HashSet::insert`'s return value to detect duplicates.
 
 ---
 
-### Lesson 66 — Vault Map (Arc\<T\> Across Threads)
+### Lesson 66 — Supply Check (Arc\<T\> Across Threads)
 **Learn:** `Arc`, `thread::spawn`, `join` — sharing immutable data across threads
-**Exercise:** `crew_estimates` — three crew threads each tally one shared vault map.
+**Exercise:** `supply_check` — three nurses' threads each double-check one shared supply list.
 **You're done when:** You understand why threads need `Arc` (it's `Send`) and `Rc` won't compile.
 
 ---
 
-### Lesson 67 — ★ The Missing Take (Arc\<Mutex\<T\>\>)
+### Lesson 67 — ★ The Missing Fluids (Arc\<Mutex\<T\>\>)
 **Learn:** `Mutex` for thread-safe mutation — the threaded sibling of `Rc<RefCell<T>>`
-**Exercise:** BUG HUNT — ten runners deposit 100 creds each; the stash reads 0. The compiler is waving a warning at the culprit.
-**You're done when:** `pool_the_take()` reads 1000 every run — deposits go through the lock, not into a copy.
+**Exercise:** BUG HUNT — ten nurses chart 100 ml each; the fluid total reads 0. The compiler is waving a warning at the culprit.
+**You're done when:** `fluid_total()` reads 1000 every run — entries go through the lock, not into a copy.
 
 ---
 
-### Lesson 68 — Alert Board (RwLock\<T\>)
+### Lesson 68 — Bed Board (RwLock\<T\>)
 **Learn:** `RwLock` — many concurrent readers OR one exclusive writer
-**Exercise:** `alert_board_count` — one spotter writes, three lookouts read concurrently.
-**You're done when:** You can share data across threads with read/write locks — the crew is in position.
+**Exercise:** `free_beds_seen` — the charge nurse writes the bed board, three nurses read it concurrently.
+**You're done when:** You can share data across threads with read/write locks.
 
 ---
 
-**Chapter 5 — THE VAULT (c69–c74):** the datavault — persistent storage for the haul, and the finale that assembles your own code.
+**Pharmacy (c69–c74):** persistent stock records, and a capstone that runs on your own code.
 
-### Lesson 69 — Datavault: Stash (Sled Insert)
+### Lesson 69 — Stock Records (Sled Insert)
 **Learn:** `sled::open` + `db.insert` — a pure-Rust embedded key-value database, no SQL
-**Exercise:** `stash(db, key, shard)` — every ripped shard goes straight to disk.
-**You're done when:** You can open a sled database and write entries that survive a dropped uplink.
+**Exercise:** `store(db, key, record)` — every stock record goes straight to disk.
+**You're done when:** You can open a sled database and write entries that survive a restart.
 
 ---
 
-### Lesson 70 — Datavault: Retrieve (Sled Get)
+### Lesson 70 — Stock Lookup (Sled Get)
 **Learn:** `db.get` → `Option<IVec>` — reading values back by key
-**Exercise:** `retrieve(db, key)` — pull a shard back out; burned intel is `None`, not a crash.
+**Exercise:** `fetch(db, key)` — look a drug up; a drug the pharmacy doesn't stock is `None`, not a crash.
 **You're done when:** You can read values out of the store and handle the missing-key case.
 
 ---
 
-### Lesson 71 — Intel Codec (Sled + Serde)
+### Lesson 71 — Stock Codec (Sled + Serde)
 **Learn:** store whole structs — `serde_json::to_vec` / `from_slice` (c49), errors unified with `anyhow` (c38)
-**Exercise:** `encode_intel` / `decode_intel` — round-trip `Intel { codename, value }` through the vault.
-**You're done when:** Structs persist and reload intact. (The c74 finale imports THIS file — build it well.)
+**Exercise:** `encode_stock` / `decode_stock` — round-trip `Stock { drug, units }` through the database.
+**You're done when:** Structs persist and reload intact. (The c74 capstone imports THIS file — build it well.)
 
 ---
 
-### Lesson 72 — Full Scan (Sled Iterate)
+### Lesson 72 — Stock Take (Sled Iterate)
 **Learn:** `db.iter()` — scanning every entry in the store
-**Exercise:** `full_scan(db)` — enumerate the entire haul, sorted by codename.
+**Exercise:** `full_inventory(db)` — list everything the pharmacy holds, sorted by drug name.
 **You're done when:** You can walk the whole database and decode each record.
 
 ---
 
-### Lesson 73 — Fence Shortlist (Sled Query)
+### Lesson 73 — Reorder List (Sled Query)
 **Learn:** "querying" without SQL — `filter` + `map` over the records (c21-22 / c45-46)
-**Exercise:** `shortlist(db, min_value)` and `shortlist_codenames` — only intel the fence will move.
+**Exercise:** `low_stock(db, below)` and `low_stock_names` — every drug running below the threshold.
 **You're done when:** You can answer questions about the data with iterator combinators.
 
 ---
 
-### Lesson 74 — FINALE: CSV → Datavault (capstone)
-**Learn:** integration — read a CSV (c47), store it via YOUR c71 codec (imported with `#[path]`), aggregate the haul
-**Exercise:** `import_dump(db, csv_path)` totals the haul; `crown_jewel(db)` finds the most valuable record.
-**You're done when:** The haul totals 124500, GHOSTKEY surfaces, and the run prints SYSTEM FULLY COMPROMISED.
+### Lesson 74 — CAPSTONE: Delivery CSV → Pharmacy
+**Learn:** integration — read a CSV (c47), store it via YOUR c71 codec (imported with `#[path]`), report on the stock
+**Exercise:** `import_delivery(db, csv_path)` totals the units on hand; `most_stocked(db)` finds the best-stocked drug.
+**You're done when:** The stock totals 12450, Paracetamol is the best stocked, and the run prints PHARMACY ONLINE.
 
 ---
 
 ## Bug Hunt (c75–c80)
 
-Side jobs back at the salon: the shop's back-office code is broken, and you debug it. Every ★ exercise COMPILES but fails its tests — read the `// BUG:` symptom at the top of the file, run the tests, diagnose, fix. No new concepts (everything is c01–c54 material); the example file holds the corrected reference.
+Side jobs around the hospital: the back-office code is broken, and you debug it. Every ★ exercise COMPILES but fails its tests — read the `// BUG:` symptom at the top of the file, run the tests, diagnose, fix. No new concepts (everything is c01–c54 material); the example file holds the corrected reference.
 
 ---
 
 ### Lesson 75 — Bug Hunt: The Vanishing Tally
 **Learn:** Why counting needs `entry(k).or_insert(0)` — `insert` overwrites instead of accumulating
-**Exercise:** Mai's per-technician count is stuck at 1; fix `service_counts` so tallies accumulate.
-**You're done when:** Mai reads 6, Linh 2, Trang 1, and the empty day yields an empty map.
+**Exercise:** Mai's visit count is stuck at 1; fix `visit_counts` so tallies accumulate.
+**You're done when:** Mai reads 6, Linh 2, Trang 1, and the empty shift yields an empty map.
 
 ---
 
 ### Lesson 76 — Bug Hunt: The Silent Zero
 **Learn:** Don't swallow parse errors — a bad row must propagate as `Err`, not become 0
-**Exercise:** A corrupt price silently undercounts the day; make `daily_total` report it.
-**You're done when:** A clean list sums correctly and a corrupt row returns `Err`.
+**Exercise:** A smudged fluid-chart entry silently undercounts the patient's intake; make `fluid_intake` report it.
+**You're done when:** A clean chart sums correctly and a corrupt row returns `Err`.
 
 ---
 
-### Lesson 77 — Bug Hunt: The Missing VIP Tips
+### Lesson 77 — Bug Hunt: The Missing Critical Beds
 **Learn:** `filter` keeps the items whose predicate is true — direction matters
-**Exercise:** The tip jar totals the Regulars instead of the VIPs; fix the filter.
-**You're done when:** `vip_tip_total` sums only VIP tips (3000) and 0 when there are none.
+**Exercise:** The oxygen report totals the stable beds instead of the critical ones; fix the filter.
+**You're done when:** `critical_oxygen_total` sums only critical beds (30) and 0 when there are none.
 
 ---
 
 ### Lesson 78 — Bug Hunt: The Overlooked Rush
 **Learn:** The last window starts at `n - width`, so the loop must be inclusive (`..=`)
-**Exercise:** The busiest-3-hour report always misses the closing rush; fix the bound.
+**Exercise:** The ER's busiest-3-hour report always misses the late-night rush; fix the bound.
 **You're done when:** The busiest window is found even when it's the last one.
 
 ---
 
 ### Lesson 79 — Bug Hunt: The Double-Booked Borrow
 **Learn:** A `borrow()` guard blocks `borrow_mut()` until it's dropped — scope it tightly
-**Exercise:** Booking a new walk-in panics with BorrowMutError; release the read borrow first.
-**You're done when:** `add_if_absent` adds new names, rejects duplicates, and never panics.
+**Exercise:** Booking a new scan panics with BorrowMutError; release the read borrow first.
+**You're done when:** `add_if_absent` adds new bookings, rejects duplicates, and never panics.
 
 ---
 
 ### Lesson 80 — Bug Hunt: The Half-Heard Clock-Out
 **Learn:** `while let Some(msg) = rx.recv().await` drains a channel; one `if let` reads only one
-**Exercise:** Three techs clock out but only Mai is logged; drain the whole channel.
+**Exercise:** Three nurses clock out but only Mai is logged; drain the whole channel.
 **You're done when:** `collect_done` returns all three "done" messages in order.
 
 ---
@@ -651,4 +651,4 @@ The lessons above cover the core language, practical application, and debugging 
 - Advanced async (`select!`, `RwLock`, cancellation)
 - Web server with `axum` or `actix-web`
 - Relational/SQL databases with `sqlx` or `SeaORM` (you've done embedded key-value with `sled`)
-- Building the salon scheduler as a web API
+- Building the ward care log as a web API

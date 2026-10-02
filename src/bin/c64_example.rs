@@ -3,40 +3,41 @@
 // Coming from C: like a runtime assert that catches aliasing a mutable thing — the safety the
 // compiler usually proves statically, enforced dynamically instead. try_borrow_mut avoids the panic.
 //
-// THE VAULT RUN: the intrusion log is shared kit. While a sweep holds it open for reading,
-// a write must be REFUSED gracefully — a panicking deck inside the ice is a dead deck.
+// RUST GENERAL HOSPITAL: a patient's chart is shared by the whole care team. While a doctor
+// holds it open for review, a new note must be REFUSED gracefully — the charting system must
+// never crash on the ward.
 use std::cell::RefCell;
 
-struct IntrusionLog {
-    entries: RefCell<Vec<String>>,
+struct Chart {
+    notes: RefCell<Vec<String>>,
 }
 
-impl IntrusionLog {
+impl Chart {
     fn new() -> Self {
-        Self { entries: RefCell::new(Vec::new()) }
+        Self { notes: RefCell::new(Vec::new()) }
     }
-    fn record(&self, entry: &str) {
-        self.entries.borrow_mut().push(entry.to_string());
+    fn add_note(&self, note: &str) {
+        self.notes.borrow_mut().push(note.to_string());
     }
-    fn entry_count(&self) -> usize {
-        self.entries.borrow().len()
+    fn note_count(&self) -> usize {
+        self.notes.borrow().len()
     }
 }
 
 fn main() {
-    let log = IntrusionLog::new();
-    log.record("breach at relay-7");
+    let chart = Chart::new();
+    chart.add_note("BP 120/80 at 08:00");
 
     {
-        let sweep = log.entries.borrow(); // a sweep holds the log open
-        // A borrow_mut() *while `sweep` is alive* would PANIC at runtime:
-        //   log.entries.borrow_mut(); // thread panics: already borrowed
+        let review = chart.notes.borrow(); // a doctor holds the chart open
+        // A borrow_mut() *while `review` is alive* would PANIC at runtime:
+        //   chart.notes.borrow_mut(); // thread panics: already borrowed
         // try_borrow_mut() returns Err instead of panicking:
-        println!("[log] write during sweep ok? {}", log.entries.try_borrow_mut().is_ok()); // false
-        println!("[log] sweep sees {} entries", sweep.len());
-    } // `sweep` released here
+        println!("[chart] note during review ok? {}", chart.notes.try_borrow_mut().is_ok()); // false
+        println!("[chart] review sees {} notes", review.len());
+    } // `review` released here
 
-    println!("[log] write after sweep ok? {}", log.entries.try_borrow_mut().is_ok()); // true
-    log.record("counter-ice deployed");
-    println!("[log] {} entries total", log.entry_count());
+    println!("[chart] note after review ok? {}", chart.notes.try_borrow_mut().is_ok()); // true
+    chart.add_note("Paracetamol 500 mg given at 09:00");
+    println!("[chart] {} notes total", chart.note_count());
 }

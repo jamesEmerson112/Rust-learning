@@ -3,35 +3,35 @@ use serde::{Deserialize, Serialize};
 // Scan the whole store. db.iter() yields Result<(IVec, IVec)> pairs (key, value);
 // take the value, decode it, collect. Sort for a deterministic order.
 //
-// THE VAULT RUN: inventory check before the meet — enumerate EVERYTHING you're
-// holding. If it's not in the scan, you never stole it.
+// RUST GENERAL HOSPITAL: the monthly stock take — list EVERYTHING the pharmacy holds.
+// If it isn't in the scan, it isn't on the shelf.
 #[derive(Debug, Serialize, Deserialize)]
-struct Intel {
-    codename: String,
-    value: u32,
+struct Stock {
+    drug: String,
+    units: u32,
 }
 
-fn full_scan(db: &sled::Db) -> anyhow::Result<Vec<Intel>> {
-    let mut haul = Vec::new();
+fn full_inventory(db: &sled::Db) -> anyhow::Result<Vec<Stock>> {
+    let mut shelf = Vec::new();
     for item in db.iter() {
         let (_key, value) = item?;
-        haul.push(serde_json::from_slice::<Intel>(&value)?);
+        shelf.push(serde_json::from_slice::<Stock>(&value)?);
     }
-    haul.sort_by(|a, b| a.codename.cmp(&b.codename));
-    Ok(haul)
+    shelf.sort_by(|a, b| a.drug.cmp(&b.drug));
+    Ok(shelf)
 }
 
 fn main() -> anyhow::Result<()> {
-    let db = sled::open("c72_example_vault")?;
-    for (codename, value) in [("GHOSTKEY", 64000u32), ("BLACKOUT", 42000), ("EXEC-DIRT", 18500)] {
-        let intel = Intel { codename: codename.to_string(), value };
-        db.insert(codename, serde_json::to_vec(&intel)?)?;
+    let db = sled::open("c72_example_sled_db")?;
+    for (drug, units) in [("Paracetamol", 6400u32), ("Amoxicillin", 4200), ("Insulin", 1850)] {
+        let stock = Stock { drug: drug.to_string(), units };
+        db.insert(drug, serde_json::to_vec(&stock)?)?;
     }
-    println!("[vault] full inventory scan:");
-    for intel in full_scan(&db)? {
-        println!("  {} — {} creds", intel.codename, intel.value);
+    println!("[pharmacy] full stock take:");
+    for stock in full_inventory(&db)? {
+        println!("  {} — {} units", stock.drug, stock.units);
     }
     drop(db);
-    std::fs::remove_dir_all("c72_example_vault").ok();
+    std::fs::remove_dir_all("c72_example_sled_db").ok();
     Ok(())
 }

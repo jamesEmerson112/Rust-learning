@@ -1,48 +1,48 @@
-// THE VAULT RUN — Chapter 1: LOADOUT
-// Plot the intrusion route: a chain of compromised nodes, each one holding the REST
-// of the route behind a Box. Without Box this enum would be infinitely large —
-// the Box stores the tail behind a fixed-size heap pointer so the compiler can size it.
+// RUST GENERAL HOSPITAL — Ward Equipment
+// Plan the delivery robot's route: a chain of stops, each one holding the REST of the
+// route behind a Box. Without Box this enum would be infinitely large — the Box stores
+// the tail behind a fixed-size heap pointer so the compiler can size it.
 pub enum Route {
-    Hop(String, Box<Route>),
-    Exit,
+    Stop(String, Box<Route>),
+    Dock,
 }
 
-pub fn build_route(nodes: &[&str]) -> Route {
-    // TODO: Nest the nodes into a Route ending in Exit, first node outermost.
-    // Hint: start from Route::Exit and fold from the BACK of the slice
-    // (`nodes.iter().rev()`), wrapping each name around what you have so far.
+pub fn build_route(stops: &[&str]) -> Route {
+    // TODO: Nest the stops into a Route ending in Dock, first stop outermost.
+    // Hint: start from Route::Dock and fold from the BACK of the slice
+    // (`stops.iter().rev()`), wrapping each name around what you have so far.
 
-    let mut route = Route::Exit;
-    for node in nodes.iter().rev() {
+    let mut route = Route::Dock;
+    for node in stops.iter().rev() {
         // create a new hop
         // linked list one item -> next
-        route = Route::Hop(node.to_string(), Box::new(route));
+        route = Route::Stop(node.to_string(), Box::new(route));
     }
-    Route::Exit
+    Route::Dock
 }
 
-pub fn hop_count(route: &Route) -> usize {
-    // TODO: Recurse — 1 + the hops in the rest, or 0 for Exit.
+pub fn stop_count(route: &Route) -> usize {
+    // TODO: Recurse — 1 + the stops in the rest, or 0 for Dock.
     match route {
-        Route::Hop(_, rest) => 1 + hop_count(rest),
-        Route::Exit => 0
+        Route::Stop(_, rest) => 1 + stop_count(rest),
+        Route::Dock => 0
     }
 }
 
-pub fn last_node(route: &Route) -> Option<String> {
-    // TODO: Return the DEEPEST hop name — the node right before Exit — or None
+pub fn last_stop(route: &Route) -> Option<String> {
+    // TODO: Return the DEEPEST stop name — the one right before Dock — or None
     // for an empty route. Hint: peek at the tail with `rest.as_ref()`.
     match route {
-        Route::Hop(item_name, rest) => match rest.as_ref() {
-            Route::Exit => Some(item_name.clone()),
-            _ => last_node(rest)
+        Route::Stop(item_name, rest) => match rest.as_ref() {
+            Route::Dock => Some(item_name.clone()),
+            _ => last_stop(rest)
         },
-        Route::Exit => None,
+        Route::Dock => None,
     }
 }
 
 fn main() {
-    let route = build_route(&["gateway", "relay-7", "aegis-core"]);
-    println!("[route] {} hops plotted (want 3)", hop_count(&route));
-    println!("[route] vault doorstep: {:?} (want Some(\"aegis-core\"))", last_node(&route));
+    let route = build_route(&["pharmacy", "ward-3", "icu"]);
+    println!("[robot] {} stops planned (want 3)", stop_count(&route));
+    println!("[robot] last stop before the dock: {:?} (want Some(\"icu\"))", last_stop(&route));
 }

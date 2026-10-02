@@ -2,35 +2,35 @@
 #[allow(dead_code)]
 mod c72_exercise;
 
-use c72_exercise::{Intel, full_scan};
+use c72_exercise::{Stock, full_inventory};
 
-fn temp_vault() -> sled::Db {
+fn temp_db() -> sled::Db {
     sled::Config::new().temporary(true).open().unwrap()
 }
 
-fn seed(db: &sled::Db, codename: &str, value: u32) {
-    let bytes = serde_json::to_vec(&Intel { codename: codename.to_string(), value }).unwrap();
-    db.insert(codename, bytes).unwrap();
+fn seed(db: &sled::Db, drug: &str, units: u32) {
+    let bytes = serde_json::to_vec(&Stock { drug: drug.to_string(), units }).unwrap();
+    db.insert(drug, bytes).unwrap();
 }
 
 #[test]
-fn scan_enumerates_the_whole_haul() {
-    let db = temp_vault();
-    seed(&db, "GHOSTKEY", 64000);
-    seed(&db, "BLACKOUT", 42000);
-    seed(&db, "EXEC-DIRT", 18500);
+fn stock_take_lists_every_drug() {
+    let db = temp_db();
+    seed(&db, "Paracetamol", 6400);
+    seed(&db, "Amoxicillin", 4200);
+    seed(&db, "Insulin", 1850);
     assert_eq!(
-        full_scan(&db).unwrap(),
+        full_inventory(&db).unwrap(),
         vec![
-            Intel { codename: "BLACKOUT".to_string(), value: 42000 },
-            Intel { codename: "EXEC-DIRT".to_string(), value: 18500 },
-            Intel { codename: "GHOSTKEY".to_string(), value: 64000 },
+            Stock { drug: "Amoxicillin".to_string(), units: 4200 },
+            Stock { drug: "Insulin".to_string(), units: 1850 },
+            Stock { drug: "Paracetamol".to_string(), units: 6400 },
         ]
     );
 }
 
 #[test]
-fn empty_vault_scans_empty() {
-    let db = temp_vault();
-    assert_eq!(full_scan(&db).unwrap(), vec![]);
+fn empty_pharmacy_lists_nothing() {
+    let db = temp_db();
+    assert_eq!(full_inventory(&db).unwrap(), vec![]);
 }

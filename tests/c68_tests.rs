@@ -2,9 +2,9 @@
 #[allow(dead_code)]
 mod c68_exercise;
 
-use c68_exercise::alert_board_count;
+use c68_exercise::free_beds_seen;
 
 #[test]
-fn lookouts_see_the_spotters_update() {
-    assert_eq!(alert_board_count(), 2);
+fn nurses_see_the_charge_nurses_update() {
+    assert_eq!(free_beds_seen(), 2);
 }

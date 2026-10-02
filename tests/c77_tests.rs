@@ -5,25 +5,25 @@ mod c77_exercise;
 use c77_exercise::*;
 
 #[test]
-fn sums_only_vip_tips() {
-    let jar = [
-        ("VIP", 1000u32),
-        ("Regular", 200),
-        ("VIP", 1500),
-        ("Regular", 300),
-        ("VIP", 500),
+fn sums_only_critical_beds() {
+    let ward = [
+        ("Critical", 10u32),
+        ("Stable", 2),
+        ("Critical", 15),
+        ("Stable", 3),
+        ("Critical", 5),
     ];
-    assert_eq!(vip_tip_total(&jar), 3000);
+    assert_eq!(critical_oxygen_total(&ward), 30);
 }
 
 #[test]
-fn no_vip_tips_is_zero() {
-    let jar = [("Regular", 200u32), ("Regular", 300)];
-    assert_eq!(vip_tip_total(&jar), 0);
+fn no_critical_beds_is_zero() {
+    let ward = [("Stable", 2u32), ("Stable", 3)];
+    assert_eq!(critical_oxygen_total(&ward), 0);
 }
 
 #[test]
-fn empty_jar_is_zero() {
-    let jar: [(&str, u32); 0] = [];
-    assert_eq!(vip_tip_total(&jar), 0);
+fn empty_ward_is_zero() {
+    let ward: [(&str, u32); 0] = [];
+    assert_eq!(critical_oxygen_total(&ward), 0);
 }

@@ -18,7 +18,7 @@ pub fn busiest_window(hourly: &[u32], width: usize) -> u32 {
 }
 
 fn main() {
-    // Hourly revenue in cents; the busiest 3-hour window is the closing rush at the end.
-    let hourly = [4500, 3500, 6000, 12000, 9000];
-    println!("busiest 3-hour window: {} cents", busiest_window(&hourly, 3));
+    // ER arrivals per hour; the busiest 3-hour window is the late rush at the end.
+    let hourly = [4, 3, 6, 12, 9];
+    println!("busiest 3-hour window: {} arrivals", busiest_window(&hourly, 3));
 }

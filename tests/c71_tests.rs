@@ -2,22 +2,22 @@
 #[allow(dead_code)]
 mod c71_exercise;
 
-use c71_exercise::{Intel, decode_intel, encode_intel};
+use c71_exercise::{Stock, decode_stock, encode_stock};
 
-fn temp_vault() -> sled::Db {
+fn temp_db() -> sled::Db {
     sled::Config::new().temporary(true).open().unwrap()
 }
 
 #[test]
-fn intel_round_trips() {
-    let db = temp_vault();
-    let jewel = Intel { codename: "GHOSTKEY".to_string(), value: 64000 };
-    encode_intel(&db, &jewel).unwrap();
-    assert_eq!(decode_intel(&db, "GHOSTKEY").unwrap(), Some(jewel));
+fn stock_record_round_trips() {
+    let db = temp_db();
+    let paracetamol = Stock { drug: "Paracetamol".to_string(), units: 6400 };
+    encode_stock(&db, &paracetamol).unwrap();
+    assert_eq!(decode_stock(&db, "Paracetamol").unwrap(), Some(paracetamol));
 }
 
 #[test]
-fn burned_intel_is_none() {
-    let db = temp_vault();
-    assert_eq!(decode_intel(&db, "BURNED").unwrap(), None);
+fn unstocked_drug_is_none() {
+    let db = temp_db();
+    assert_eq!(decode_stock(&db, "Unknown").unwrap(), None);
 }

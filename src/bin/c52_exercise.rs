@@ -2,9 +2,9 @@ use tokio::sync::mpsc;
 
 pub async fn collect_completions() -> Vec<String> {
     // TODO: Create an mpsc::channel with buffer 10.
-    // Spawn a task that sends two messages:
+    // Spawn a nurse task that reports two finished rounds:
     //   "Mai done" and "Linh done"
-    // Receive all messages and collect into a Vec.
+    // Receive all messages at the nurses' station and collect into a Vec.
     let (_tx, mut _rx) = mpsc::channel::<String>(10);
     tokio::spawn(async move {
         _tx.send("Mai done".to_string()).await.unwrap();

@@ -1,51 +1,51 @@
-// Implementing Deref lets your own wrapper act like a pointer: *implant works, and method
+// Implementing Deref lets your own wrapper act like a pointer: *pump works, and method
 // calls "auto-deref" through it. This is the trait that makes Box/Rc/Arc feel built in.
 // Coming from C: it's defining what unary `*` means for your type — a user-overloadable
 // pointer dereference, with the compiler inserting the derefs for you where needed.
 //
-// THE VAULT RUN: chrome implants wrap a skill. Deref done right means the skill shines
-// through the chrome — the deck calls i32/String methods on the implant as if bare wetware.
+// RUST GENERAL HOSPITAL: an infusion pump wraps the setting a nurse programmed into it.
+// Deref done right means any code can read that setting straight through the pump.
 use std::ops::Deref;
 
-struct Implant<T: Default> {
-    model: String,
-    firmware: T,        // what's actually installed
-    factory_default: T, // the stock image, kept for hard resets
+struct Pump<T: Default> {
+    device: String,
+    programmed: T,      // what the nurse entered
+    factory_default: T, // what the pump ships with, kept for a reset
 }
 
-impl<T: Default> Implant<T> {
-    fn new(model: &str, firmware: T) -> Implant<T> {
-        Implant {
-            model: model.to_string(),
-            firmware,
+impl<T: Default> Pump<T> {
+    fn new(device: &str, programmed: T) -> Pump<T> {
+        Pump {
+            device: device.to_string(),
+            programmed,
             factory_default: T::default(),
         }
     }
 
-    fn is_stock(&self) -> bool
+    fn is_default(&self) -> bool
     where
         T: PartialEq,
     {
-        self.firmware == self.factory_default
+        self.programmed == self.factory_default
     }
 }
 
-impl<T: Default> Deref for Implant<T> {
+impl<T: Default> Deref for Pump<T> {
     type Target = T;
     fn deref(&self) -> &T {
-        &self.firmware // serve the INSTALLED firmware, not the factory image
+        &self.programmed // serve the PROGRAMMED setting, not the factory default
     }
 }
 
-fn boost(skill: &i32) -> i32 {
-    *skill * 2
+fn two_hour_volume(rate_ml_per_hour: &i32) -> i32 {
+    *rate_ml_per_hour * 2
 }
 
 fn main() {
-    let reflex = Implant::new("neural-lace mk2", 21);
-    println!("[{}] stock? {}", reflex.model, reflex.is_stock());
-    println!("[{}] deck reads {} — boosted: {}", reflex.model, *reflex, boost(&reflex));
+    let iv = Pump::new("IV pump 3", 21);
+    println!("[{}] still on factory default? {}", iv.device, iv.is_default());
+    println!("[{}] rate {} ml/h — {} ml over two hours", iv.device, *iv, two_hour_volume(&iv));
 
-    let stealth = Implant::new("subdermal ghostweave", String::from("stealth"));
-    println!("[{}] skill '{}' loaded ({} chars)", stealth.model, *stealth, stealth.len());
+    let syringe = Pump::new("syringe pump 1", String::from("insulin"));
+    println!("[{}] loaded with '{}' ({} chars)", syringe.device, *syringe, syringe.len());
 }

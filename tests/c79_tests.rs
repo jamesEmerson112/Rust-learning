@@ -7,15 +7,15 @@ use c79_exercise::*;
 #[test]
 fn adds_distinct_bookings() {
     let sched = Schedule::new();
-    assert!(sched.add_if_absent("Mai - Gel Manicure"));
-    assert!(sched.add_if_absent("Linh - Pedicure"));
+    assert!(sched.add_if_absent("Mr. Hung - X-ray"));
+    assert!(sched.add_if_absent("Mrs. Lan - MRI"));
     assert_eq!(sched.len(), 2);
 }
 
 #[test]
 fn rejects_a_duplicate_booking() {
     let sched = Schedule::new();
-    assert!(sched.add_if_absent("Mai - Gel Manicure"));
-    assert!(!sched.add_if_absent("Mai - Gel Manicure"));
+    assert!(sched.add_if_absent("Mr. Hung - X-ray"));
+    assert!(!sched.add_if_absent("Mr. Hung - X-ray"));
     assert_eq!(sched.len(), 1);
 }

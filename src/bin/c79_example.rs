@@ -7,34 +7,34 @@
 use std::cell::RefCell;
 
 pub struct Schedule {
-    appts: RefCell<Vec<String>>,
+    scans: RefCell<Vec<String>>,
 }
 
 impl Schedule {
     pub fn new() -> Self {
-        Self { appts: RefCell::new(Vec::new()) }
+        Self { scans: RefCell::new(Vec::new()) }
     }
 
-    pub fn add(&self, name: &str) {
-        self.appts.borrow_mut().push(name.to_string());
+    pub fn add(&self, booking: &str) {
+        self.scans.borrow_mut().push(booking.to_string());
     }
 
     pub fn len(&self) -> usize {
-        self.appts.borrow().len()
+        self.scans.borrow().len()
     }
 
     pub fn is_empty(&self) -> bool {
         self.len() == 0
     }
 
-    // Adds `name` only if it isn't already booked. Returns true if it was added.
-    pub fn add_if_absent(&self, name: &str) -> bool {
+    // Adds `booking` only if it isn't already on the schedule. Returns true if it was added.
+    pub fn add_if_absent(&self, booking: &str) -> bool {
         // Read in a single statement so the borrow() guard is dropped right here...
-        let already = self.appts.borrow().iter().any(|n| n == name);
+        let already = self.scans.borrow().iter().any(|b| b == booking);
         if already {
             false
         } else {
-            self.add(name); // ...leaving add()'s borrow_mut() free to run.
+            self.add(booking); // ...leaving add()'s borrow_mut() free to run.
             true
         }
     }
@@ -42,8 +42,8 @@ impl Schedule {
 
 fn main() {
     let sched = Schedule::new();
-    println!("added Mai?   {}", sched.add_if_absent("Mai - Gel Manicure"));
-    println!("added Linh?  {}", sched.add_if_absent("Linh - Pedicure"));
-    println!("added Mai?   {}", sched.add_if_absent("Mai - Gel Manicure"));
-    println!("booked today: {}", sched.len());
+    println!("booked Mr. Hung?  {}", sched.add_if_absent("Mr. Hung - X-ray"));
+    println!("booked Mrs. Lan?  {}", sched.add_if_absent("Mrs. Lan - MRI"));
+    println!("booked Mr. Hung?  {}", sched.add_if_absent("Mr. Hung - X-ray"));
+    println!("scans today: {}", sched.len());
 }

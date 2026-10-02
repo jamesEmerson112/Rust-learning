@@ -2,10 +2,10 @@
 #[allow(dead_code)]
 mod c66_exercise;
 
-use c66_exercise::crew_estimates;
+use c66_exercise::supply_check;
 
 #[test]
-fn three_crew_members_tally_the_same_map() {
+fn three_nurses_count_the_same_list() {
     // 3 threads × (4000 + 6500 + 3500 = 14000) = 42000
-    assert_eq!(crew_estimates(), 42000);
+    assert_eq!(supply_check(), 42000);
 }

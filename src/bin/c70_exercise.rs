@@ -1,8 +1,8 @@
-// THE VAULT RUN — Chapter 5: THE VAULT
-// The fence wants proof before the meet. Pull shards back out by key —
-// a missing key means the intel got burned in transit (that's a None, not a crash).
+// RUST GENERAL HOSPITAL — Pharmacy
+// A nurse looks a drug up before giving it. Pull the record back out by key —
+// a drug the pharmacy doesn't stock comes back as None, not a crash.
 
-pub fn retrieve(db: &sled::Db, key: &str) -> sled::Result<Option<String>> {
+pub fn fetch(db: &sled::Db, key: &str) -> sled::Result<Option<String>> {
     // TODO: db.get(key) returns Result<Option<IVec>>. Map the bytes to a String
     // (e.g. String::from_utf8_lossy(&v).to_string()). Return None when absent.
     let _ = (db, key);
@@ -10,11 +10,11 @@ pub fn retrieve(db: &sled::Db, key: &str) -> sled::Result<Option<String>> {
 }
 
 fn main() -> sled::Result<()> {
-    let db = sled::open("c70_exercise_vault")?;
-    db.insert("vault:blueprints", "aegis-9 tower schematics".as_bytes())?;
-    println!("[vault] blueprints -> {:?}", retrieve(&db, "vault:blueprints")?);
-    println!("[vault] burned     -> {:?} (want None)", retrieve(&db, "vault:burned")?);
+    let db = sled::open("c70_exercise_sled_db")?;
+    db.insert("stock:paracetamol", "500 mg tablets, shelf A3".as_bytes())?;
+    println!("[pharmacy] paracetamol -> {:?}", fetch(&db, "stock:paracetamol")?);
+    println!("[pharmacy] unknown     -> {:?} (want None)", fetch(&db, "stock:unknown")?);
     drop(db);
-    std::fs::remove_dir_all("c70_exercise_vault").ok();
+    std::fs::remove_dir_all("c70_exercise_sled_db").ok();
     Ok(())
 }

@@ -3,24 +3,24 @@
 // C/ThreadX: a refcounted shared buffer whose count is bumped with atomic ops, so several
 // threads can hold it and the last one out frees it.
 //
-// THE VAULT RUN: one vault map, whole crew. Mai, Linh, and Trang each get an Arc handle
-// and independently tally the haul — nobody copies the map, nobody frees it early.
+// RUST GENERAL HOSPITAL: one supply list, three nurses. Mai, Linh, and Trang each get an Arc
+// handle and independently double-check the count — nobody copies the list, nobody frees it early.
 use std::sync::Arc;
 use std::thread;
 
 fn main() {
-    let vault_map = Arc::new(vec![4000u32, 6500, 3500]); // marked caches, in creds
+    let supply_list = Arc::new(vec![4000u32, 6500, 3500]); // saline on hand, in ml
 
-    let mut crew = Vec::new();
-    for handle in ["Mai", "Linh", "Trang"] {
-        let map = Arc::clone(&vault_map); // each crew member gets a handle
-        crew.push(thread::spawn(move || {
-            let estimate: u32 = map.iter().sum();
-            println!("[{handle}] tallies {estimate} creds");
-            estimate
+    let mut nurses = Vec::new();
+    for nurse in ["Mai", "Linh", "Trang"] {
+        let list = Arc::clone(&supply_list); // each nurse gets a handle
+        nurses.push(thread::spawn(move || {
+            let count: u32 = list.iter().sum();
+            println!("[{nurse}] counts {count} ml");
+            count
         }));
     }
 
-    let combined: u32 = crew.into_iter().map(|h| h.join().unwrap()).sum();
-    println!("[crew] combined estimates: {combined} creds");
+    let combined: u32 = nurses.into_iter().map(|h| h.join().unwrap()).sum();
+    println!("[ward] all three counts together: {combined} ml");
 }

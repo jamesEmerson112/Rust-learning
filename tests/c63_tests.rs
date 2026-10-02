@@ -2,26 +2,26 @@
 #[allow(dead_code)]
 mod c63_exercise;
 
-use c63_exercise::SignalJammer;
+use c63_exercise::Defibrillator;
 
 #[test]
-fn reload_returns_the_spent_cell() {
-    let jammer = SignalJammer::new(10);
-    assert_eq!(jammer.reload(99), 10);
-    assert_eq!(jammer.charge_level(), 99);
+fn recharge_returns_the_previous_charge() {
+    let defib = Defibrillator::new(150);
+    assert_eq!(defib.recharge(200), 150);
+    assert_eq!(defib.charge_level(), 200);
 }
 
 #[test]
-fn discharge_dumps_everything() {
-    let jammer = SignalJammer::new(42);
-    assert_eq!(jammer.discharge(), 42);
-    assert_eq!(jammer.charge_level(), 0);
+fn shock_delivers_everything() {
+    let defib = Defibrillator::new(200);
+    assert_eq!(defib.shock(), 200);
+    assert_eq!(defib.charge_level(), 0);
 }
 
 #[test]
 fn all_through_a_shared_reference() {
-    let jammer = SignalJammer::new(5);
-    let alias: &SignalJammer = &jammer; // no &mut anywhere in this test
-    alias.reload(7);
-    assert_eq!(jammer.charge_level(), 7);
+    let defib = Defibrillator::new(120);
+    let alias: &Defibrillator = &defib; // no &mut anywhere in this test
+    alias.recharge(150);
+    assert_eq!(defib.charge_level(), 150);
 }

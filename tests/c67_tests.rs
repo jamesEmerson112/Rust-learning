@@ -2,10 +2,10 @@
 #[allow(dead_code)]
 mod c67_exercise;
 
-use c67_exercise::pool_the_take;
+use c67_exercise::fluid_total;
 
 #[test]
-fn every_deposit_lands_in_the_shared_take() {
-    // 10 runners × 100 creds — the ledger must read 1000, every run, no races
-    assert_eq!(pool_the_take(), 1000);
+fn every_entry_lands_in_the_shared_total() {
+    // 10 nurses × 100 ml — the chart must read 1000, every run, no races
+    assert_eq!(fluid_total(), 1000);
 }

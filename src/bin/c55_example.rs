@@ -1,20 +1,18 @@
-// Warmup (no new Rust concepts): iterative Fibonacci with a rolling pair — limbering up
-// before the run on Aegis-9. Coming from C: a plain for-loop with two accumulators,
-// nothing borrowed.
+// Warmup (no new Rust concepts): iterative Fibonacci with a rolling pair. Coming from C:
+// a plain for-loop with two accumulators, nothing borrowed.
 //
-// THE VAULT RUN — Chapter 1: LOADOUT. The vault's rolling access code is Fibonacci-derived.
-// Old crypto, corporate arrogance. Crack the keygen and we're in business.
-fn access_code(n: u32) -> u64 {
-    let (mut a, mut b) = (0u64, 1u64);
-    for _ in 0..n {
+// RUST GENERAL HOSPITAL: the medicine-delivery robot climbs stairs one or two steps at a
+// time. The number of different step patterns that get it up n steps is a Fibonacci number.
+fn climb_ways(steps: u32) -> u64 {
+    let (mut a, mut b) = (1u64, 1u64);
+    for _ in 0..steps {
         (a, b) = (b, a + b);
     }
     a
 }
 
 fn main() {
-    println!("[CHROME SURGEON] jacking in... warming up the keygen");
-    let stream: Vec<u64> = (0..10).map(access_code).collect();
-    println!("[keygen] keystream sample: {stream:?}");
-    println!("[keygen] access_code(50) = {} — the vault rotates deep", access_code(50));
+    let table: Vec<u64> = (0..10).map(climb_ways).collect();
+    println!("[robot] ways to climb 0..10 steps: {table:?}");
+    println!("[robot] a 50-step stairwell: {} step patterns", climb_ways(50));
 }

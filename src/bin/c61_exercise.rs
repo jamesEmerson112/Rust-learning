@@ -1,55 +1,55 @@
-// THE VAULT RUN — Chapter 2: GHOST PROTOCOL — ★ BUG HUNT ★
+// RUST GENERAL HOSPITAL — Safe Shutdown — ★ BUG HUNT ★
 //
-// BUG: You jack out, but the session never dies. The trace daemon and your session
-// point at each other, and strong_count says TWO owners when you expected one —
-// an Rc cycle. The count never hits zero, the memory never frees, and the daemon
-// can still reach you after disconnect. The trace follows you home.
+// BUG: Mr. Hung went home, but his bed alarm keeps ringing for an empty bed. The
+// patient record and the bed alarm point at each other, and strong_count says TWO
+// owners when you expected one — an Rc cycle. The count never hits zero, the record
+// never frees, and the alarm can still reach a patient who was discharged.
 //
-// One direction of this handshake must not own the other.
+// One direction of this link must not own the other.
 // Find it, fix it: cargo test --test c61_tests
 #[allow(unused_imports)]
 use std::cell::RefCell;
 #[allow(unused_imports)]
 use std::rc::{Rc, Weak};
 
-pub struct Session {
-    pub id: String,
-    pub daemon: RefCell<Option<Rc<Daemon>>>,
+pub struct Patient {
+    pub name: String,
+    pub alarm: RefCell<Option<Rc<BedAlarm>>>,
 }
 
-pub struct Daemon {
-    pub target: RefCell<Option<Rc<Session>>>,
+pub struct BedAlarm {
+    pub patient: RefCell<Option<Rc<Patient>>>,
 }
 
-pub fn open_session() -> (Rc<Session>, Rc<Daemon>) {
-    let session = Rc::new(Session {
-        id: "ghost-run-7".to_string(),
-        daemon: RefCell::new(None),
+pub fn admit() -> (Rc<Patient>, Rc<BedAlarm>) {
+    let patient = Rc::new(Patient {
+        name: "Mr. Hung".to_string(),
+        alarm: RefCell::new(None),
     });
-    let daemon = Rc::new(Daemon {
-        target: RefCell::new(None),
+    let alarm = Rc::new(BedAlarm {
+        patient: RefCell::new(None),
     });
-    *session.daemon.borrow_mut() = Some(Rc::clone(&daemon));
-    *daemon.target.borrow_mut() = Some(Rc::clone(&session));
-    (session, daemon)
+    *patient.alarm.borrow_mut() = Some(Rc::clone(&alarm));
+    *alarm.patient.borrow_mut() = Some(Rc::clone(&patient));
+    (patient, alarm)
 }
 
 pub fn link_counts() -> (usize, usize) {
-    // How many strong and weak owners does the session have while the daemon watches?
-    let (session, _daemon) = open_session();
-    (Rc::strong_count(&session), Rc::weak_count(&session))
+    // How many strong and weak owners does the patient have while the alarm watches?
+    let (patient, _alarm) = admit();
+    (Rc::strong_count(&patient), Rc::weak_count(&patient))
 }
 
-pub fn trace_lost() -> bool {
-    // Jack out. Does the daemon lose you?
-    let (session, daemon) = open_session();
-    drop(session);
-    let watching = daemon.target.borrow();
+pub fn alarm_silent_after_discharge() -> bool {
+    // Discharge the patient. Does the alarm let go?
+    let (patient, alarm) = admit();
+    drop(patient);
+    let watching = alarm.patient.borrow();
     watching.is_none()
 }
 
 fn main() {
-    println!("[session] (strong, weak) = {:?} — want (1, 1)", link_counts());
-    println!("[session] trace lost after jack-out? {} — want true", trace_lost());
-    println!("══ when the trace loses you, CHAPTER 2: GHOST PROTOCOL is complete ══");
+    println!("[patient] (strong, weak) = {:?} — want (1, 1)", link_counts());
+    println!("[alarm] silent after discharge? {} — want true", alarm_silent_after_discharge());
+    println!("══ when the alarm goes quiet, Safe Shutdown is complete ══");
 }

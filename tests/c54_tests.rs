@@ -2,33 +2,33 @@
 #[allow(dead_code)]
 mod c54_exercise;
 
-use c54_exercise::Salon;
+use c54_exercise::Ward;
 
 #[test]
-fn book_and_list() {
-    let mut salon = Salon::new();
-    salon.book("Mai", "Gel Manicure", 4500);
-    salon.book("Linh", "Pedicure", 3500);
-    assert_eq!(salon.list().len(), 2);
-    assert_eq!(salon.list()[0].0, "Mai");
-    assert_eq!(salon.list()[1].2, 3500);
+fn log_and_list() {
+    let mut ward = Ward::new();
+    ward.log_visit("Mai", "Mr. Hung", 45);
+    ward.log_visit("Linh", "Mrs. Lan", 35);
+    assert_eq!(ward.list().len(), 2);
+    assert_eq!(ward.list()[0].0, "Mai");
+    assert_eq!(ward.list()[1].2, 35);
 }
 
 #[test]
-fn revenue_by_technician() {
-    let mut salon = Salon::new();
-    salon.book("Mai", "Gel Manicure", 4500);
-    salon.book("Linh", "Pedicure", 3500);
-    salon.book("Mai", "Acrylic Fill", 3000);
+fn care_minutes_by_nurse() {
+    let mut ward = Ward::new();
+    ward.log_visit("Mai", "Mr. Hung", 45);
+    ward.log_visit("Linh", "Mrs. Lan", 35);
+    ward.log_visit("Mai", "Mr. Bao", 30);
 
-    let rev = salon.revenue_by_tech();
-    assert_eq!(rev.get("Mai"), Some(&7500));
-    assert_eq!(rev.get("Linh"), Some(&3500));
+    let care = ward.minutes_by_nurse();
+    assert_eq!(care.get("Mai"), Some(&75));
+    assert_eq!(care.get("Linh"), Some(&35));
 }
 
 #[test]
-fn empty_salon() {
-    let salon = Salon::new();
-    assert!(salon.list().is_empty());
-    assert!(salon.revenue_by_tech().is_empty());
+fn empty_ward() {
+    let ward = Ward::new();
+    assert!(ward.list().is_empty());
+    assert!(ward.minutes_by_nurse().is_empty());
 }

@@ -3,22 +3,22 @@
 // keys and values. Coming from C: a B-tree-backed store you link into the binary, like
 // Berkeley DB — no daemon to talk to.
 //
-// THE VAULT RUN — Chapter 5: THE VAULT. You're inside. Every data shard you rip from
-// Aegis-9 goes straight into your own datavault — if the connection drops, the haul survives.
-fn stash(db: &sled::Db, key: &str, shard: &str) -> sled::Result<()> {
-    db.insert(key, shard.as_bytes())?; // keys and values are bytes
+// RUST GENERAL HOSPITAL: the pharmacy keeps its stock records in a local database, so the
+// records survive a power cut or a restart.
+fn store(db: &sled::Db, key: &str, record: &str) -> sled::Result<()> {
+    db.insert(key, record.as_bytes())?; // keys and values are bytes
     Ok(())
 }
 
 fn main() -> sled::Result<()> {
-    let db = sled::open("c69_example_vault")?; // creates the vault directory on disk
-    stash(&db, "vault:blueprints", "aegis-9 tower schematics")?;
-    stash(&db, "vault:payroll", "executive shell accounts")?;
-    db.flush()?; // persist to disk — the haul survives a dropped uplink
-    println!("[vault] {} shards stashed", db.len());
-    println!("[vault] blueprints secured? {}", db.contains_key("vault:blueprints")?);
+    let db = sled::open("c69_example_sled_db")?; // creates the database directory on disk
+    store(&db, "stock:paracetamol", "500 mg tablets, shelf A3")?;
+    store(&db, "stock:insulin", "10 ml vials, fridge 2")?;
+    db.flush()?; // persist to disk — the records survive a restart
+    println!("[pharmacy] {} records stored", db.len());
+    println!("[pharmacy] paracetamol on file? {}", db.contains_key("stock:paracetamol")?);
 
-    drop(db); // close the vault before removing its files
-    std::fs::remove_dir_all("c69_example_vault").ok();
+    drop(db); // close the database before removing its files
+    std::fs::remove_dir_all("c69_example_sled_db").ok();
     Ok(())
 }

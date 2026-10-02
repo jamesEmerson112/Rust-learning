@@ -1,12 +1,14 @@
-// Capstone — no new concept: a real CLI with subcommands (book / list / revenue) wiring
+// Capstone — no new concept: a real CLI with subcommands (log / list / minutes) wiring
 // together clap parsing and a HashMap of state into one usable tool.
 // Coming from C: this is your `program <command> --args` dispatcher, but matching on the
 // subcommand enum is exhaustive — the compiler ensures every command is handled.
+//
+// RUST GENERAL HOSPITAL: the ward's care log — who visited which patient, and for how long.
 use clap::{Parser, Subcommand};
 use std::collections::HashMap;
 
 #[derive(Parser)]
-#[command(about = "Salon scheduler CLI")]
+#[command(about = "Ward care log CLI")]
 struct Cli {
     #[command(subcommand)]
     command: Command,
@@ -14,57 +16,57 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
-    Book {
+    Log {
         #[arg(long)]
-        technician: String,
+        nurse: String,
         #[arg(long)]
-        service: String,
+        patient: String,
         #[arg(long)]
-        price: u32,
+        minutes: u32,
     },
     List,
-    Revenue,
+    Minutes,
 }
 
-struct Salon {
-    bookings: Vec<(String, String, u32)>,
+struct Ward {
+    visits: Vec<(String, String, u32)>,
 }
 
-impl Salon {
+impl Ward {
     fn new() -> Self {
-        Self { bookings: Vec::new() }
+        Self { visits: Vec::new() }
     }
 
-    fn book(&mut self, technician: &str, service: &str, price: u32) {
-        self.bookings.push((technician.to_string(), service.to_string(), price));
+    fn log_visit(&mut self, nurse: &str, patient: &str, minutes: u32) {
+        self.visits.push((nurse.to_string(), patient.to_string(), minutes));
     }
 
     fn list(&self) -> &[(String, String, u32)] {
-        &self.bookings
+        &self.visits
     }
 
-    fn revenue_by_tech(&self) -> HashMap<String, u32> {
+    fn minutes_by_nurse(&self) -> HashMap<String, u32> {
         let mut map = HashMap::new();
-        for (tech, _, price) in &self.bookings {
-            *map.entry(tech.clone()).or_insert(0) += price;
+        for (nurse, _, minutes) in &self.visits {
+            *map.entry(nurse.clone()).or_insert(0) += minutes;
         }
         map
     }
 }
 
 fn main() {
-    let mut salon = Salon::new();
-    salon.book("Mai", "Gel Manicure", 4500);
-    salon.book("Linh", "Pedicure", 3500);
-    salon.book("Mai", "Acrylic Fill", 3000);
+    let mut ward = Ward::new();
+    ward.log_visit("Mai", "Mr. Hung", 45);
+    ward.log_visit("Linh", "Mrs. Lan", 35);
+    ward.log_visit("Mai", "Mr. Bao", 30);
 
-    println!("--- Bookings ---");
-    for (tech, svc, price) in salon.list() {
-        println!("  {tech}: {svc} ({price} cents)");
+    println!("--- Visits ---");
+    for (nurse, patient, minutes) in ward.list() {
+        println!("  {nurse}: {patient} ({minutes} min)");
     }
 
-    println!("--- Revenue ---");
-    for (tech, total) in &salon.revenue_by_tech() {
-        println!("  {tech}: {total} cents");
+    println!("--- Care minutes ---");
+    for (nurse, total) in &ward.minutes_by_nurse() {
+        println!("  {nurse}: {total} min");
     }
 }

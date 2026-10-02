@@ -2,41 +2,41 @@
 #[allow(dead_code)]
 mod c57_exercise;
 
-use c57_exercise::{Ghost, Icepick, Program, Siphon, full_loadout, over_budget, total_draw};
+use c57_exercise::{BloodOxygen, BloodPressure, HeartRate, Sensor, full_monitor, over_budget, total_draw};
 
 #[test]
-fn individual_programs() {
-    assert_eq!(Icepick.name(), "Icepick");
-    assert_eq!(Icepick.power_draw(), 40);
-    assert_eq!(Siphon.name(), "Siphon");
-    assert_eq!(Siphon.power_draw(), 25);
-    assert_eq!(Ghost.name(), "Ghost");
-    assert_eq!(Ghost.power_draw(), 15);
+fn individual_sensors() {
+    assert_eq!(HeartRate.name(), "Heart Rate");
+    assert_eq!(HeartRate.power_draw(), 40);
+    assert_eq!(BloodOxygen.name(), "Blood Oxygen");
+    assert_eq!(BloodOxygen.power_draw(), 25);
+    assert_eq!(BloodPressure.name(), "Blood Pressure");
+    assert_eq!(BloodPressure.power_draw(), 15);
 }
 
 #[test]
-fn full_loadout_is_three_programs() {
-    let deck = full_loadout();
-    assert_eq!(deck.len(), 3);
-    let names: Vec<String> = deck.iter().map(|p| p.name()).collect();
-    assert_eq!(names, vec!["Icepick", "Siphon", "Ghost"]);
+fn full_monitor_has_three_sensors() {
+    let monitor = full_monitor();
+    assert_eq!(monitor.len(), 3);
+    let names: Vec<String> = monitor.iter().map(|s| s.name()).collect();
+    assert_eq!(names, vec!["Heart Rate", "Blood Oxygen", "Blood Pressure"]);
 }
 
 #[test]
 fn mixed_rack_total_draw() {
-    assert_eq!(total_draw(&full_loadout()), 80);
+    assert_eq!(total_draw(&full_monitor()), 80);
 }
 
 #[test]
-fn empty_rack_draws_nothing() {
-    let empty: Vec<Box<dyn Program>> = vec![];
+fn empty_monitor_draws_nothing() {
+    let empty: Vec<Box<dyn Sensor>> = vec![];
     assert_eq!(total_draw(&empty), 0);
 }
 
 #[test]
 fn budget_check() {
-    let deck = full_loadout();
-    assert!(over_budget(&deck, 60));
-    assert!(!over_budget(&deck, 100));
-    assert!(!over_budget(&deck, 80)); // exactly at budget is NOT over
+    let monitor = full_monitor();
+    assert!(over_budget(&monitor, 60));
+    assert!(!over_budget(&monitor, 100));
+    assert!(!over_budget(&monitor, 80)); // exactly at budget is NOT over
 }

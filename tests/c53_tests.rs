@@ -2,24 +2,24 @@
 #[allow(dead_code)]
 mod c53_exercise;
 
-use c53_exercise::{format_booking, Args};
+use c53_exercise::{format_order, Args};
 
 #[test]
-fn formats_booking() {
+fn formats_an_order() {
     let args = Args {
-        technician: "Mai".to_string(),
-        service: "Gel Manicure".to_string(),
-        price: 4500,
+        patient: "Mr. Hung".to_string(),
+        medication: "Paracetamol".to_string(),
+        dose_mg: 500,
     };
-    assert_eq!(format_booking(&args), "Booked: Gel Manicure with Mai for 4500 cents");
+    assert_eq!(format_order(&args), "Order: Paracetamol 500 mg for Mr. Hung");
 }
 
 #[test]
 fn formats_another() {
     let args = Args {
-        technician: "Linh".to_string(),
-        service: "Pedicure".to_string(),
-        price: 3500,
+        patient: "Mrs. Lan".to_string(),
+        medication: "Amoxicillin".to_string(),
+        dose_mg: 250,
     };
-    assert_eq!(format_booking(&args), "Booked: Pedicure with Linh for 3500 cents");
+    assert_eq!(format_order(&args), "Order: Amoxicillin 250 mg for Mrs. Lan");
 }

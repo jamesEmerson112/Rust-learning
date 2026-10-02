@@ -3,33 +3,33 @@
 // Coming from C: a small mutable box you can poke even when the struct around it is otherwise
 // "const" — but the type system keeps it single-owner, so there are no aliasing surprises.
 //
-// THE VAULT RUN: your signal jammer rides in a sealed housing — everyone holds it by
-// &shared reference, but the charge cell inside still swaps and drains. That's Cell.
+// RUST GENERAL HOSPITAL: the crash-cart defibrillator is shared kit. Everyone on the team
+// holds it by &shared reference, but its charge still has to change. That's Cell.
 use std::cell::Cell;
 
-struct SignalJammer {
-    charge: Cell<u32>,
+struct Defibrillator {
+    charge: Cell<u32>, // joules
 }
 
-impl SignalJammer {
+impl Defibrillator {
     fn new(charge: u32) -> Self {
         Self { charge: Cell::new(charge) }
     }
     fn charge_level(&self) -> u32 {
         self.charge.get()
     }
-    fn reload(&self, fresh: u32) -> u32 {
-        self.charge.replace(fresh) // slot the fresh cell, return the spent one
+    fn recharge(&self, fresh: u32) -> u32 {
+        self.charge.replace(fresh) // set the new charge, return the previous one
     }
-    fn discharge(&self) -> u32 {
-        self.charge.take() // dump ALL charge into the jam, leave the default (0)
+    fn shock(&self) -> u32 {
+        self.charge.take() // deliver ALL the charge, leave the default (0)
     }
 }
 
 fn main() {
-    let jammer = SignalJammer::new(10);
-    println!("[jammer] spent cell pulled: {} units", jammer.reload(99));
-    println!("[jammer] charge now: {}", jammer.charge_level());
-    println!("[jammer] FULL DISCHARGE: {} units into the jam", jammer.discharge());
-    println!("[jammer] charge now: {}", jammer.charge_level());
+    let defib = Defibrillator::new(150);
+    println!("[defib] recharged to 200 J; previous charge was {} J", defib.recharge(200));
+    println!("[defib] charge now: {} J", defib.charge_level());
+    println!("[defib] SHOCK: {} J delivered", defib.shock());
+    println!("[defib] charge now: {} J", defib.charge_level());
 }

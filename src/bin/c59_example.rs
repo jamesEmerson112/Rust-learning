@@ -2,23 +2,23 @@
 // HashMap, then look for its complement. Coming from C: a hash table replacing the O(n^2)
 // double loop.
 //
-// THE VAULT RUN — Chapter 2: GHOST PROTOCOL. You intercepted a burst of numeric codes.
-// Intel says exactly two of them sum to the master key. Find the pair, keep the indices.
+// RUST GENERAL HOSPITAL: the delivery robot has charge left for exactly 9 hallway units.
+// Find the two legs of its route that use that charge up exactly, and keep their indices.
 use std::collections::HashMap;
 
-fn master_key_pair(codes: &[i32], master: i32) -> Option<(usize, usize)> {
+fn trip_pair(legs: &[i32], charge: i32) -> Option<(usize, usize)> {
     let mut seen: HashMap<i32, usize> = HashMap::new();
-    for (i, &code) in codes.iter().enumerate() {
-        if let Some(&j) = seen.get(&(master - code)) {
+    for (i, &leg) in legs.iter().enumerate() {
+        if let Some(&j) = seen.get(&(charge - leg)) {
             return Some((j, i));
         }
-        seen.insert(code, i);
+        seen.insert(leg, i);
     }
     None
 }
 
 fn main() {
-    let intercepted = [2, 7, 11, 15];
-    println!("[intercept] codes: {intercepted:?}, master key: 9");
-    println!("[intercept] pair: {:?}", master_key_pair(&intercepted, 9));
+    let legs = [2, 7, 11, 15];
+    println!("[robot] hallway legs: {legs:?}, charge left: 9");
+    println!("[robot] pair: {:?}", trip_pair(&legs, 9));
 }
