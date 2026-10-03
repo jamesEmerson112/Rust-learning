@@ -1,12 +1,11 @@
 // RUST GENERAL HOSPITAL — Shared Care — ★ BUG HUNT ★
 //
-// BUG: The charting system CRASHES on the ward — "already borrowed" / BorrowMutError.
-// A nurse adds a note while a doctor still holds the chart open for review.
-// The compiler can't save you here: RefCell checks borrows at RUNTIME.
-// A crashed chart in the middle of a shift is worse than a delayed note.
-// Refuse the contended write gracefully instead.
+// BUG: The charting system crashes on the ward with an "already borrowed" panic, which is a
+// BorrowMutError. It happens when a nurse adds a note while a doctor still holds the chart
+// open for review. The compiler does not catch this, because RefCell checks borrows at run
+// time. A crashed chart in the middle of a shift is worse than a delayed note.
 //
-// Find it, fix it: cargo test --test c64_tests
+// Find the bug and fix it, then run: cargo test --test c64_tests
 use std::cell::RefCell;
 
 pub struct Chart {
@@ -26,18 +25,18 @@ impl Chart {
         self.notes.borrow().len()
     }
 
-    // A note that arrives DURING a review must come back Err — never a panic.
+    // A note that arrives during a review must come back as an Err, not a panic.
     pub fn note_during_review(&self) -> Result<usize, String> {
         let review = self.notes.borrow(); // the doctor holds the chart open
         self.notes.borrow_mut().push("pulse 72 at 08:15".to_string());
         Ok(review.len())
     }
 
-    // After the review releases the chart, notes flow again.
+    // After the review releases the chart, notes can be added again.
     pub fn note_after_review(&self) -> usize {
         {
             let _review = self.notes.borrow();
-        } // review released here
+        } // the review is released here
         self.add_note("pulse 74 at 08:30");
         self.note_count()
     }

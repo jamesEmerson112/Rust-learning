@@ -1,7 +1,9 @@
 // RUST GENERAL HOSPITAL — Pharmacy
-// A line of text isn't enough for stock control. Store each drug as a struct — name
-// plus units on hand — encoded into the database as JSON bytes and decoded back out intact.
-// (The c74 capstone will import THIS file and reuse your codec. Build it well.)
+// A line of text is not enough for stock control. Store each drug as a struct holding its
+// name and the units on hand. Encode it into the database as JSON bytes, and decode it back
+// out intact.
+// The c74 capstone imports this file and reuses your encode and decode functions, so they
+// need to work correctly.
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -12,15 +14,15 @@ pub struct Stock {
 
 pub fn encode_stock(db: &sled::Db, stock: &Stock) -> anyhow::Result<()> {
     // TODO: Serialize the stock record to JSON bytes with serde_json::to_vec, then
-    // db.insert it under stock.drug.as_bytes(). anyhow's `?` unifies the
-    // serde + sled error types.
+    // db.insert it under the key stock.drug.as_bytes(). With anyhow, a single `?` works
+    // for both the serde error type and the sled error type.
     let _ = (db, stock);
     Ok(())
 }
 
 pub fn decode_stock(db: &sled::Db, drug: &str) -> anyhow::Result<Option<Stock>> {
-    // TODO: db.get(drug)? gives Option<IVec>; deserialize the bytes with
-    // serde_json::from_slice into a Stock. Return None when the key is absent.
+    // TODO: db.get(drug)? gives an Option<IVec>. Deserialize the bytes into a Stock with
+    // serde_json::from_slice. Return None when the key is absent.
     let _ = (db, drug);
     Ok(None)
 }

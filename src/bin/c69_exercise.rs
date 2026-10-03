@@ -1,10 +1,10 @@
 // RUST GENERAL HOSPITAL — Pharmacy
 // The pharmacy keeps every stock record on disk, so nothing is lost in a power cut.
-// sled: a HashMap that lives on disk.
+// The sled database works like a HashMap that lives on disk.
 
 pub fn store(db: &sled::Db, key: &str, record: &str) -> sled::Result<()> {
-    // TODO: Insert key -> record into the database. Keys and values are bytes,
-    // so pass record.as_bytes(). db.insert(...) returns a Result.
+    // TODO: Insert the record into the database under the given key. Keys and values
+    // are bytes, so pass record.as_bytes(). db.insert(...) returns a Result.
     let _ = (db, key, record);
     Ok(())
 }

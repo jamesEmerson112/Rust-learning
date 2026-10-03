@@ -1,8 +1,9 @@
-// BUG: A smudged entry made it onto the fluid chart — "Water,oops" instead of a number.
-// Instead of rejecting the chart, fluid_intake quietly counts the bad row as 0 ml and reports
-// an intake that's too low. The doctor would see a patient drinking less than they really did.
-// The code compiles and runs — a corrupt amount must come back as an Err, not vanish. Find and fix it.
-// (This drills c17-c19: Result / map_err / ?. The tests in tests/c76_tests.rs must go green.)
+// BUG: A smudged entry made it onto the fluid chart. It reads "Water,oops" instead of a
+// number. Instead of rejecting the chart, fluid_intake quietly counts the bad row as 0 ml and
+// reports an intake that is too low. The doctor would think the patient drank less than they
+// really did. The code compiles and runs. The tests expect a corrupt amount to produce an
+// Err. Find the bug and fix it.
+// This drills c17 to c19. The tests in tests/c76_tests.rs must pass.
 pub fn fluid_intake(rows: &[&str]) -> Result<u32, String> {
     let mut total = 0;
     for row in rows {

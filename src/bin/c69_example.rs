@@ -1,7 +1,8 @@
-// sled is a pure-Rust embedded key-value database — think a HashMap that lives on disk and
-// survives restarts. No SQL, no schema, no server: open a directory, then insert/get byte
-// keys and values. Coming from C: a B-tree-backed store you link into the binary, like
-// Berkeley DB — no daemon to talk to.
+// sled is a key-value database written entirely in Rust that runs inside your program. Think
+// of it as a HashMap that lives on disk and survives restarts. It has no SQL, no schema, and
+// no server. You open a directory, then insert and get keys and values, stored as bytes.
+// Coming from C: this is like Berkeley DB, a B-tree store that you link into your binary.
+// There is no separate database process to talk to.
 //
 // RUST GENERAL HOSPITAL: the pharmacy keeps its stock records in a local database, so the
 // records survive a power cut or a restart.
@@ -14,7 +15,7 @@ fn main() -> sled::Result<()> {
     let db = sled::open("c69_example_sled_db")?; // creates the database directory on disk
     store(&db, "stock:paracetamol", "500 mg tablets, shelf A3")?;
     store(&db, "stock:insulin", "10 ml vials, fridge 2")?;
-    db.flush()?; // persist to disk — the records survive a restart
+    db.flush()?; // write to disk now, so the records survive a restart
     println!("[pharmacy] {} records stored", db.len());
     println!("[pharmacy] paracetamol on file? {}", db.contains_key("stock:paracetamol")?);
 

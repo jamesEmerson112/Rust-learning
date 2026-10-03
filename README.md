@@ -481,7 +481,7 @@ From c50 onward, every lesson is set at Rust General Hospital: one small, real j
 
 ### Lesson 59 — ⚡ Last Trip (Warmup: Two Sum)
 **Learn:** One-pass hashing — trade space for time
-**Exercise:** `trip_pair(legs, charge)` — indices of the two hallway legs that use exactly the robot's remaining charge.
+**Exercise:** `trip_pair(legs, charge)` — each number is the battery cost of one hallway; return the positions of two hallways whose costs add up to exactly the robot's remaining charge.
 **You're done when:** You can find a complement in O(n) instead of a nested loop.
 
 ---

@@ -1,12 +1,12 @@
 // RUST GENERAL HOSPITAL — Shared Care
 // The delivery robot drives back to the pharmacy by retracing the rooms it passed.
-// Reverse its path in place — the robot's controller has no memory to spare for a
+// Reverse its path in place, because the robot's controller has no memory to spare for a
 // second Vec. (Warmup: no new Rust concepts.)
 
 pub fn retrace(path: &mut Vec<i32>) {
-    // TODO: Reverse `path` in place — no allocation. Walk two pointers inward and
-    // swap position i with position n-1-i for the first half.
-    // (Idiomatic alternative: .iter().rev().collect(), but that allocates.)
+    // TODO: Reverse `path` in place without allocating. Walk two indices inward from both
+    // ends, and for each position i in the first half, swap it with position n-1-i.
+    // The idiomatic alternative is .iter().rev().collect(), but that allocates a new Vec.
     let _ = path;
 }
 

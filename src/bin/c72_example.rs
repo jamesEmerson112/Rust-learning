@@ -1,10 +1,11 @@
 use serde::{Deserialize, Serialize};
 
-// Scan the whole store. db.iter() yields Result<(IVec, IVec)> pairs (key, value);
-// take the value, decode it, collect. Sort for a deterministic order.
+// Scan the whole store. db.iter() yields items of type Result<(IVec, IVec)>, where each
+// pair is a key and a value. Take the value, decode it, and collect the results. Sort them
+// so the output comes out in the same order on every run.
 //
-// RUST GENERAL HOSPITAL: the monthly stock take — list EVERYTHING the pharmacy holds.
-// If it isn't in the scan, it isn't on the shelf.
+// RUST GENERAL HOSPITAL: in the monthly stock take, the pharmacy lists everything it holds.
+// Anything missing from the scan counts as missing from the shelf.
 #[derive(Debug, Serialize, Deserialize)]
 struct Stock {
     drug: String,

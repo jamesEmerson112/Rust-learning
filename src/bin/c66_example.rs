@@ -1,10 +1,14 @@
-// Arc<T> = Atomically Reference-Counted: share read-only data across THREADS. It's Rc (c31)
-// with thread-safe atomic counts — plain Rc isn't safe to send between threads. Coming from
-// C/ThreadX: a refcounted shared buffer whose count is bumped with atomic ops, so several
-// threads can hold it and the last one out frees it.
+// Arc<T> stands for atomically reference-counted. It lets several threads share read-only
+// data. It works like Rc from c31, but it updates its count with atomic operations, which
+// stay correct when several threads run them at once. Plain Rc is not safe to send between
+// threads.
+// Coming from C: in C or ThreadX, this is a reference-counted shared buffer whose count is
+// changed with atomic operations. Several threads can hold the buffer, and the last thread
+// to release it frees it.
 //
-// RUST GENERAL HOSPITAL: one supply list, three nurses. Mai, Linh, and Trang each get an Arc
-// handle and independently double-check the count — nobody copies the list, nobody frees it early.
+// RUST GENERAL HOSPITAL: three nurses share one supply list. Mai, Linh, and Trang each get an
+// Arc handle and check the count on their own. Nobody copies the list, and it cannot be freed
+// while any nurse still holds it.
 use std::sync::Arc;
 use std::thread;
 

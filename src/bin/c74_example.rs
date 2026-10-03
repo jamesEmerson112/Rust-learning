@@ -1,11 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-// Capstone: read the supplier's CSV delivery note (c47 skill), store each record in sled via
-// the serde codec (c71 pattern), then PROCESS the stock — total it and find the best-stocked drug.
-// anyhow unifies the csv + serde + sled error types so a single `?` style handles them all.
+// Capstone: read the supplier's CSV delivery note as in c47, and store each record in sled
+// with the serde encoding from c71. Then process the stock by totaling it and finding the
+// best-stocked drug. anyhow wraps the csv, serde, and sled error types in one error type, so
+// a single `?` handles all of them.
 //
-// RUST GENERAL HOSPITAL: everything the pharmacy lessons built, assembled into one pipeline:
-// delivery CSV -> the pharmacy database -> the stock report.
+// RUST GENERAL HOSPITAL: this puts everything from the pharmacy lessons into one pipeline.
+// The delivery CSV goes into the pharmacy database, and the stock report comes out of it.
 #[derive(Debug, Serialize, Deserialize)]
 struct Stock {
     drug: String,

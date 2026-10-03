@@ -1,12 +1,12 @@
 // RUST GENERAL HOSPITAL — Safe Shutdown — ★ BUG HUNT ★
 //
-// BUG: Mr. Hung went home, but his bed alarm keeps ringing for an empty bed. The
-// patient record and the bed alarm point at each other, and strong_count says TWO
-// owners when you expected one — an Rc cycle. The count never hits zero, the record
-// never frees, and the alarm can still reach a patient who was discharged.
+// BUG: Mr. Hung went home, but his bed alarm keeps ringing for an empty bed. The patient
+// record and the bed alarm point at each other through Rc, which forms a cycle.
+// strong_count reports two owners for the patient when you expected one. Because the count
+// never reaches zero, the record is never freed, and the alarm can still reach a patient who
+// was discharged.
 //
-// One direction of this link must not own the other.
-// Find it, fix it: cargo test --test c61_tests
+// Find the bug and fix it, then run: cargo test --test c61_tests
 #[allow(unused_imports)]
 use std::cell::RefCell;
 #[allow(unused_imports)]

@@ -1,8 +1,10 @@
-// BUG: Three nurses clock out at the end of the night shift — Mai, Linh, and Trang each send a
-// "done" message to the nurses' station — but the log only ever shows Mai. The other two
-// messages were delivered to the channel just fine; the station just stops listening after the
-// first one. The code compiles and runs (no hang). Drain them all. Find and fix it.
-// (This drills c50-c52: tokio mpsc channels. The tests in tests/c80_tests.rs must go green.)
+// BUG: Three nurses clock out at the end of the night shift. Mai, Linh, and Trang each send a
+// "done" message to the nurses' station, but the log only ever shows Mai. The other two
+// messages were delivered to the channel without any problem. The station stops listening
+// after the first one. The code compiles and runs, and it does not hang. Find the bug and
+// fix it.
+// This drills tokio mpsc channels, which have many senders and one receiver, from c50 to
+// c52. The tests in tests/c80_tests.rs must pass.
 use tokio::sync::mpsc;
 
 pub async fn collect_done() -> Vec<String> {

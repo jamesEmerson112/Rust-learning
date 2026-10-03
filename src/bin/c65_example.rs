@@ -1,8 +1,10 @@
-// Warmup (no new Rust concepts): detect a duplicate by inserting into a HashSet — insert returns
-// false if the value was already present. Coming from C: a hash-set membership check, no nested loops.
+// Warmup (no new Rust concepts): detect a duplicate by inserting each value into a HashSet.
+// insert returns false if the value was already present.
+// Coming from C: this is a hash-set membership check, which replaces a pair of nested loops.
 //
 // RUST GENERAL HOSPITAL: every medication order the delivery robot carries must arrive exactly
-// once. Deliver one twice and a patient could get a double dose. Check the log in one pass.
+// once. If one is delivered twice, a patient could get a double dose. The code checks the
+// delivery log in one pass.
 use std::collections::HashSet;
 
 fn double_delivery(order_ids: &[i32]) -> bool {

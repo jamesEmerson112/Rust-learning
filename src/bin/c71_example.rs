@@ -1,11 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-// Store whole structs: serialize to JSON bytes with serde (c49), insert, then
-// deserialize on the way back. anyhow (c38) unifies serde + sled errors so one
-// `?` handles both error types.
+// Store whole structs. Serialize each struct to JSON bytes with serde from c49, insert the
+// bytes, and deserialize them on the way back out. anyhow from c38 wraps both serde errors
+// and sled errors in one error type, so a single `?` handles both.
 //
-// RUST GENERAL HOSPITAL: a line of text isn't enough for stock control. Each drug is a
-// struct — name plus units on hand — encoded into the database and decoded back out intact.
+// RUST GENERAL HOSPITAL: a line of text is not enough for stock control. Each drug is a
+// struct holding its name and the units on hand. The struct is encoded into the database
+// and decoded back out intact.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Stock {
     drug: String,

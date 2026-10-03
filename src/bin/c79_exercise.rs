@@ -1,8 +1,9 @@
-// BUG: The radiology desk books a scan only if the patient isn't already on the schedule — but
-// the moment it goes to add a brand-new booking, the whole program PANICS with a BorrowMutError.
-// It's holding the schedule open for reading while another hand tries to write to it. The code
-// compiles; it blows up at runtime. Scope the read so the write can happen. Find and fix it.
-// (This drills c42-c44/c64: RefCell runtime borrows. The tests in tests/c79_tests.rs must go green.)
+// BUG: The radiology desk books a scan only if the patient is not already on the schedule.
+// But as soon as it tries to add a new booking, the whole program panics with a
+// BorrowMutError. The schedule is still open for reading when the code tries to write to it.
+// The code compiles, and the failure happens only at run time. Find the bug and fix it.
+// This drills RefCell runtime borrows from c42 to c44 and c64. The tests in
+// tests/c79_tests.rs must pass.
 use std::cell::RefCell;
 
 pub struct Schedule {

@@ -1,6 +1,6 @@
 // RUST GENERAL HOSPITAL — Pharmacy
-// The monthly stock take: list EVERYTHING in the pharmacy database.
-// If it isn't in the scan, it isn't on the shelf.
+// For the monthly stock take, list everything in the pharmacy database.
+// Anything missing from the scan counts as missing from the shelf.
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -10,9 +10,9 @@ pub struct Stock {
 }
 
 pub fn full_inventory(db: &sled::Db) -> anyhow::Result<Vec<Stock>> {
-    // TODO: Iterate db.iter() (each item is Result<(IVec, IVec)>). Deserialize
-    // each value with serde_json::from_slice into a Stock and collect them.
-    // Sort by drug name for a stable order.
+    // TODO: Loop over db.iter(), where each item is a Result<(IVec, IVec)>. Deserialize
+    // each value into a Stock with serde_json::from_slice, and collect them.
+    // Sort by drug name so the order is the same on every run.
     let _ = db;
     Ok(Vec::new())
 }

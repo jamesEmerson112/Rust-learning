@@ -1,11 +1,14 @@
-// Rc counts owners and frees at zero — but two Rcs pointing at each other form a cycle whose
-// count never reaches zero: a leak. Weak<T> is a non-owning reference that doesn't bump the
-// count, breaking the cycle. Coming from C: a manual refcount where a child's back-pointer to
-// its parent is deliberately "weak" so it can't keep the parent alive forever.
+// Rc counts the owners of a value and frees the value when the count reaches zero. If two
+// Rc values point at each other, they form a cycle. Each one keeps the other's count above
+// zero, so neither is ever freed, and the memory leaks. Weak<T> is a reference that does not
+// own the value and does not add to its strong count, so it breaks the cycle.
+// Coming from C: think of a manually reference-counted tree where a child's pointer back to
+// its parent does not increment the parent's count, so the child cannot keep the parent alive.
 //
-// RUST GENERAL HOSPITAL: a bed alarm watches its patient. If the alarm holds a STRONG grip,
-// discharging the patient never frees their record and the alarm keeps ringing for an empty
-// bed. The alarm must watch through a Weak: after discharge, upgrade() comes back None.
+// RUST GENERAL HOSPITAL: a bed alarm watches its patient. If the alarm holds a strong Rc to
+// the patient, discharging the patient never frees the record, and the alarm keeps ringing
+// for an empty bed. The alarm watches through a Weak instead, so after discharge, upgrade()
+// returns None.
 use std::cell::RefCell;
 use std::rc::{Rc, Weak};
 
@@ -15,7 +18,7 @@ struct Patient {
 }
 
 struct BedAlarm {
-    patient: RefCell<Option<Weak<Patient>>>, // weak grip — can't keep the patient alive
+    patient: RefCell<Option<Weak<Patient>>>, // a Weak does not keep the patient alive
 }
 
 fn main() {
@@ -28,7 +31,7 @@ fn main() {
     });
 
     *patient.alarm.borrow_mut() = Some(Rc::clone(&alarm));
-    *alarm.patient.borrow_mut() = Some(Rc::downgrade(&patient)); // downgrade, not clone
+    *alarm.patient.borrow_mut() = Some(Rc::downgrade(&patient)); // makes a Weak, not a clone
 
     println!(
         "[{}] strong = {}, weak = {}",
@@ -37,7 +40,7 @@ fn main() {
         Rc::weak_count(&patient)
     );
 
-    drop(patient); // discharge — the only strong owner is gone
+    drop(patient); // discharge the patient, which drops the only strong owner
 
     let watching = alarm.patient.borrow();
     match watching.as_ref().and_then(|w| w.upgrade()) {

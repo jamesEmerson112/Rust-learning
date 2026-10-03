@@ -1,10 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-// "Querying" without SQL: load the records, then process them with the iterator
-// combinators from c21-22/c45-46 — filter() selects rows, map() projects a field.
+// You can query the store without SQL. Load the records, then process them with the
+// iterator methods from c21-22 and c45-46. filter() selects the rows you want, and map()
+// pulls one field out of each row.
 //
-// RUST GENERAL HOSPITAL: the reorder list. Every drug running below the threshold
-// goes on tomorrow's order — no SQL engine, just iterators over the pharmacy's own store.
+// RUST GENERAL HOSPITAL: this is the reorder list. Every drug running below the threshold
+// goes on tomorrow's order. There is no SQL engine, only iterators over the pharmacy's own
+// store.
 #[derive(Debug, Serialize, Deserialize)]
 struct Stock {
     drug: String,

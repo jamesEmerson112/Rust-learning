@@ -1,6 +1,6 @@
 // RUST GENERAL HOSPITAL — Pharmacy
-// The reorder list: every drug running BELOW the threshold goes on tomorrow's order.
-// No SQL, just filter/map over the pharmacy's own store.
+// Build the reorder list. Every drug running below the threshold goes on tomorrow's order.
+// There is no SQL here, only filter and map over the pharmacy's own store.
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -10,16 +10,16 @@ pub struct Stock {
 }
 
 pub fn low_stock(db: &sled::Db, below: u32) -> anyhow::Result<Vec<Stock>> {
-    // TODO: Load every Stock (iterate db.iter(), from_slice each value), then
-    // keep only the drugs with FEWER than `below` units. Sort by drug name.
+    // TODO: Load every Stock by looping over db.iter() and calling from_slice on each
+    // value. Then keep only the drugs with fewer than `below` units, and sort by drug name.
     // A drug sitting exactly at the threshold is not low.
     let _ = (db, below);
     Ok(Vec::new())
 }
 
 pub fn low_stock_names(db: &sled::Db, below: u32) -> anyhow::Result<Vec<String>> {
-    // TODO: Same filter as low_stock, then .map(|s| s.drug).collect() to
-    // project just the drug names. Sort them.
+    // TODO: Use the same filter as low_stock, then .map(|s| s.drug).collect() to keep
+    // only the drug names. Sort them.
     let _ = (db, below);
     Ok(Vec::new())
 }

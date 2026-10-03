@@ -1,6 +1,6 @@
 // RUST GENERAL HOSPITAL — Safe Shutdown
-// Rule one for infusion pumps: when a pump session ends, the pump stops, automatically.
-// That's Drop — RAII cleanup at a deterministic point, LIFO order, every exit path.
+// When an IV pump session ends, the pump must stop. You'll put that stop in Drop, so it
+// runs by itself when the session goes out of scope, on every path out of the code.
 use std::cell::RefCell;
 
 pub struct PumpSession<'a> {
@@ -12,15 +12,15 @@ impl<'a> Drop for PumpSession<'a> {
     fn drop(&mut self) {
         // TODO: When a PumpSession ends (leaves scope), push
         // "<bed> pump stopped" into the shared log (self.log).
-        let _ = (&self.bed, &self.log);
+        self.log.borrow_mut().push(format!("{} pump stopped", self.bed))
     }
 }
 
 pub fn stop_order() -> Vec<String> {
     let log = RefCell::new(Vec::new());
     {
-        // Named bindings live until the end of this block.
-        // A bare `_` would drop *immediately* — keep the names.
+        // Named variables live until the end of this block.
+        // A plain `_` would drop the value immediately, so keep the names.
         let _bed1 = PumpSession { bed: "bed-1".to_string(), log: &log };
         let _bed2 = PumpSession { bed: "bed-2".to_string(), log: &log };
     } // stopped here in reverse order: bed-2 first, then bed-1
@@ -32,8 +32,9 @@ pub fn early_stop() -> Vec<String> {
     {
         let bed1 = PumpSession { bed: "bed-1".to_string(), log: &log };
         let _bed2 = PumpSession { bed: "bed-2".to_string(), log: &log };
-        // TODO: The line to bed-1 is blocked — stop that pump FIRST, before
-        // this scope ends. Hand it to std's drop(): drop(bed1)
+        // TODO: The IV line to bed-1 is blocked, so stop that pump before this
+        // scope ends. Pass it to the standard drop() function: drop(bed1)
+        drop(bed1);
     }
     log.into_inner()
 }

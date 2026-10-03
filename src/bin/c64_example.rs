@@ -1,11 +1,14 @@
-// RefCell also gives interior mutability, but for non-Copy data, by moving the borrow check from
-// compile time to RUNTIME: borrow()/borrow_mut() track active borrows and PANIC on a violation.
-// Coming from C: like a runtime assert that catches aliasing a mutable thing — the safety the
-// compiler usually proves statically, enforced dynamically instead. try_borrow_mut avoids the panic.
+// RefCell also gives interior mutability, and it works for data that is not Copy. It does
+// this by moving the borrow check from compile time to run time. borrow() and borrow_mut()
+// keep track of the active borrows, and they panic if a new borrow would break the rules.
+// try_borrow_mut() returns an Err instead of panicking.
+// Coming from C: this is like a runtime assert that fires when a mutable object is aliased.
+// The compiler usually proves this safety before the program runs. RefCell checks it while
+// the program runs instead.
 //
 // RUST GENERAL HOSPITAL: a patient's chart is shared by the whole care team. While a doctor
-// holds it open for review, a new note must be REFUSED gracefully — the charting system must
-// never crash on the ward.
+// holds it open for review, a request to add a note should get an error back instead of
+// crashing the charting system. The charting system on the ward must never crash.
 use std::cell::RefCell;
 
 struct Chart {
@@ -30,12 +33,12 @@ fn main() {
 
     {
         let review = chart.notes.borrow(); // a doctor holds the chart open
-        // A borrow_mut() *while `review` is alive* would PANIC at runtime:
+        // Calling borrow_mut() while `review` is still alive would panic at run time:
         //   chart.notes.borrow_mut(); // thread panics: already borrowed
         // try_borrow_mut() returns Err instead of panicking:
         println!("[chart] note during review ok? {}", chart.notes.try_borrow_mut().is_ok()); // false
         println!("[chart] review sees {} notes", review.len());
-    } // `review` released here
+    } // the borrow held by `review` is released here
 
     println!("[chart] note after review ok? {}", chart.notes.try_borrow_mut().is_ok()); // true
     chart.add_note("Paracetamol 500 mg given at 09:00");

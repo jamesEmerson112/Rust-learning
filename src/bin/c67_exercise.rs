@@ -1,10 +1,10 @@
 // RUST GENERAL HOSPITAL — Night Shift — ★ BUG HUNT ★
 //
-// BUG: Ten nurses each gave 100 ml and every one of them charted it. The fluid-balance
-// total reads 0 ml. The entries vanish somewhere between the lock and the chart.
-// (The compiler is even waving a clue at you: `cargo build` warns about this file.)
+// BUG: Ten nurses each gave 100 ml, and every one of them charted it. The fluid-balance
+// total still reads 0 ml, so all ten entries are lost.
+// The compiler also gives you a clue, because `cargo build` prints a warning for this file.
 //
-// Find it, fix it: cargo test --test c67_tests
+// Find the bug and fix it, then run: cargo test --test c67_tests
 use std::sync::{Arc, Mutex};
 use std::thread;
 

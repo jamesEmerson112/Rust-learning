@@ -1,10 +1,14 @@
-// Interior mutability: Cell<T> lets you mutate a value through a SHARED &reference (normally
-// forbidden), for Copy types — get/set/replace/take, no borrows tracked, single-threaded only.
-// Coming from C: a small mutable box you can poke even when the struct around it is otherwise
-// "const" — but the type system keeps it single-owner, so there are no aliasing surprises.
+// Interior mutability means changing a value through a shared & reference, which Rust
+// normally forbids. Cell<T> provides it for Copy types. You move values in and out with get,
+// set, replace, and take, and you never hold a reference to the inside, so there are no
+// borrows to track. Cell works only within a single thread.
+// Coming from C: think of a small mutable field that you can change even when the struct
+// around it is const. The type system still rules out aliasing surprises, because Cell never
+// gives out a pointer to its contents.
 //
-// RUST GENERAL HOSPITAL: the crash-cart defibrillator is shared kit. Everyone on the team
-// holds it by &shared reference, but its charge still has to change. That's Cell.
+// RUST GENERAL HOSPITAL: the crash-cart defibrillator is shared equipment. Everyone on the
+// team holds it by shared reference, but its charge still has to change. Cell makes that
+// possible.
 use std::cell::Cell;
 
 struct Defibrillator {
@@ -19,10 +23,10 @@ impl Defibrillator {
         self.charge.get()
     }
     fn recharge(&self, fresh: u32) -> u32 {
-        self.charge.replace(fresh) // set the new charge, return the previous one
+        self.charge.replace(fresh) // set the new charge and return the previous one
     }
     fn shock(&self) -> u32 {
-        self.charge.take() // deliver ALL the charge, leave the default (0)
+        self.charge.take() // deliver all of the charge and leave the default value, 0
     }
 }
 

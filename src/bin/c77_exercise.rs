@@ -1,8 +1,7 @@
-// BUG: The oxygen report is supposed to total the flow going to the CRITICAL beds, but the
-// number that comes out is the stable patients' total instead. The sickest patients vanish
-// from the report. Somewhere the filter is keeping exactly the wrong beds. The code compiles
-// and runs. Find and fix it.
-// (This drills c21-c24: filter + fold. The tests in tests/c77_tests.rs must go green.)
+// BUG: The oxygen report is supposed to total the flow going to the critical beds, but the
+// number that comes out is the stable patients' total instead. The sickest patients are
+// missing from the report. The code compiles and runs. Find the bug and fix it.
+// This drills c21 to c24. The tests in tests/c77_tests.rs must pass.
 pub fn critical_oxygen_total(beds: &[(&str, u32)]) -> u32 {
     beds.iter()
         .filter(|(status, _lpm)| *status != "Critical")

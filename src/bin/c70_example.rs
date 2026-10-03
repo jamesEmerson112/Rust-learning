@@ -1,8 +1,8 @@
-// Read values back out of sled by key. get() returns Option<IVec> (a smart
-// pointer to bytes) — None when the key is absent, just like HashMap::get.
+// Read values back out of sled by key. get() returns an Option<IVec>, where IVec is a smart
+// pointer to bytes. It returns None when the key is absent, just like HashMap::get.
 //
-// RUST GENERAL HOSPITAL: a nurse looks a drug up before giving it. A missing key means
-// the pharmacy doesn't stock that drug — an answer, not a crash.
+// RUST GENERAL HOSPITAL: a nurse looks a drug up before giving it. A missing key means the
+// pharmacy does not stock that drug. The lookup returns None in that case instead of crashing.
 fn fetch(db: &sled::Db, key: &str) -> sled::Result<Option<String>> {
     Ok(db.get(key)?.map(|v| String::from_utf8_lossy(&v).to_string()))
 }

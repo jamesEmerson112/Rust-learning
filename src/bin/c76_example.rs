@@ -1,8 +1,10 @@
-// Bug Hunt drill: DON'T swallow parse errors. A bad row must surface as Err, not silently
-// become 0. `?` on map_err propagates the failure so a corrupt fluid chart refuses to lie
-// about the day's intake instead of quietly undercounting it.
-// Coming from C: unwrap_or(0) is `atoi(s)` — it returns 0 for garbage and you never know.
-// parse()?.map_err is `strtol` with the errno actually checked and the caller told.
+// Bug Hunt drill: do not hide parse errors. A bad row should come back as an Err instead of
+// silently turning into 0. map_err converts the parse error into the function's error type,
+// and `?` passes it back to the caller. A corrupt fluid chart then reports an error instead
+// of quietly undercounting the day's intake.
+// Coming from C: unwrap_or(0) is like `atoi(s)`, which returns 0 for invalid input without
+// telling you. parse() with map_err and `?` is like `strtol` where you check errno and report
+// the failure to the caller.
 pub fn fluid_intake(rows: &[&str]) -> Result<u32, String> {
     let mut total = 0;
     for row in rows {

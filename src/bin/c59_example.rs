@@ -2,8 +2,9 @@
 // HashMap, then look for its complement. Coming from C: a hash table replacing the O(n^2)
 // double loop.
 //
-// RUST GENERAL HOSPITAL: the delivery robot has charge left for exactly 9 hallway units.
-// Find the two legs of its route that use that charge up exactly, and keep their indices.
+// RUST GENERAL HOSPITAL: the delivery robot has 9 units of battery left. Each number in
+// `legs` is the battery cost of one hallway. Find two hallways whose costs add up to
+// exactly 9, and return their positions in the list.
 use std::collections::HashMap;
 
 fn trip_pair(legs: &[i32], charge: i32) -> Option<(usize, usize)> {

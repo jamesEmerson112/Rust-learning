@@ -1,10 +1,11 @@
 // RUST GENERAL HOSPITAL — Pharmacy
-// A nurse looks a drug up before giving it. Pull the record back out by key —
-// a drug the pharmacy doesn't stock comes back as None, not a crash.
+// A nurse looks a drug up before giving it. Read the record back out by its key. A drug the
+// pharmacy does not stock should come back as None instead of crashing the program.
 
 pub fn fetch(db: &sled::Db, key: &str) -> sled::Result<Option<String>> {
-    // TODO: db.get(key) returns Result<Option<IVec>>. Map the bytes to a String
-    // (e.g. String::from_utf8_lossy(&v).to_string()). Return None when absent.
+    // TODO: db.get(key) returns Result<Option<IVec>>. Convert the bytes to a String,
+    // for example with String::from_utf8_lossy(&v).to_string(). Return None when the
+    // key is absent.
     let _ = (db, key);
     Ok(None)
 }

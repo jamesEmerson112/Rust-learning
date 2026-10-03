@@ -1,8 +1,10 @@
-// Bug Hunt drill: iterator predicate + fold accumulator. filter() KEEPS the items whose
-// predicate is true, and fold() folds them into an accumulator starting from a correct seed.
-// Get the predicate direction right (== "Critical", not !=) and start the sum at 0.
-// Coming from C: this is the `for (i=0; i<n; i++) if (status[i]==CRITICAL) sum += flow[i];`
-// loop, but the `==` typo becomes a `!=` that quietly sums the WRONG half of the ward.
+// Bug Hunt drill: an iterator filter followed by fold. filter() keeps the items for which the
+// test function, called the predicate, returns true. fold() then combines those items into
+// one running value, starting from an initial value you choose. Here the predicate must be
+// == "Critical", not !=, and the sum must start at 0.
+// Coming from C: this is the same as
+// `for (i=0; i<n; i++) if (status[i]==CRITICAL) sum += flow[i];`. A typo that turns `==`
+// into `!=` makes the loop quietly sum the wrong half of the ward.
 pub fn critical_oxygen_total(beds: &[(&str, u32)]) -> u32 {
     beds.iter()
         .filter(|(status, _lpm)| *status == "Critical")
