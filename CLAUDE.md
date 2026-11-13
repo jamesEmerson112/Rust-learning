@@ -46,7 +46,7 @@ All code sharing goes through `#[path]`, never a library crate:
 
 The async lessons (c50–c52, c80) use `#[tokio::test]`. The sled lessons (c69–c74) test against `sled::Config::new().temporary(true)`, while their examples write `*_sled_db` directories into the working directory, which are gitignored.
 
-`benchmarks/`, `python_exercises/`, `c02_example_backup.rs`, and `src/main.rs` are side experiments outside the lesson pipeline. Nothing reads them.
+`benchmarks/`, `c02_example_backup.rs`, and `src/main.rs` are side experiments outside the lesson pipeline. Nothing reads them.
 
 ## Tracker and dashboard
 
