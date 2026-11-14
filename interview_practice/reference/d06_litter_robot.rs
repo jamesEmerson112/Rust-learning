@@ -60,11 +60,29 @@ pub enum LitterError {
 /// - `drawer_capacity`: the clean cycles the drawer holds before it is full.
 /// - `visits`: the cat weight in grams recorded at the start of each visit.
 pub struct LitterBox {
-    state: State,
-    wait_minutes: u32,
-    drawer_level: u32,
+    state:           State,
+    wait_minutes:    u32,
+    drawer_level:    u32,
     drawer_capacity: u32,
-    visits: Vec<u32>,
+    visits:          Vec<u32>,
+}
+
+/// Description: Runs one cat visit through the countdown and the clean cycle, printing the state
+/// each minute.
+/// Inputs: none
+/// Outputs: none
+fn main() {
+    let mut litter_box = LitterBox::new(3, 10);
+    litter_box.sense_weight(4_500);
+    litter_box.sense_weight(0);
+
+    for minute in 1..=5 {
+        litter_box.tick();
+        // Compressed:
+        // println!("minute {minute}: {:?}", litter_box.state());
+        let state = litter_box.state();
+        println!("minute {minute}: {state:?}");
+    }
 }
 
 impl LitterBox {
@@ -76,41 +94,14 @@ impl LitterBox {
     /// Constraints: panics when `drawer_capacity` is zero.
     pub fn new(wait_minutes: u32, drawer_capacity: u32) -> Self {
         assert!(drawer_capacity > 0, "the drawer must hold at least one cycle");
+
         LitterBox {
-            state: State::Ready,
+            state:        State::Ready,
             wait_minutes,
             drawer_level: 0,
             drawer_capacity,
-            visits: Vec::new(),
+            visits:       Vec::new(),
         }
-    }
-
-    /// Description: Returns what the box is doing now.
-    /// Inputs: none
-    /// Outputs: the current state.
-    pub fn state(&self) -> State {
-        self.state
-    }
-
-    /// Description: Returns how many clean cycles have run since the drawer was emptied.
-    /// Inputs: none
-    /// Outputs: the drawer level in cycles.
-    pub fn drawer_level(&self) -> u32 {
-        self.drawer_level
-    }
-
-    /// Description: Reports whether the drawer needs emptying.
-    /// Inputs: none
-    /// Outputs: `true` once the drawer holds `drawer_capacity` cycles.
-    pub fn drawer_full(&self) -> bool {
-        self.drawer_level >= self.drawer_capacity
-    }
-
-    /// Description: Returns the visit log.
-    /// Inputs: none
-    /// Outputs: the cat weight in grams recorded at each visit, oldest first.
-    pub fn visits(&self) -> &[u32] {
-        &self.visits
     }
 
     /// Description: Feeds one weight-sensor reading. A cat stepping in records a visit, stops any
@@ -122,7 +113,7 @@ impl LitterBox {
     /// Constraints: readings below `CAT_GRAMS` count as an empty box. Repeated readings during one
     /// visit record that visit once.
     pub fn sense_weight(&mut self, grams: u32) {
-        let cat = grams >= CAT_GRAMS;
+        let cat    = grams >= CAT_GRAMS;
         self.state = match (self.state, cat) {
             (State::Ready | State::Waiting { .. } | State::DrawerFull, true) => {
                 self.visits.push(grams);
@@ -146,11 +137,17 @@ impl LitterBox {
     pub fn tick(&mut self) {
         self.state = match self.state {
             State::Waiting { minutes_left } if minutes_left > 1 => {
-                State::Waiting { minutes_left: minutes_left - 1 }
+                // Compressed:
+                // State::Waiting { minutes_left: minutes_left - 1 }
+                let minutes_after_tick = minutes_left - 1;
+                State::Waiting { minutes_left: minutes_after_tick }
             }
             State::Waiting { .. } => State::Cleaning { minutes_left: CYCLE_MINUTES },
             State::Cleaning { minutes_left } if minutes_left > 1 => {
-                State::Cleaning { minutes_left: minutes_left - 1 }
+                // Compressed:
+                // State::Cleaning { minutes_left: minutes_left - 1 }
+                let minutes_after_tick = minutes_left - 1;
+                State::Cleaning { minutes_left: minutes_after_tick }
             }
             State::Cleaning { .. } => {
                 self.drawer_level += 1;
@@ -189,18 +186,32 @@ impl LitterBox {
             self.state = State::Ready;
         }
     }
-}
 
-/// Description: Runs one cat visit through the countdown and the clean cycle, printing the state
-/// each minute.
-/// Inputs: none
-/// Outputs: none
-fn main() {
-    let mut litter_box = LitterBox::new(3, 10);
-    litter_box.sense_weight(4_500);
-    litter_box.sense_weight(0);
-    for minute in 1..=5 {
-        litter_box.tick();
-        println!("minute {minute}: {:?}", litter_box.state());
+    /// Description: Reports whether the drawer needs emptying.
+    /// Inputs: none
+    /// Outputs: `true` once the drawer holds `drawer_capacity` cycles.
+    pub fn drawer_full(&self) -> bool {
+        self.drawer_level >= self.drawer_capacity
+    }
+
+    /// Description: Returns what the box is doing now.
+    /// Inputs: none
+    /// Outputs: the current state.
+    pub fn state(&self) -> State {
+        self.state
+    }
+
+    /// Description: Returns how many clean cycles have run since the drawer was emptied.
+    /// Inputs: none
+    /// Outputs: the drawer level in cycles.
+    pub fn drawer_level(&self) -> u32 {
+        self.drawer_level
+    }
+
+    /// Description: Returns the visit log.
+    /// Inputs: none
+    /// Outputs: the cat weight in grams recorded at each visit, oldest first.
+    pub fn visits(&self) -> &[u32] {
+        &self.visits
     }
 }

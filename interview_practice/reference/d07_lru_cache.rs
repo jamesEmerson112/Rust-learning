@@ -17,10 +17,10 @@ use std::collections::HashMap;
 /// - `prev`: the slot of the next more recent entry, or `None` for the most recent entry.
 /// - `next`: the slot of the next less recent entry, or `None` for the least recent entry.
 struct Node {
-    key: u32,
+    key:   u32,
     value: u32,
-    prev: Option<usize>,
-    next: Option<usize>,
+    prev:  Option<usize>,
+    next:  Option<usize>,
 }
 
 /// Description: A least-recently-used cache. A hash map finds an entry's slot in O(1), and a
@@ -34,10 +34,31 @@ struct Node {
 /// - `tail`: the slot of the least recent entry.
 pub struct TileCache {
     capacity: usize,
-    slots: HashMap<u32, usize>,
-    nodes: Vec<Node>,
-    head: Option<usize>,
-    tail: Option<usize>,
+    slots:    HashMap<u32, usize>,
+    nodes:    Vec<Node>,
+    head:     Option<usize>,
+    tail:     Option<usize>,
+}
+
+/// Description: Fills a two-tile cache, touches the older tile and shows which tile is evicted.
+/// Inputs: none
+/// Outputs: none
+fn main() {
+    let mut cache = TileCache::new(2);
+    cache.put(1, 10);
+    cache.put(2, 20);
+    cache.get(1);
+
+    // Compressed:
+    // println!("putting tile 3 evicts {:?}", cache.put(3, 30));
+    let evicted_tile = cache.put(3, 30);
+    println!("putting tile 3 evicts {evicted_tile:?}");
+
+    // Compressed:
+    // println!("tile 2 is now {:?}, tile 1 is {:?}", cache.get(2), cache.get(1));
+    let tile_2_cost = cache.get(2);
+    let tile_1_cost = cache.get(1);
+    println!("tile 2 is now {tile_2_cost:?}, tile 1 is {tile_1_cost:?}");
 }
 
 impl TileCache {
@@ -48,38 +69,14 @@ impl TileCache {
     /// Constraints: panics when `capacity` is zero.
     pub fn new(capacity: usize) -> Self {
         assert!(capacity > 0, "a cache must hold at least one tile");
+
         TileCache {
             capacity,
             slots: HashMap::new(),
             nodes: Vec::with_capacity(capacity),
-            head: None,
-            tail: None,
+            head:  None,
+            tail:  None,
         }
-    }
-
-    /// Description: Returns how many tiles are cached.
-    /// Inputs: none
-    /// Outputs: the number of entries.
-    pub fn len(&self) -> usize {
-        self.slots.len()
-    }
-
-    /// Description: Reports whether the cache holds no tiles.
-    /// Inputs: none
-    /// Outputs: `true` when the cache is empty.
-    pub fn is_empty(&self) -> bool {
-        self.slots.is_empty()
-    }
-
-    /// Description: Reads a tile and marks it as the most recently used.
-    /// Inputs:
-    /// - `key`: the tile id.
-    /// Outputs: the tile's traversal cost, or `None` when the tile is not cached.
-    /// Constraints: O(1) on average.
-    pub fn get(&mut self, key: u32) -> Option<u32> {
-        let slot = *self.slots.get(&key)?;
-        self.move_to_front(slot);
-        Some(self.nodes[slot].value)
     }
 
     /// Description: Stores a tile as the most recently used. A tile that is already cached gets
@@ -95,23 +92,61 @@ impl TileCache {
             self.move_to_front(slot);
             return None;
         }
+
         let mut evicted = None;
-        let slot = if self.nodes.len() < self.capacity {
-            self.nodes.push(Node { key, value, prev: None, next: None });
+        let slot        = if self.nodes.len() < self.capacity {
+            // Compressed:
+            // self.nodes.push(Node { key, value, prev: None, next: None });
+            let node = Node {
+                key,
+                value,
+                prev: None,
+                next: None,
+            };
+            self.nodes.push(node);
             self.nodes.len() - 1
         } else {
             let slot = self.tail.expect("a full cache has a least recent entry");
             self.unlink(slot);
+
             let old_key = self.nodes[slot].key;
             self.slots.remove(&old_key);
             evicted = Some(old_key);
-            self.nodes[slot].key = key;
+
+            self.nodes[slot].key   = key;
             self.nodes[slot].value = value;
             slot
         };
+
         self.push_front(slot);
         self.slots.insert(key, slot);
         evicted
+    }
+
+    /// Description: Reads a tile and marks it as the most recently used.
+    /// Inputs:
+    /// - `key`: the tile id.
+    /// Outputs: the tile's traversal cost, or `None` when the tile is not cached.
+    /// Constraints: O(1) on average.
+    pub fn get(&mut self, key: u32) -> Option<u32> {
+        // Compressed:
+        // let slot = *self.slots.get(&key)?;
+        let cached_slot = self.slots.get(&key)?;
+        let slot        = *cached_slot;
+
+        self.move_to_front(slot);
+        Some(self.nodes[slot].value)
+    }
+
+    /// Description: Makes a cached slot the most recent entry.
+    /// Inputs:
+    /// - `slot`: the slot that was just used.
+    /// Outputs: none
+    fn move_to_front(&mut self, slot: usize) {
+        if self.head != Some(slot) {
+            self.unlink(slot);
+            self.push_front(slot);
+        }
     }
 
     /// Description: Removes a slot from the recency list and joins its neighbours together.
@@ -121,6 +156,7 @@ impl TileCache {
     fn unlink(&mut self, slot: usize) {
         let prev = self.nodes[slot].prev;
         let next = self.nodes[slot].next;
+
         match prev {
             Some(p) => self.nodes[p].next = next,
             None => self.head = next,
@@ -138,35 +174,28 @@ impl TileCache {
     fn push_front(&mut self, slot: usize) {
         self.nodes[slot].prev = None;
         self.nodes[slot].next = self.head;
+
         if let Some(old_head) = self.head {
             self.nodes[old_head].prev = Some(slot);
         }
+
         self.head = Some(slot);
         if self.tail.is_none() {
             self.tail = Some(slot);
         }
     }
 
-    /// Description: Makes a cached slot the most recent entry.
-    /// Inputs:
-    /// - `slot`: the slot that was just used.
-    /// Outputs: none
-    fn move_to_front(&mut self, slot: usize) {
-        if self.head != Some(slot) {
-            self.unlink(slot);
-            self.push_front(slot);
-        }
+    /// Description: Returns how many tiles are cached.
+    /// Inputs: none
+    /// Outputs: the number of entries.
+    pub fn len(&self) -> usize {
+        self.slots.len()
     }
-}
 
-/// Description: Fills a two-tile cache, touches the older tile and shows which tile is evicted.
-/// Inputs: none
-/// Outputs: none
-fn main() {
-    let mut cache = TileCache::new(2);
-    cache.put(1, 10);
-    cache.put(2, 20);
-    cache.get(1);
-    println!("putting tile 3 evicts {:?}", cache.put(3, 30));
-    println!("tile 2 is now {:?}, tile 1 is {:?}", cache.get(2), cache.get(1));
+    /// Description: Reports whether the cache holds no tiles.
+    /// Inputs: none
+    /// Outputs: `true` when the cache is empty.
+    pub fn is_empty(&self) -> bool {
+        self.slots.is_empty()
+    }
 }

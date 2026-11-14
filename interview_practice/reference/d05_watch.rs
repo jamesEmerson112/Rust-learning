@@ -51,25 +51,28 @@ pub enum WatchError {
 /// - `running`: whether the stopwatch is counting.
 #[derive(Debug, Default)]
 pub struct Watch {
-    seconds: u32,
-    format: HourFormat,
-    alarm: Option<u32>,
+    seconds:   u32,
+    format:    HourFormat,
+    alarm:     Option<u32>,
     stopwatch: u32,
-    running: bool,
+    running:   bool,
 }
 
-/// Description: Converts a time of day to seconds since midnight.
-/// Inputs:
-/// - `hour`: 0 to 23.
-/// - `minute`: 0 to 59.
-/// - `second`: 0 to 59.
-/// Outputs: the seconds since midnight, or `InvalidTime` when any part is out of range.
-fn to_seconds(hour: u32, minute: u32, second: u32) -> Result<u32, WatchError> {
-    if hour < 24 && minute < 60 && second < 60 {
-        Ok(hour * 3600 + minute * 60 + second)
-    } else {
-        Err(WatchError::InvalidTime { hour, minute, second })
+/// Description: Ticks past a 7:00 alarm, printing each second, then shows the 12-hour face.
+/// Inputs: none
+/// Outputs: none
+fn main() {
+    let mut watch = Watch::new();
+    watch.set_time(6, 59, 58).unwrap();
+    watch.set_alarm(7, 0).unwrap();
+
+    for _ in 0..3 {
+        let ringing = watch.tick();
+        println!("{watch} ringing={ringing}");
     }
+
+    watch.set_format(HourFormat::H12);
+    println!("{watch}");
 }
 
 impl Watch {
@@ -93,11 +96,35 @@ impl Watch {
         Ok(())
     }
 
-    /// Description: Returns the clock reading.
+    /// Description: Sets the alarm to ring at a time of day.
+    /// Inputs:
+    /// - `hour`: 0 to 23.
+    /// - `minute`: 0 to 59.
+    /// Outputs: `Ok(())` once set, or `InvalidTime`.
+    pub fn set_alarm(&mut self, hour: u32, minute: u32) -> Result<(), WatchError> {
+        // Compressed:
+        // self.alarm = Some(to_seconds(hour, minute, 0)?);
+        let alarm_seconds = to_seconds(hour, minute, 0)?;
+        self.alarm        = Some(alarm_seconds);
+        Ok(())
+    }
+
+    /// Description: Advances the clock by one second, and advances the stopwatch when it is
+    /// running.
     /// Inputs: none
-    /// Outputs: the hour, minute and second.
-    pub fn time(&self) -> (u32, u32, u32) {
-        (self.seconds / 3600, self.seconds / 60 % 60, self.seconds % 60)
+    /// Outputs: `true` when this tick reaches the alarm time, otherwise `false`.
+    /// Constraints: the clock wraps from 23:59:59 to 00:00:00.
+    pub fn tick(&mut self) -> bool {
+        // Compressed:
+        // self.seconds = (self.seconds + 1) % SECONDS_PER_DAY;
+        let one_second_later = self.seconds + 1;
+        self.seconds         = one_second_later % SECONDS_PER_DAY;
+
+        if self.running {
+            self.stopwatch += 1;
+        }
+
+        self.alarm == Some(self.seconds)
     }
 
     /// Description: Chooses how the clock face shows the hour.
@@ -108,34 +135,11 @@ impl Watch {
         self.format = format;
     }
 
-    /// Description: Sets the alarm to ring at a time of day.
-    /// Inputs:
-    /// - `hour`: 0 to 23.
-    /// - `minute`: 0 to 59.
-    /// Outputs: `Ok(())` once set, or `InvalidTime`.
-    pub fn set_alarm(&mut self, hour: u32, minute: u32) -> Result<(), WatchError> {
-        self.alarm = Some(to_seconds(hour, minute, 0)?);
-        Ok(())
-    }
-
     /// Description: Turns the alarm off.
     /// Inputs: none
     /// Outputs: none
     pub fn clear_alarm(&mut self) {
         self.alarm = None;
-    }
-
-    /// Description: Advances the clock by one second, and advances the stopwatch when it is
-    /// running.
-    /// Inputs: none
-    /// Outputs: `true` when this tick reaches the alarm time, otherwise `false`.
-    /// Constraints: the clock wraps from 23:59:59 to 00:00:00.
-    pub fn tick(&mut self) -> bool {
-        self.seconds = (self.seconds + 1) % SECONDS_PER_DAY;
-        if self.running {
-            self.stopwatch += 1;
-        }
-        self.alarm == Some(self.seconds)
     }
 
     /// Description: Starts the stopwatch counting.
@@ -159,6 +163,19 @@ impl Watch {
         self.stopwatch = 0;
     }
 
+    /// Description: Returns the clock reading.
+    /// Inputs: none
+    /// Outputs: the hour, minute and second.
+    pub fn time(&self) -> (u32, u32, u32) {
+        // Compressed:
+        // (self.seconds / 3600, self.seconds / 60 % 60, self.seconds % 60)
+        let hour                   = self.seconds / 3600;
+        let minutes_since_midnight = self.seconds / 60;
+        let minute                 = minutes_since_midnight % 60;
+        let second                 = self.seconds % 60;
+        (hour, minute, second)
+    }
+
     /// Description: Returns the stopwatch reading.
     /// Inputs: none
     /// Outputs: the counted seconds.
@@ -174,11 +191,12 @@ impl fmt::Display for Watch {
     /// Outputs: the formatter's result.
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let (hour, minute, second) = self.time();
+
         match self.format {
             HourFormat::H24 => write!(f, "{hour:02}:{minute:02}:{second:02}"),
             HourFormat::H12 => {
                 let suffix = if hour < 12 { "AM" } else { "PM" };
-                let hour = match hour % 12 {
+                let hour   = match hour % 12 {
                     0 => 12,
                     h => h,
                 };
@@ -188,17 +206,31 @@ impl fmt::Display for Watch {
     }
 }
 
-/// Description: Ticks past a 7:00 alarm, printing each second, then shows the 12-hour face.
-/// Inputs: none
-/// Outputs: none
-fn main() {
-    let mut watch = Watch::new();
-    watch.set_time(6, 59, 58).unwrap();
-    watch.set_alarm(7, 0).unwrap();
-    for _ in 0..3 {
-        let ringing = watch.tick();
-        println!("{watch} ringing={ringing}");
+/// Description: Converts a time of day to seconds since midnight.
+/// Inputs:
+/// - `hour`: 0 to 23.
+/// - `minute`: 0 to 59.
+/// - `second`: 0 to 59.
+/// Outputs: the seconds since midnight, or `InvalidTime` when any part is out of range.
+fn to_seconds(hour: u32, minute: u32, second: u32) -> Result<u32, WatchError> {
+    // Compressed:
+    // if hour < 24 && minute < 60 && second < 60 {
+    //     Ok(hour * 3600 + minute * 60 + second)
+    // } else {
+    //     Err(WatchError::InvalidTime { hour, minute, second })
+    // }
+    let in_range = hour < 24 && minute < 60 && second < 60;
+    if in_range {
+        let hour_seconds           = hour * 3600;
+        let minute_seconds         = minute * 60;
+        let seconds_since_midnight = hour_seconds + minute_seconds + second;
+        Ok(seconds_since_midnight)
+    } else {
+        let error = WatchError::InvalidTime {
+            hour,
+            minute,
+            second,
+        };
+        Err(error)
     }
-    watch.set_format(HourFormat::H12);
-    println!("{watch}");
 }

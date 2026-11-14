@@ -3,6 +3,15 @@
 //! APIs:
 //! - `compact_scan`: move the zero readings to the end and keep the other readings in order
 
+/// Description: Compacts a short scan with three dropouts and prints the result.
+/// Inputs: none
+/// Outputs: none
+fn main() {
+    let mut scan = [0, 1_200, 0, 0, 850, 3_100];
+    let valid    = compact_scan(&mut scan);
+    println!("{valid} valid readings: {scan:?}");
+}
+
 /// Description: Moves every zero reading to the end of the scan in place, and keeps the valid
 /// readings in their original order. This is the Move Zeroes problem.
 /// Inputs:
@@ -19,13 +28,4 @@ pub fn compact_scan(scan: &mut [u16]) -> usize {
         }
     }
     write
-}
-
-/// Description: Compacts a short scan with three dropouts and prints the result.
-/// Inputs: none
-/// Outputs: none
-fn main() {
-    let mut scan = [0, 1_200, 0, 0, 850, 3_100];
-    let valid = compact_scan(&mut scan);
-    println!("{valid} valid readings: {scan:?}");
 }

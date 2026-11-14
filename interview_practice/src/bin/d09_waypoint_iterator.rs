@@ -18,8 +18,8 @@ use std::cmp::Ordering;
 /// - `right`: the subtree of farther waypoints.
 struct Node {
     meters: u32,
-    left: Option<Box<Node>>,
-    right: Option<Box<Node>>,
+    left:   Option<Box<Node>>,
+    right:  Option<Box<Node>>,
 }
 
 /// Description: A binary search tree of waypoint distances with no duplicates.
@@ -28,6 +28,28 @@ struct Node {
 #[derive(Default)]
 pub struct Waypoints {
     root: Option<Box<Node>>,
+}
+
+/// Description: Walks a tree in increasing order with an explicit stack instead of recursion.
+/// Fields:
+/// - `stack`: the nodes still to yield, with the next one on top. Each node's right subtree is
+///   explored only after the node is yielded.
+/// Constraints: the stack holds at most one node per tree level, so memory is O(height).
+pub struct InOrder<'a> {
+    stack: Vec<&'a Node>,
+}
+
+/// Description: Inserts waypoints out of order and prints them in route order.
+/// Inputs: none
+/// Outputs: none
+fn main() {
+    let mut route = Waypoints::new();
+    for meters in [500, 120, 900, 60, 300] {
+        route.insert(meters);
+    }
+
+    let in_order: Vec<u32> = route.iter().collect();
+    println!("waypoints in route order: {in_order:?}");
 }
 
 impl Waypoints {
@@ -53,8 +75,29 @@ impl Waypoints {
                 Ordering::Equal => return false,
             };
         }
-        *link = Some(Box::new(Node { meters, left: None, right: None }));
+
+        // Compressed:
+        // *link = Some(Box::new(Node { meters, left: None, right: None }));
+        let leaf = Node {
+            meters,
+            left:  None,
+            right: None,
+        };
+        let boxed_leaf = Box::new(leaf);
+        *link          = Some(boxed_leaf);
         true
+    }
+
+    /// Description: Starts an in-order walk of the waypoints.
+    /// Inputs: none
+    /// Outputs: an iterator that yields the distances from nearest to farthest.
+    pub fn iter(&self) -> InOrder<'_> {
+        let mut walk = InOrder { stack: Vec::new() };
+        // Compressed:
+        // walk.push_left(self.root.as_deref());
+        let root = self.root.as_deref();
+        walk.push_left(root);
+        walk
     }
 
     /// Description: Checks whether a waypoint is in the tree.
@@ -73,24 +116,6 @@ impl Waypoints {
         }
         false
     }
-
-    /// Description: Starts an in-order walk of the waypoints.
-    /// Inputs: none
-    /// Outputs: an iterator that yields the distances from nearest to farthest.
-    pub fn iter(&self) -> InOrder<'_> {
-        let mut walk = InOrder { stack: Vec::new() };
-        walk.push_left(self.root.as_deref());
-        walk
-    }
-}
-
-/// Description: Walks a tree in increasing order with an explicit stack instead of recursion.
-/// Fields:
-/// - `stack`: the nodes still to yield, with the next one on top. Each node's right subtree is
-///   explored only after the node is yielded.
-/// Constraints: the stack holds at most one node per tree level, so memory is O(height).
-pub struct InOrder<'a> {
-    stack: Vec<&'a Node>,
 }
 
 impl<'a> InOrder<'a> {
@@ -123,19 +148,11 @@ impl<'a> Iterator for InOrder<'a> {
     /// Constraints: O(1) amortized, because each node is pushed and popped once.
     fn next(&mut self) -> Option<u32> {
         let node = self.stack.pop()?;
-        self.push_left(node.right.as_deref());
+
+        // Compressed:
+        // self.push_left(node.right.as_deref());
+        let right_subtree = node.right.as_deref();
+        self.push_left(right_subtree);
         Some(node.meters)
     }
-}
-
-/// Description: Inserts waypoints out of order and prints them in route order.
-/// Inputs: none
-/// Outputs: none
-fn main() {
-    let mut route = Waypoints::new();
-    for meters in [500, 120, 900, 60, 300] {
-        route.insert(meters);
-    }
-    let in_order: Vec<u32> = route.iter().collect();
-    println!("waypoints in route order: {in_order:?}");
 }

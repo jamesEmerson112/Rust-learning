@@ -51,12 +51,12 @@ pub enum PayError {
 /// - `salon_cents`: what the salon keeps after the commission and the card fee.
 #[derive(Debug, PartialEq)]
 pub struct Receipt {
-    pub subtotal_cents: u32,
-    pub tip_cents: u32,
-    pub charged_cents: u32,
-    pub card_fee_cents: u32,
+    pub subtotal_cents:   u32,
+    pub tip_cents:        u32,
+    pub charged_cents:    u32,
+    pub card_fee_cents:   u32,
     pub technician_cents: u32,
-    pub salon_cents: i64,
+    pub salon_cents:      i64,
 }
 
 /// Description: The salon's menu, staff and running balances for the day.
@@ -69,10 +69,35 @@ pub struct Receipt {
 /// bigger than the salon's share.
 #[derive(Default)]
 pub struct Salon {
-    menu: HashMap<String, u32>,
-    commission: HashMap<String, u32>,
-    earnings: HashMap<String, u32>,
+    menu:            HashMap<String, u32>,
+    commission:      HashMap<String, u32>,
+    earnings:        HashMap<String, u32>,
     salon_net_cents: i64,
+}
+
+/// Description: Checks out one card ticket and prints the receipt and the day's payroll.
+/// Inputs: none
+/// Outputs: none
+fn main() {
+    let mut salon = Salon::new();
+    salon.add_service("gel manicure", 3_500);
+    salon.add_service("pedicure", 4_500);
+    salon.hire("Mai", 60);
+
+    // Compressed:
+    // let receipt = salon.checkout("Mai", &["gel manicure", "pedicure"], 1_000, Payment::Card);
+    let receipt = salon.checkout(
+        "Mai",
+        &["gel manicure", "pedicure"],
+        1_000,
+        Payment::Card,
+    );
+    println!("{receipt:?}");
+
+    // Compressed:
+    // println!("payroll: {:?}", salon.end_of_day());
+    let payroll = salon.end_of_day();
+    println!("payroll: {payroll:?}");
 }
 
 impl Salon {
@@ -122,36 +147,66 @@ impl Salon {
         if services.is_empty() {
             return Err(PayError::EmptyTicket);
         }
-        let percent = *self
-            .commission
-            .get(technician)
-            .ok_or_else(|| PayError::UnknownTechnician(technician.to_string()))?;
-        let subtotal_cents = services
-            .iter()
-            .map(|&name| self.price_of(name))
-            .sum::<Result<u32, PayError>>()?;
+        // Compressed:
+        // let percent = *self
+        //     .commission
+        //     .get(technician)
+        //     .ok_or_else(|| PayError::UnknownTechnician(technician.to_string()))?;
+        let Some(rate) = self.commission.get(technician) else {
+            return Err(PayError::UnknownTechnician(technician.to_string()));
+        };
+        let percent = *rate;
+        // Compressed:
+        // let subtotal_cents = services
+        //     .iter()
+        //     .map(|&name| self.price_of(name))
+        //     .sum::<Result<u32, PayError>>()?;
+        let mut subtotal_cents = 0;
+        for &name in services {
+            let price_cents = self.price_of(name)?;
+            subtotal_cents += price_cents;
+        }
 
-        let charged_cents = subtotal_cents + tip_cents;
+        let charged_cents  = subtotal_cents + tip_cents;
         let card_fee_cents = match payment {
             Payment::Cash => 0,
             Payment::Card => charged_cents * CARD_FEE_PERCENT / 100,
         };
         let commission_cents = subtotal_cents * percent / 100;
         let technician_cents = commission_cents + tip_cents;
-        let salon_cents = i64::from(subtotal_cents)
-            - i64::from(commission_cents)
-            - i64::from(card_fee_cents);
+        // Compressed:
+        // let salon_cents = i64::from(subtotal_cents)
+        //     - i64::from(commission_cents)
+        //     - i64::from(card_fee_cents);
+        let signed_subtotal   = i64::from(subtotal_cents);
+        let signed_commission = i64::from(commission_cents);
+        let signed_card_fee   = i64::from(card_fee_cents);
+        let salon_cents       = signed_subtotal - signed_commission - signed_card_fee;
 
-        *self.earnings.entry(technician.to_string()).or_insert(0) += technician_cents;
+        // Compressed:
+        // *self.earnings.entry(technician.to_string()).or_insert(0) += technician_cents;
+        let balance           = self.earnings.entry(technician.to_string()).or_insert(0);
+        *balance             += technician_cents;
         self.salon_net_cents += salon_cents;
-        Ok(Receipt {
+
+        // Compressed:
+        // Ok(Receipt {
+        //     subtotal_cents,
+        //     tip_cents,
+        //     charged_cents,
+        //     card_fee_cents,
+        //     technician_cents,
+        //     salon_cents,
+        // })
+        let receipt = Receipt {
             subtotal_cents,
             tip_cents,
             charged_cents,
             card_fee_cents,
             technician_cents,
             salon_cents,
-        })
+        };
+        Ok(receipt)
     }
 
     /// Description: Looks up the menu price of one service.
@@ -159,22 +214,13 @@ impl Salon {
     /// - `name`: the service name.
     /// Outputs: the price in cents, or `UnknownService`.
     fn price_of(&self, name: &str) -> Result<u32, PayError> {
-        self.menu.get(name).copied().ok_or_else(|| PayError::UnknownService(name.to_string()))
-    }
-
-    /// Description: Returns what a technician has earned today.
-    /// Inputs:
-    /// - `technician`: the technician's name.
-    /// Outputs: the cents earned, or 0 for someone who has earned nothing yet.
-    pub fn earnings(&self, technician: &str) -> u32 {
-        self.earnings.get(technician).copied().unwrap_or(0)
-    }
-
-    /// Description: Returns what the salon has kept today.
-    /// Inputs: none
-    /// Outputs: the salon's net in cents.
-    pub fn salon_net_cents(&self) -> i64 {
-        self.salon_net_cents
+        // Compressed:
+        // self.menu.get(name).copied().ok_or_else(|| PayError::UnknownService(name.to_string()))
+        let Some(price) = self.menu.get(name) else {
+            return Err(PayError::UnknownService(name.to_string()));
+        };
+        let price_cents = *price;
+        Ok(price_cents)
     }
 
     /// Description: Pays out every technician who earned money today and starts a fresh day.
@@ -187,17 +233,24 @@ impl Salon {
         self.salon_net_cents = 0;
         payouts
     }
-}
 
-/// Description: Checks out one card ticket and prints the receipt and the day's payroll.
-/// Inputs: none
-/// Outputs: none
-fn main() {
-    let mut salon = Salon::new();
-    salon.add_service("gel manicure", 3_500);
-    salon.add_service("pedicure", 4_500);
-    salon.hire("Mai", 60);
-    let receipt = salon.checkout("Mai", &["gel manicure", "pedicure"], 1_000, Payment::Card);
-    println!("{receipt:?}");
-    println!("payroll: {:?}", salon.end_of_day());
+    /// Description: Returns what a technician has earned today.
+    /// Inputs:
+    /// - `technician`: the technician's name.
+    /// Outputs: the cents earned, or 0 for someone who has earned nothing yet.
+    pub fn earnings(&self, technician: &str) -> u32 {
+        // Compressed:
+        // self.earnings.get(technician).copied().unwrap_or(0)
+        match self.earnings.get(technician) {
+            Some(cents) => *cents,
+            None => 0,
+        }
+    }
+
+    /// Description: Returns what the salon has kept today.
+    /// Inputs: none
+    /// Outputs: the salon's net in cents.
+    pub fn salon_net_cents(&self) -> i64 {
+        self.salon_net_cents
+    }
 }
